@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using _1toOne_Converter.src.gbx;
+using _1toOne_Converter.src.gbx.chunks;
 using _1toOne_Converter.src.gbx.core;
 using _1toOne_Converter.src.gbx.core.chunks;
 
@@ -20,7 +21,10 @@ namespace _1toOne_Converter.src.conversion
 
             blockChunk.Version.Value = 6; //Adding Support for Custom Blocks
 
-            blockChunk.Blocks.AddAll(ExtraBlocks);
+            foreach(var block in ExtraBlocks)
+            {
+                blockChunk.Blocks.Add((Block) block.DeepClone());
+            }
         }
     }
 }

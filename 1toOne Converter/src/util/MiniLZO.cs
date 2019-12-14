@@ -59,11 +59,11 @@ namespace _1toOne_Converter.src.util
     public static class MiniLZO
     {
         private const uint M2_MAX_LEN = 8;
-        private const uint M3_MAX_LEN = 33;
+        //private const uint M3_MAX_LEN = 33;
         private const uint M4_MAX_LEN = 9;
         private const byte M3_MARKER = 32;
         private const byte M4_MARKER = 16;
-        private const uint M1_MAX_OFFSET = 0x0400;
+        //private const uint M1_MAX_OFFSET = 0x0400;
         private const uint M2_MAX_OFFSET = 0x0800;
         private const uint M3_MAX_OFFSET = 0x4000;
         private const uint M4_MAX_OFFSET = 0xbfff;

@@ -1,4 +1,5 @@
-﻿using _1toOne_Converter.src.gbx.core.primitives;
+﻿using _1toOne_Converter.src.gbx.core;
+using _1toOne_Converter.src.gbx.core.primitives;
 using _1toOne_Converter.src.gbx.primitives;
 using _1toOne_Converter.Streams;
 using System;
@@ -10,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace _1toOne_Converter.src.gbx.core.chunks
+namespace _1toOne_Converter.src.gbx.chunks
 {
     public class Challenge0304301F : Chunk
     {
@@ -41,8 +42,13 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public GBXUInt NumBlocks { get => numBlocks; set { numBlocks = value; AddChildNew(value); } }
         public Array<Block> Blocks { get => blocks; set { blocks = value; AddChildNew(value); } }
 
-        public Challenge0304301F(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
+        public Challenge0304301F(Stream s, GBXLBSContext context, GBXNodeRefList list, bool is013) : base(context, list)
         {
+            if(is013)
+            {
+                ChunkID = 0x02400301F; //Update chunk from 0x013 to 0x01F
+            }
+
             TrackMeta = new Meta(s, context);
 
             TrackName = new GBXString(s);
@@ -52,13 +58,13 @@ namespace _1toOne_Converter.src.gbx.core.chunks
             MapSize = new GBXNat3(s);
 
             NeedUnlock = new GBXBool(s);
+            NeedUnlock.Value = false; //TODO find better solution
 
-            Version = new GBXUInt(s);
-            Trace.Assert(Version.Value!= 0, "Unsupported version in the block chunk");
+            Version = is013 ? new GBXUInt(0) : new GBXUInt(s);
 
             NumBlocks = new GBXUInt(s);
 
-            Blocks = new Array<Block>(() => new Block(s, context, list), () => (s.PeekUInt() & 0xC0_00_00_00) != 0);
+            Blocks = new Array<Block>(() => new Block(s, context, list, is013), () => (s.PeekUInt() & 0xC0_00_00_00) != 0);
             Blocks.LinkSize(NumBlocks);
         }
 
@@ -111,7 +117,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
 
         }
 
-        public Block(Stream s, GBXLBSContext context, GBXNodeRefList list)
+        public Block(Stream s, GBXLBSContext context, GBXNodeRefList list, bool is013)
         {
             BlockName = context.ReadLookBackString(s);
 
@@ -124,7 +130,11 @@ namespace _1toOne_Converter.src.gbx.core.chunks
 
             Coords = new GBXByte3(s);
 
-            Flags = new GBXUInt(s);
+            if (!is013)
+                Flags = new GBXUInt(s);
+            else
+                Flags = new GBXUInt(s.ReadUshort()); //Only is a short in 03034013
+
             Flags.SetBase(16);
 
             if(Flags.Value== 0xFFFFFFFF)
@@ -155,6 +165,19 @@ namespace _1toOne_Converter.src.gbx.core.chunks
             result.AddChild(authorKey, Author);
             result.AddChild(skinKey, Skin);
             result.AddChild(blockParametersKey, BlockParameters);
+            return result;
+        }
+
+        public override FileComponent DeepClone()
+        {
+            var result = new Block();
+            result.BlockName = (GBXLBS)BlockName.DeepClone();
+            result.Rot = (GBXByte)Rot.DeepClone();
+            result.Coords = (GBXByte3)Coords.DeepClone();
+            result.Flags = (GBXUInt)Flags.DeepClone();
+            result.Author = (GBXLBS)Author?.DeepClone();
+            result.Skin = (GBXNodeRef)Skin?.DeepClone();
+            result.BlockParameters = (GBXNodeRef)BlockParameters?.DeepClone();
             return result;
         }
     }

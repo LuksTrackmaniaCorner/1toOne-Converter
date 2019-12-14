@@ -19,7 +19,7 @@ namespace _1toOne_Converter.src.gbx
         public RefTable(Stream fs)
         {
             var numExternalNodes = new GBXUInt(fs);
-            AddChildDeprevated(numExternalNodesKey, numExternalNodes);
+            AddChildDeprecated(numExternalNodesKey, numExternalNodes);
 
             if (numExternalNodes.Value== 0) {
                 return;
@@ -27,13 +27,13 @@ namespace _1toOne_Converter.src.gbx
 
             //numExternalNodes >= 1
             var ancestorLevel = new GBXUInt(fs);
-            AddChildDeprevated(ancestorLevelKey, ancestorLevel);
+            AddChildDeprecated(ancestorLevelKey, ancestorLevel);
 
             var numSubFolders = new GBXUInt(fs);
-            AddChildDeprevated(numSubFoldersKey, numSubFolders);
+            AddChildDeprecated(numSubFoldersKey, numSubFolders);
 
             var subFolders = new Array<Folder>(numSubFolders.Value, () => new Folder(fs));
-            AddChildDeprevated(subFoldersKey, subFolders);
+            AddChildDeprecated(subFoldersKey, subFolders);
         }
     }
 
@@ -46,13 +46,13 @@ namespace _1toOne_Converter.src.gbx
         public Folder(Stream fs)
         {
             var name = new GBXString(fs);
-            AddChildDeprevated(nameKey, name);
+            AddChildDeprecated(nameKey, name);
 
             var numSubFolders = new GBXUInt(fs);
-            AddChildDeprevated(numSubFoldersKey, numSubFolders);
+            AddChildDeprecated(numSubFoldersKey, numSubFolders);
 
             var subFolders = new Array<Folder>(numSubFolders.Value, () => new Folder(fs));
-            AddChildDeprevated(subFoldersKey, subFolders);
+            AddChildDeprecated(subFoldersKey, subFolders);
         }
     }
 }

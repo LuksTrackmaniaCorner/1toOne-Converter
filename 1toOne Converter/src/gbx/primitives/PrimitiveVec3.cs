@@ -19,6 +19,9 @@ namespace _1toOne_Converter.src.gbx.primitives
         [XmlAttribute]
         public T Z;
 
+        [XmlIgnore]
+        public (T, T, T) Value => (X, Y, Z);
+
         public override LinkedList<string> Dump()
         {
             var result = new LinkedList<string>();

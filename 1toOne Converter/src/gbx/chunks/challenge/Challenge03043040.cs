@@ -1,4 +1,6 @@
-﻿using _1toOne_Converter.src.gbx.core.primitives;
+﻿using _1toOne_Converter.src.gbx.core;
+using _1toOne_Converter.src.gbx.core.primitives;
+using _1toOne_Converter.src.gbx.primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _1toOne_Converter.src.gbx.core.chunks
+namespace _1toOne_Converter.src.gbx.chunks
 {
     public class Challenge03043040 : Chunk
     {
@@ -91,6 +93,27 @@ namespace _1toOne_Converter.src.gbx.core.chunks
             size.Value = (uint) (sizeEndPos - sizeStartPos);
             Size.WriteBack(s); //Write size back after everything else
             s.Position = sizeEndPos;
+        }
+
+        public void AddItem(Meta meta, GBXVec3 rot, GBXByte3 blockCoords, GBXVec3 itemCoords)
+        {
+            var anchoredObject = new AnchoredObject03101002(
+                new GBXUInt(7),
+                meta,
+                rot,
+                blockCoords,
+                new GBXUInt(0xFFFFFFFF),
+                itemCoords,
+                new GBXUInt(0xFFFFFFFF),
+                new GBXUShort(1),
+                new GBXVec3(0, 0, 0),
+                new GBXFloat(1)
+            );
+
+            var itemNode = new Node(0x03101000);
+            itemNode.AddChunk(Chunk.anchoredObject03101002Key, anchoredObject);
+
+            Items.Add(itemNode);
         }
     }
 }

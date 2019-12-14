@@ -12,28 +12,39 @@ namespace _1toOne_Converter.src.gbx.core.primitives
         public readonly string versionKey = "Version";
         public readonly string checksumKey = "Checksum";
         public readonly string filePathKey = "FilePath";
-        public readonly string locatorURLKey = "Locator URL";
+        public readonly string locatorUrlKey = "Locator URL";
+
+        public GBXByte version;
+        public Unread checksum;
+        public GBXString filePath;
+        public GBXString locatorUrl;
 
         public GBXFileRef(Stream s)
         {
-            var version = new GBXByte(s);
-            AddChildDeprevated(versionKey, version);
+            version = new GBXByte(s);
 
             if(version.Value>= 3)
             {
-                var checksum = new Unread(s, 32);
-                AddChildDeprevated(checksumKey, checksum);
+                checksum = new Unread(s, 32);
             }
 
-            var filePath = new GBXString(s);
-            AddChildDeprevated(filePathKey, filePath);
+            filePath = new GBXString(s);
 
             //TODO Condition not 100% clear.
             if(version.Value>= 1 && (filePath.Value.Length != 0 || version.Value>= 3))
             {
-                var locatorURL = new GBXString(s);
-                AddChildDeprevated(locatorURLKey, locatorURL);
+                locatorUrl = new GBXString(s);
             }
+        }
+
+        public override List<NamedChild> GenerateChildren()
+        {
+            var result = new List<NamedChild>();
+            result.AddChild(versionKey, version);
+            result.AddChild(checksumKey, checksum);
+            result.AddChild(filePathKey, filePath);
+            result.AddChild(locatorUrlKey, locatorUrl);
+            return result;
         }
     }
 }

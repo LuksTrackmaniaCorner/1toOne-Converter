@@ -1,4 +1,5 @@
 ﻿using _1toOne_Converter.src.gbx;
+using _1toOne_Converter.src.gbx.chunks;
 using _1toOne_Converter.src.gbx.core;
 using _1toOne_Converter.src.gbx.core.chunks;
 using System;

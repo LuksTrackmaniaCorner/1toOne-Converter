@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _1toOne_Converter.src.gbx.core.primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,8 @@ namespace _1toOne_Converter.src.util
             return result;
         }
 
+        public Marker Displace(GBXVec3 vec) => Displace(vec.X, vec.Y, vec.Z);
+
         public Marker Rotate(byte rot)
         {
             var result = new Marker
@@ -51,16 +54,16 @@ namespace _1toOne_Converter.src.util
                     result.Z = Z;
                     break;
                 case 1:
-                    result.X = Z;
-                    result.Z = -X;
+                    result.X = -Z;
+                    result.Z = X;
                     break;
                 case 2:
                     result.X = -X;
                     result.Z = -Z;
                     break;
                 case 3:
-                    result.X = -Z;
-                    result.Z = X;
+                    result.X = Z;
+                    result.Z = -X;
                     break;
                 default:
                     throw new Exception();

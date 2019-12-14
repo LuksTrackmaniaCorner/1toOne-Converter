@@ -78,7 +78,7 @@ namespace _1toOne_Converter.src.gbx.core
         //                          .Single()).Order
         //                select property;
 
-        //    //Todo Cache props
+        //    //TODO Cache props
 
         //    var namedChildGetters = new List<NamedChildGetter>();
 
@@ -92,7 +92,7 @@ namespace _1toOne_Converter.src.gbx.core
         //    return result;
         //}
 
-        protected void AddChildDeprevated(string key, FileComponent child)
+        protected void AddChildDeprecated(string key, FileComponent child)
         {
             if (child != null)
                 children.Add(new NamedChild(key, child));
@@ -100,7 +100,8 @@ namespace _1toOne_Converter.src.gbx.core
 
         protected void AddChildNew(FileComponent child)
         {
-            child.Parent = this;
+            if(child != null)
+                child.Parent = this;
             MarkAsChanged();
         }
 

@@ -31,31 +31,31 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public ChallengeThumbnail(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             version = new GBXUInt(s);
-            AddChildDeprevated(versionKey, version);
+            AddChildDeprecated(versionKey, version);
 
             if(version.Value== 0)
                 return;
             //version > 0
             thumbSize = new GBXUInt(s);
-            AddChildDeprevated(thumbSizeKey, thumbSize);
+            AddChildDeprecated(thumbSizeKey, thumbSize);
 
             thumbBegin = new GBXFixedLengthString(s, 15);
-            AddChildDeprevated(thumbBeginKey, thumbBegin);
+            AddChildDeprecated(thumbBeginKey, thumbBegin);
 
             thumb = new Unread(s, (int)thumbSize.Value);
-            AddChildDeprevated(thumbKey, thumb);
+            AddChildDeprecated(thumbKey, thumb);
 
             thumbEnd = new GBXFixedLengthString(s, 16);
-            AddChildDeprevated(thumbEndKey, thumbEnd);
+            AddChildDeprecated(thumbEndKey, thumbEnd);
 
             commentBegin = new GBXFixedLengthString(s, 10);
-            AddChildDeprevated(commentBeginKey, commentBegin);
+            AddChildDeprecated(commentBeginKey, commentBegin);
 
             comment = new GBXString(s);
-            AddChildDeprevated(commentKey, comment);
+            AddChildDeprecated(commentKey, comment);
 
             commentEnd = new GBXFixedLengthString(s, 11);
-            AddChildDeprevated(commentEndKey, commentEnd);
+            AddChildDeprecated(commentEndKey, commentEnd);
         }
     }
 }

@@ -7,6 +7,7 @@ using System.IO;
 using _1toOne_Converter.src.gbx.core.primitives;
 using System.Xml.Serialization;
 using _1toOne_Converter.src.gbx.core.chunks;
+using _1toOne_Converter.src.gbx.chunks;
 
 namespace _1toOne_Converter.src.gbx.core
 {
@@ -41,7 +42,7 @@ namespace _1toOne_Converter.src.gbx.core
 
         public virtual FileComponent DeepClone()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Operation not supported for type " + this.GetType());
         }
 
         //Writes the data which has been read by the constructor and eventually modified back to a file.

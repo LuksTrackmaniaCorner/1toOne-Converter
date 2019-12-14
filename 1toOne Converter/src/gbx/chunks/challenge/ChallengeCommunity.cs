@@ -17,7 +17,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public ChallengeCommunity(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             xml = new GBXString(s);
-            AddChildDeprevated(xmlKey, xml);
+            AddChildDeprecated(xmlKey, xml);
         }
     }
 }

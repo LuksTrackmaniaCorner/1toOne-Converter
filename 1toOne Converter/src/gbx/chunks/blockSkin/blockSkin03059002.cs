@@ -1,4 +1,5 @@
-﻿using _1toOne_Converter.src.gbx.core.primitives;
+﻿using _1toOne_Converter.src.gbx.core;
+using _1toOne_Converter.src.gbx.core.primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _1toOne_Converter.src.gbx.core.chunks
+namespace _1toOne_Converter.src.gbx.chunks
 {
     public class BlockSkin03059002 : Chunk
     {
@@ -22,13 +23,13 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public BlockSkin03059002(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             unknown = new GBXString(s);
-            AddChildDeprevated(unknownKey, unknown);
+            AddChildDeprecated(unknownKey, unknown);
 
             packDesc = new GBXFileRef(s);
-            AddChildDeprevated(packDescKey, packDesc);
+            AddChildDeprecated(packDescKey, packDesc);
 
             parentPackDesc = new GBXFileRef(s);
-            AddChildDeprevated(parentPackDescKey, parentPackDesc);
+            AddChildDeprecated(parentPackDescKey, parentPackDesc);
         }
     }
 }

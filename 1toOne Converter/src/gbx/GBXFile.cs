@@ -1,6 +1,9 @@
 ﻿using _1toOne_Converter.src.conversion;
+using _1toOne_Converter.src.gbx.chunks;
 using _1toOne_Converter.src.gbx.core;
+using _1toOne_Converter.src.gbx.core.chunks;
 using _1toOne_Converter.src.gbx.core.primitives;
+using _1toOne_Converter.src.util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,6 +17,15 @@ namespace _1toOne_Converter.src.gbx
     //TODO add type enum by main class id.
     public class GBXFile : Structure
     {
+        private const float Yaw0 = 0;
+        private const float Yaw1 = -1.57079632679489f;
+        private const float Yaw2 = -3.14159265358979f;
+        private const float Yaw3 = 1.57079632679489f;
+
+        public const int MaxMapXSize = 64;
+        public const int MaxMapYSize = 64;
+        public const int MaxMapZSize = 64;
+
         //Keys for storing the children in the map.
         //Effectively the descriptions for the components.
         public static readonly string magicKey = "Magic";
@@ -58,8 +70,15 @@ namespace _1toOne_Converter.src.gbx
         public MainNode MainNode { get => mainNode; set { mainNode = value; AddChildNew(value); } }
 
 
-        //Markers
-        private readonly Dictionary<string, List<(float X, float Y, float Z)>> markers;
+        //Data storage for Conversions
+        //TODO use a Dictionary<string, object> for all metadata
+        //for example metadata["Flags"] = new Dictionary<string, bool[,]>();
+        internal GBXVec3 GridSize;
+        internal GBXVec3 GridOffset;
+        private readonly Dictionary<string, byte[,]> flags;
+        private readonly Dictionary<string, HashSet<Clip>> clips;
+        private readonly Dictionary<PylonType, HashSet<Pylon>> pylons;
+        private readonly List<(string, double)> statistics;
 
         public GBXFile(Stream s)
         {
@@ -91,7 +110,10 @@ namespace _1toOne_Converter.src.gbx
 
             MainNode.ReadBodyChunks(s);
 
-            markers = new Dictionary<string, List<(float, float, float)>>();
+            flags = new Dictionary<string, byte[,]>();
+            clips = new Dictionary<string, HashSet<Clip>>();
+            pylons = new Dictionary<PylonType, HashSet<Pylon>>();
+            statistics = new List<(string, double)>();
         }
 
         public override List<NamedChild> GenerateChildren()
@@ -131,7 +153,7 @@ namespace _1toOne_Converter.src.gbx
 
         public Chunk GetChunk(string key)
         {
-            return (Chunk)(MainNode.Get(key));
+            return (Chunk)MainNode.Get(key);
         }
 
         public void AddBodyChunk(string key, Chunk chunk)
@@ -139,21 +161,155 @@ namespace _1toOne_Converter.src.gbx
             MainNode.AddChunk(key, chunk);
         }
 
-        public void AddMarker(string name, float x, float y, float z)
+        public void AddPylon(Pylon pylon)
         {
-            if (!markers.ContainsKey(name))
-                markers.Add(name, new List<(float X, float Y, float Z)>());
-            markers[name].Add((x, y, z));
+            if (!pylons.ContainsKey(pylon.Type))
+                pylons.Add(pylon.Type, new HashSet<Pylon>());
+            pylons[pylon.Type].Add(pylon.Normalize());
         }
 
-        public void AddMarker(string name, GBXVec3 vec) => AddMarker(name, vec.X, vec.Y, vec.Z);
-
-        public IReadOnlyCollection<(float x, float y, float z)> GetMarkers(string name)
+        public void AddPylons(IEnumerable<Pylon> pylonList, byte x, byte y, byte z, byte rot)
         {
-            if (markers.ContainsKey(name))
-                return markers[name]?.AsReadOnly();
-            else
-                return new List<(float, float, float)>().AsReadOnly();
+            foreach (var pylon in pylonList)
+                AddPylon(pylon.GetRelativeToBlock(x, y, z, rot));
         }
+
+        public IEnumerable<Pylon> GetPylons(PylonType type)
+        {
+            if (!pylons.ContainsKey(type))
+                return Enumerable.Empty<Pylon>();
+            return pylons[type];
+        }
+
+        public void AddClip(Clip clip)
+        {
+            if (!clips.ContainsKey(clip.Name))
+                clips.Add(clip.Name, new HashSet<Clip>());
+            clips[clip.Name].Add(clip);
+        }
+
+        public void AddClips(IEnumerable<Clip> clipList, byte x, byte y, byte z, byte rot)
+        {
+            foreach (var clip in clipList)
+                AddClip(clip.GetRelativeToBlock(x, y, z, rot));
+        }
+
+        public IEnumerable<Clip> GetClips(string name)
+        {
+            if (!clips.ContainsKey(name))
+                return null;
+            return clips[name];
+        }
+
+        public void SetFlag(Flag flag)
+        {
+            if (!flags.ContainsKey(flag.Name))
+                flags.Add(flag.Name, new byte[MaxMapXSize, MaxMapZSize]);
+            flags[flag.Name][flag.X, flag.Z] = flag.Y;
+        }
+
+        public void SetFlags(IEnumerable<Flag> flagList, byte x, byte z, byte rot)
+        {
+            foreach (var flag in flagList)
+                SetFlag(flag.GetRelativeToBlock(x, z, rot));
+        }
+
+        public byte GetFlag(string name, byte x, byte z)
+        {
+            if (!flags.ContainsKey(name))
+                return 0;
+            return flags[name][x, z];
+        }
+
+        public bool TestFlag(string name, int x, int z)
+        {
+            if (!flags.ContainsKey(name))
+                return false;
+            return flags[name][x, z] != 0;
+        }
+
+        public void Move(int x, int y, int z)
+        {
+
+            var chunk0304301F = (Challenge0304301F)GetChunk(Chunk.challenge0304301FKey);
+
+            if(chunk0304301F != null)
+            {
+                foreach (var block in chunk0304301F.Blocks)
+                {
+                    block.Coords.X = (byte)(block.Coords.X + x);
+                    block.Coords.Y = (byte)(block.Coords.Y + y);
+                    block.Coords.Z = (byte)(block.Coords.Z + z);
+                }
+            }
+
+            if(GridSize != null)
+            {
+                var chunk03043028 = (Challenge03043028)GetChunk(Chunk.challenge03043028Key);
+
+                if(chunk03043028 != null && chunk03043028.SnapshotPosition is GBXVec3 pos)
+                {
+                    pos.X += GridSize.X * x;
+                    pos.Y += GridSize.Y * y;
+                    pos.Z += GridSize.Z * z;
+                }
+            }
+        }
+
+        #region Grid Operations
+        public GBXVec3 ConvertCoords((byte x, byte y, byte z) coords)
+        {
+            return new GBXVec3(
+                coords.x * GridSize.X + GridOffset.X,
+                coords.y * GridSize.Y + GridOffset.Y,
+                coords.z * GridSize.Z + GridOffset.Z
+            );
+        }
+
+        public GBXVec3 ConvertPylonCoords((byte x, byte y, byte z) coords, byte rot)
+        {
+            return rot switch
+            {
+                2 => new GBXVec3(
+                     coords.x * GridSize.X + GridOffset.X,
+                     coords.y * GridSize.Y + GridOffset.Y,
+                    (coords.z - 0.5f) * GridSize.Z + GridOffset.Z
+                ),
+                1 => new GBXVec3(
+                    (coords.x - 0.5f) * GridSize.X + GridOffset.X,
+                     coords.y * GridSize.Y + GridOffset.Y,
+                     coords.z * GridSize.Z + GridOffset.Z
+                ),
+                _ => throw new InternalException()
+            };
+        }
+
+        public static GBXVec3 ConvertRot(byte rot)
+        {
+            return rot switch
+            {
+                0 => new GBXVec3(Yaw0, 0, 0),
+                1 => new GBXVec3(Yaw1, 0, 0),
+                2 => new GBXVec3(Yaw2, 0, 0),
+                3 => new GBXVec3(Yaw3, 0, 0),
+                _ => throw new InternalException(),
+            };
+        }
+        #endregion
+
+        #region Statistics
+        public void AddStatistic(string statistic, double value)
+        {
+            statistics.Add((statistic, value));
+        }
+
+        internal void PrintStatistics()
+        {
+            foreach((string statistic, double value) in statistics)
+            {
+                Console.WriteLine(statistic + ": " + value);
+            }
+        }
+        #endregion
     }
 }

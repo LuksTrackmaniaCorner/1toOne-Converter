@@ -21,13 +21,13 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public Challenge03043021(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             clipIntro = list.ReadGBXNodeRef(s, context);
-            AddChildDeprevated(clipIntroKey, clipIntro);
+            AddChildDeprecated(clipIntroKey, clipIntro);
 
             clipGroupIngame = list.ReadGBXNodeRef(s, context);
-            AddChildDeprevated(clipGroupIngameKey, clipGroupIngame);
+            AddChildDeprecated(clipGroupIngameKey, clipGroupIngame);
 
             clipGroupEndRace = list.ReadGBXNodeRef(s, context);
-            AddChildDeprevated(clipGroupEndRaceKey, clipGroupEndRace);
+            AddChildDeprecated(clipGroupEndRaceKey, clipGroupEndRace);
         }
     }
 }

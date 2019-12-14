@@ -16,7 +16,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public ChallengeVersion(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             version = new GBXUInt(s);
-            AddChildDeprevated(versionKey, version);
+            AddChildDeprecated(versionKey, version);
         }
     }
 }

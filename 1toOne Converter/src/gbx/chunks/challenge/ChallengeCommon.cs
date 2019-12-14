@@ -63,7 +63,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
 
         public ChallengeCommon(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
-            Version = new GBXByte(s); // TODO check: Needs to be at least 3
+            Version = new GBXByte(s);
 
             TrackMeta = new Meta(s, context);
 
@@ -71,10 +71,17 @@ namespace _1toOne_Converter.src.gbx.core.chunks
 
             Kind = new GBXByte(s);
 
+            if (Version.Value < 1)
+                return;
+            //version >= 1
             Locked = new GBXBool(s);
+            Locked.Value = false; //TODO replace with constant
 
             Password = new GBXString(s);
 
+            if (Version.Value < 2)
+                return;
+            //version >= 2
             DecorationMeta = new Meta(s, context);
 
             if (Version.Value< 3)
@@ -85,7 +92,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
             if (Version.Value< 4)
                 return;
             //version >= 4
-            MapTarget = new GBXVec2(s); //TODO add own class for vec2
+            MapTarget = new GBXVec2(s);
 
             if (Version.Value< 5)
                 return;

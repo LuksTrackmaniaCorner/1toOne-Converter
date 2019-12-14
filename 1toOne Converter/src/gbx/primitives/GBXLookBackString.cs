@@ -30,11 +30,8 @@ namespace _1toOne_Converter.src.gbx.core.primitives
             }
         }
 
-
-        [XmlIgnore]
         internal GBXString _content;
 
-        [XmlIgnore]
         internal GBXLBSContext _context;
 
         private GBXLBS()
@@ -49,15 +46,9 @@ namespace _1toOne_Converter.src.gbx.core.primitives
             _context = context;
         }
 
-        public bool ShouldSerializeCollectionID()
-        {
-            return CollectionID != 0;
-        }
+        public bool ShouldSerializeCollectionID() => CollectionID != 0;
 
-        public bool ShouldSerializeContent()
-        {
-            return _content != null;
-        }
+        //public bool ShouldSerializeContent() => _content != null;
 
         public override LinkedList<string> Dump()
         {
@@ -83,10 +74,11 @@ namespace _1toOne_Converter.src.gbx.core.primitives
 
         public override FileComponent DeepClone()
         {
-            var result = new GBXLBS();
-            result.CollectionID = this.CollectionID;
-            result.Content = this.Content;
-            return result;
+            return new GBXLBS
+            {
+                CollectionID = this.CollectionID,
+                Content = this.Content
+            };
         }
 
         public override void WriteBack(Stream s)
@@ -179,7 +171,7 @@ namespace _1toOne_Converter.src.gbx.core.primitives
 
             if(lookbackstring._content == null)
             {
-                s.WriteUInt((uint) lookbackstring.CollectionID);
+                s.WriteUInt(lookbackstring.CollectionID);
             }
             else
             {

@@ -50,5 +50,10 @@ namespace _1toOne_Converter.src.gbx.core.primitives
         {
             return this.Value == other.Value;
         }
+
+        public override FileComponent DeepClone()
+        {
+            return new GBXUInt(Value);
+        }
     }
 }

@@ -20,10 +20,10 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public ChallengeParameters0305B008(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             timeLimit = new GBXUInt(s);
-            AddChildDeprevated(timeLimitKey, timeLimit);
+            AddChildDeprecated(timeLimitKey, timeLimit);
 
             authorScore = new GBXUInt(s);
-            AddChildDeprevated(authorScoreKey, authorScore);
+            AddChildDeprecated(authorScoreKey, authorScore);
         }
     }
 }

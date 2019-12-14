@@ -30,6 +30,8 @@ namespace _1toOne_Converter.src.gbx.primitives
             Z = z;
         }
 
+        public GBXByte3((byte x, byte y, byte z) coords) : this(coords.x, coords.y, coords.z) { }
+
         public override void WriteBack(Stream s)
         {
             s.WriteByte(X);

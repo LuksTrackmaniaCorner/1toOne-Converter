@@ -27,22 +27,22 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public ChallengeAuthor(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             version = new GBXUInt(s);
-            AddChildDeprevated(versionKey, version);
+            AddChildDeprecated(versionKey, version);
 
             authorVersion = new GBXUInt(s);
-            AddChildDeprevated(authorVersionKey, authorVersion);
+            AddChildDeprecated(authorVersionKey, authorVersion);
 
             authorLogin = new GBXString(s);
-            AddChildDeprevated(authorLoginKey, authorLogin);
+            AddChildDeprecated(authorLoginKey, authorLogin);
 
             authorNick = new GBXString(s);
-            AddChildDeprevated(authorNickKey, authorNick);
+            AddChildDeprecated(authorNickKey, authorNick);
 
             authorZone = new GBXString(s);
-            AddChildDeprevated(authorZoneKey, authorZone);
+            AddChildDeprecated(authorZoneKey, authorZone);
 
             authorExtraInfo = new GBXString(s);
-            AddChildDeprevated(authorExtraInfoKey, authorExtraInfo);
+            AddChildDeprecated(authorExtraInfoKey, authorExtraInfo);
         }
     }
 }

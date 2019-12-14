@@ -45,6 +45,11 @@ namespace _1toOne_Converter.src.gbx.core.primitives
         {
             NodeRefList.WriteGBXNodeRef(s, this);
         }
+
+        public override FileComponent DeepClone()
+        {
+            return new GBXNodeRef(null, (Node)node?.DeepClone());
+        }
     }
 
     public class GBXNodeRefList

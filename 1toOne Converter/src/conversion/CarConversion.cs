@@ -1,4 +1,5 @@
 ﻿using _1toOne_Converter.src.gbx;
+using _1toOne_Converter.src.gbx.chunks;
 using _1toOne_Converter.src.gbx.core;
 using _1toOne_Converter.src.gbx.core.chunks;
 using System;
@@ -17,7 +18,7 @@ namespace _1toOne_Converter.src.conversion
         {
             var chunk0304300D = (Challenge0304300D)file.GetChunk(Chunk.challenge0304300DKey);
 
-            chunk0304300D.Meta = CarMeta;
+            chunk0304300D.Meta = (Meta) CarMeta.DeepClone();
         }
     }
 }

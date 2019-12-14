@@ -19,7 +19,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         {
             archiveCount = new GBXUInt(s);
             Trace.Assert(archiveCount.Value== 0, "Unsupported Archive count");
-            AddChildDeprevated(archiveCountKey, archiveCount);
+            AddChildDeprecated(archiveCountKey, archiveCount);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public Challenge03043026(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             clipGlobal = list.ReadGBXNodeRef(s, context);
-            AddChildDeprevated(clipGlobalKey, clipGlobal);
+            AddChildDeprecated(clipGlobalKey, clipGlobal);
         }
     }
 }

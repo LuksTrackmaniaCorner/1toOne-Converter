@@ -18,7 +18,7 @@ namespace _1toOne_Converter.src.conversion
         {
             var commonChunk = (ChallengeCommon)file.GetChunk(Chunk.challengeCommonKey);
             commonChunk.UpdateToVersion11();
-            commonChunk.TitleUID = TitleUID;
+            commonChunk.TitleUID = (GBXLBS) TitleUID.DeepClone();
         }
     }
 }

@@ -19,10 +19,10 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public Challenge03043025(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             var mapCoordsOrigin = new GBXVec2(s);
-            AddChildDeprevated(mapCoordsOriginKey, mapCoordsOrigin);
+            AddChildDeprecated(mapCoordsOriginKey, mapCoordsOrigin);
 
             var mapCoordsTarget = new GBXVec2(s);
-            AddChildDeprevated(mapCoordsTargetKey, mapCoordsTarget);
+            AddChildDeprecated(mapCoordsTargetKey, mapCoordsTarget);
         }
     }
 }

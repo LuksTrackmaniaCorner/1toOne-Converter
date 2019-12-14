@@ -1,4 +1,5 @@
-﻿using _1toOne_Converter.src.gbx.core.primitives;
+﻿using _1toOne_Converter.src.gbx.core;
+using _1toOne_Converter.src.gbx.core.primitives;
 using _1toOne_Converter.src.gbx.primitives;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _1toOne_Converter.src.gbx.core.chunks
+namespace _1toOne_Converter.src.gbx.chunks
 {
     public class AnchoredObject03101002 : Chunk
     {

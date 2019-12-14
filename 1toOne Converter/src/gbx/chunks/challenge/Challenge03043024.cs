@@ -17,7 +17,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public Challenge03043024(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             customMusicPackDesc = new GBXFileRef(s);
-            AddChildDeprevated(customMusicPackDescKey, customMusicPackDesc);
+            AddChildDeprecated(customMusicPackDescKey, customMusicPackDesc);
         }
     }
 }

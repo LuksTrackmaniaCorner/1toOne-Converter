@@ -13,7 +13,7 @@ namespace _1toOne_Converter
 
         public static void OpenDebugMail(Exception e)
         {
-            MailMessage Mail = new MailMessage {
+            using MailMessage Mail = new MailMessage {
                 From = new MailAddress(_DebugMailAddress),
                 Subject = "Error Report",
                 //IsBodyHtml = true,
@@ -24,7 +24,7 @@ namespace _1toOne_Converter
             Mail.Attachments.Add(new Attachment(AttachmentPath));
             Mail.Headers.Add("X-Unsent", "1");
 
-            SmtpClient Client = new SmtpClient
+            using SmtpClient Client = new SmtpClient
             {
                 DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory,
                 PickupDirectoryLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
@@ -33,8 +33,6 @@ namespace _1toOne_Converter
             Client.Send(Mail);
 
             //Cleanup
-            Mail.Dispose();
-            Client.Dispose();
         }
     }
 }

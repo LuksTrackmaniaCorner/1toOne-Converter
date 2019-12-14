@@ -1,4 +1,5 @@
-﻿using _1toOne_Converter.src.gbx.core.primitives;
+﻿using _1toOne_Converter.src.gbx.core;
+using _1toOne_Converter.src.gbx.core.primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _1toOne_Converter.src.gbx.core.chunks
+namespace _1toOne_Converter.src.gbx.chunks
 {
     public class Challenge03043014 : Chunk
     {
@@ -19,10 +20,10 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public Challenge03043014(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             unknown = new GBXUInt(s);
-            AddChildDeprevated(unknownKey, unknown);
+            AddChildDeprecated(unknownKey, unknown);
 
             passwordXorOld = new GBXString(s);
-            AddChildDeprevated(passwordXorOldKey, passwordXorOld);
+            AddChildDeprecated(passwordXorOldKey, passwordXorOld);
         }
     }
 }

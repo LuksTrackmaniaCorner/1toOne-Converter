@@ -19,13 +19,13 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public ChallengeParameters0305B00E(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             unknown1 = new GBXString(s);
-            AddChildDeprevated("Unknown 1", unknown1);
+            AddChildDeprecated("Unknown 1", unknown1);
 
             unknown2 = new GBXUInt(s);
-            AddChildDeprevated("Unknown 2", unknown2);
+            AddChildDeprecated("Unknown 2", unknown2);
 
             unknown3 = new GBXUInt(s);
-            AddChildDeprevated("Unknown 3", unknown3);
+            AddChildDeprecated("Unknown 3", unknown3);
         }
     }
 }

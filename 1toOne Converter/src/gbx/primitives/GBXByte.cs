@@ -29,5 +29,10 @@ namespace _1toOne_Converter.src.gbx.core.primitives
         {
             s.WriteByte(Value);
         }
+
+        public override FileComponent DeepClone()
+        {
+            return new GBXByte(Value);
+        }
     }
 }

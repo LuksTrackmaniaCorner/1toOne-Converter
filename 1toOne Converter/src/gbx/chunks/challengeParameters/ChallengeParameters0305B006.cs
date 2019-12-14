@@ -19,7 +19,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         {
             count = new GBXUInt(s);
             Trace.Assert(count.Value== 0, "Unsupported count");
-            AddChildDeprevated(countKey, count);
+            AddChildDeprecated(countKey, count);
         }
     }
 }

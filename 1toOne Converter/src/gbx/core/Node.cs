@@ -55,7 +55,10 @@ namespace _1toOne_Converter.src.gbx.core
 
         public void AddChunk(string key, Chunk newChunk)
         {
-            AddChildDeprevated(key, newChunk);
+            if (newChunk.ChunkID == 0x24003029 || newChunk.ChunkID == 0x03043029 || newChunk.ChunkID == 0x24003014 || newChunk.ChunkID == 0x03043014)
+                return; //TODO come up with better solution.
+
+            AddChildDeprecated(key, newChunk);
             newChunk.Parent = this;
         }
 
@@ -115,7 +118,7 @@ namespace _1toOne_Converter.src.gbx.core
                 long endPos = startPos + (chunkSize & 0x7FFFFFFF);
                 if (endPos != s.Position)
                 {
-                    throw new Exception("Chunk could not be read. Chunk ID: " + chunkID);
+                    throw new InternalException("Chunk could not be read. Chunk ID: " + chunkID.ToString("x"));
                 }
             }
 
@@ -188,8 +191,15 @@ namespace _1toOne_Converter.src.gbx.core
             var uncompressedBody = new byte[uncompressedSize];
             MiniLZO.Decompress(compressedBody.Get(), uncompressedBody);
 
-            using (var ms = new MemoryStream(uncompressedBody))
+            using var ms = new MemoryStream(uncompressedBody);
+            try
+            {
                 ReadChunks(ms, _context, _list);
+            }
+            catch(UnknownChunkException)
+            {
+                //TODO Add Warning that a chunk could not be read and all further chunks have been skipped
+            }
         }
 
         public void WriteBodyChunk(Stream s)

@@ -30,6 +30,11 @@ namespace _1toOne_Converter.src.gbx.core.primitives
             Z = z;
         }
 
+        public override FileComponent DeepClone()
+        {
+            return new GBXVec3(X, Y, Z);
+        }
+
         public override void WriteBack(Stream s)
         {
             s.WriteFloat(X);

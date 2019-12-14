@@ -17,7 +17,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public Challenge0304301C(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             playMode = new GBXUInt(s);
-            AddChildDeprevated(playModeKey, playMode);
+            AddChildDeprecated(playModeKey, playMode);
         }
     }
 }

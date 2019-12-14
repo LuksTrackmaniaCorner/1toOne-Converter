@@ -27,6 +27,7 @@ namespace _1toOne_Converter.src.gbx.core
         public static readonly string challengeAuthorKey = "Challenge Author";
         public static readonly string challenge0304300DKey = "Challenge 0304300D";
         public static readonly string challenge03043011Key = "Challenge 03043011";
+        public static readonly string challenge03043013Key = "Challenge 03043013";
         public static readonly string challenge03043014Key = "Challenge 03043014";
         public static readonly string challenge03043017Key = "Challenge 03043017";
         public static readonly string challenge03043018Key = "Challenge 03043018";
@@ -102,6 +103,11 @@ namespace _1toOne_Converter.src.gbx.core
             chunkInfos.Add(0x03043011, challenge03043011Info);
             chunkInfos.Add(0x24003011, challenge03043011Info);
 
+            //03043013 is redirected and updated to 0304301F
+            var challenge03043013Info = new ChunkInfo(challenge0304301FKey, false, (s, c, l) => new Challenge0304301F(s, c, l, true));
+            chunkInfos.Add(0x03043013, challenge03043013Info);
+            chunkInfos.Add(0x24003013, challenge03043013Info);
+
             var challenge03043014Info = new ChunkInfo(challenge03043014Key, true, (s, c, l) => new Challenge03043014(s, c, l));
             chunkInfos.Add(0x03043014, challenge03043014Info);
             chunkInfos.Add(0x24003014, challenge03043014Info);
@@ -122,7 +128,7 @@ namespace _1toOne_Converter.src.gbx.core
             chunkInfos.Add(0x0304301C, challenge0304301CInfo);
             chunkInfos.Add(0x2400301C, challenge0304301CInfo);
 
-            var challenge0304301FInfo = new ChunkInfo(challenge0304301FKey, false, (s, c, l) => new Challenge0304301F(s, c, l));
+            var challenge0304301FInfo = new ChunkInfo(challenge0304301FKey, false, (s, c, l) => new Challenge0304301F(s, c, l, false));
             chunkInfos.Add(0x0304301F, challenge0304301FInfo);
             chunkInfos.Add(0x2400301F, challenge0304301FInfo);
 
@@ -234,7 +240,7 @@ namespace _1toOne_Converter.src.gbx.core
             }
         }
 
-        [XmlIgnore] //TODO
+        [XmlIgnore]
         public bool IsHeaderChunk { get; private set; }
 
         public uint ChunkID { get; set; }
@@ -261,7 +267,7 @@ namespace _1toOne_Converter.src.gbx.core
             {
                 if (!IsSkippable)
                     return Parent.NodeRefList;
-                throw new Exception("Noderefs can't be in skippable chunks. Consider using nodes instead.");
+                throw new ParsingException("Noderefs can't be in skippable chunks. Consider using nodes instead.");
             }
         }
         protected Chunk(GBXLBSContext context, GBXNodeRefList list)
@@ -365,7 +371,8 @@ namespace _1toOne_Converter.src.gbx.core
                 }
                 else
                 {
-                    throw new Exception("Chunk could not be read ChunkID: " + chunkID.ToString("X"));
+                    //This exeption will cause the read to end.
+                    throw new UnknownChunkException("Chunk could not be read ChunkID: " + chunkID.ToString("X"));
                 }
                 
             }
@@ -378,7 +385,10 @@ namespace _1toOne_Converter.src.gbx.core
             var info = chunkInfos[chunkID];
             key = info.key;
             var newChunk = info.constructor(s, context, list);
-            newChunk.ChunkID = chunkID;
+            if(newChunk.ChunkID == 0)
+            {
+                newChunk.ChunkID = chunkID; //ChunkID has not been set manually.
+            }
             newChunk.isSkippable = info.skippable;
             return newChunk;
         }

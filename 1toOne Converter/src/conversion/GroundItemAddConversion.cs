@@ -3,22 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using _1toOne_Converter.src.gbx;
+using _1toOne_Converter.src.gbx.chunks;
 using _1toOne_Converter.src.gbx.core;
 using _1toOne_Converter.src.gbx.core.chunks;
 using _1toOne_Converter.src.gbx.core.primitives;
-using _1toOne_Converter.src.gbx.primitives;
 using _1toOne_Converter.src.util;
 
 namespace _1toOne_Converter.src.conversion
 {
     public class GroundItemAddConversion : Conversion
     {
-        public GBXVec3 GridSize;
-        public GBXVec3 GridOffset;
+        public GBXLBS Collection;
+        public GBXLBS DefaultAuthor;
+        public GBXByte Height;
 
-        public Marker MarkerTileIgnore;
-        public Meta GroundItem;
+        [XmlElement(ElementName = "BlockIgnoreFlag")]
+        public FlagName[] BlockIgnoreFlags;
+
+        [XmlElement]
+        public FlagName HeightFlag;
+
+        public ItemData GroundItem;
 
         public override void Convert(GBXFile file)
         {
@@ -28,43 +35,42 @@ namespace _1toOne_Converter.src.conversion
             var mapXSize = blockChunk.MapSize.X;
             var mapZSize = blockChunk.MapSize.Z;
 
-            //Determine the tiles where no blocks should be placed
-            var tileIgnore = new bool[mapXSize, mapZSize];
-            foreach (var (x, y, z) in file.GetMarkers(MarkerTileIgnore.Name))
+            var ignoredTiles = new bool[GBXFile.MaxMapXSize, GBXFile.MaxMapZSize];
+
+            //Initializing ignoredTiles
+            foreach(var blockIgnoreFlag in BlockIgnoreFlags)
             {
-                tileIgnore[(int) (x / GridSize.X), (int) (z / GridSize.Z)] = true;
+                for(int x = 0; x < GBXFile.MaxMapXSize; x++)
+                {
+                    for(int z = 0; z < GBXFile.MaxMapZSize; z++)
+                    {
+                        if(file.TestFlag(blockIgnoreFlag.Name, x, z))
+                        {
+                            ignoredTiles[x, z] = true;
+                        }
+                    }
+                }
             }
 
             //Placing the ground on all other tiles
-            for(int x = 0; x < mapXSize; x++)
+            for(byte x = 0; x < mapXSize; x++)
             {
-                for(int z = 0; z < mapZSize; z++)
+                for(byte z = 0; z < mapZSize; z++)
                 {
-                    if (!tileIgnore[x, z])
+                    if (ignoredTiles[x, z])
+                        continue;
+
+                    //Tile not ignored
+                    //ground item needs to be placed
+                    byte height = 0;
+                    if (HeightFlag != null)
                     {
-                        //ground item needs to be placed
-
-                        //Creating the item chunk
-                        var anchoredObject = new AnchoredObject03101002(
-                            new GBXUInt(7),
-                            (Meta)GroundItem.DeepClone(),
-                            new GBXVec3(0 ,0 ,0),
-                            new GBXByte3((byte) x, 0, (byte) z),
-                            new GBXUInt(0xFFFFFFFF),
-                            new GBXVec3(x * GridSize.X + GridOffset.X, GridOffset.Y, z * GridSize.Z + GridOffset.Z),
-                            new GBXUInt(0xFFFFFFFF),
-                            new GBXUShort(1),
-                            new GBXVec3(0, 0, 0),
-                            new GBXFloat(1)
-                        );
-
-                        //Wrapping the item chunk in a node
-                        var itemNode = new Node(0x03101000);
-                        itemNode.AddChunk(Chunk.anchoredObject03101002Key, anchoredObject);
-
-                        //Adding the item node
-                        itemChunk.Items.Add(itemNode);
+                        height = file.GetFlag(HeightFlag.Name, x, z);
                     }
+
+                    //Creating the item chunk
+                    var itemInfo = GroundItem.GetItemInfo(new Identifier(null, 0, false, null));
+                    itemInfo.PlaceAt(file, (x, (byte)(Height.Value + height), z), 0, itemChunk, Collection, DefaultAuthor.Content);
                 }
             }
         }

@@ -1,191 +1,327 @@
-﻿using System;
+﻿using _1toOne_Converter.src.gbx;
+using _1toOne_Converter.src.gbx.chunks;
+using _1toOne_Converter.src.gbx.core;
+using _1toOne_Converter.src.gbx.core.primitives;
+using _1toOne_Converter.src.util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
-using _1toOne_Converter.src.gbx;
-using _1toOne_Converter.src.gbx.core;
-using _1toOne_Converter.src.gbx.core.chunks;
-using _1toOne_Converter.src.gbx.core.primitives;
-using _1toOne_Converter.src.gbx.primitives;
-using _1toOne_Converter.src.util;
 
 namespace _1toOne_Converter.src.conversion
 {
     public class BlockToItemConversion : Conversion
     {
-        private const float Yaw0 = 0;
-        private const float Yaw1 = -1.57079632679489f;
-        private const float Yaw2 = -3.14159265358979f;
-        private const float Yaw3 = 1.57079632679489f;
-
-        public GBXVec3 GridSize;
-        public GBXVec3 GridOffset;
-
         public GBXLBS Collection;
-        public GBXLBS DefaultAuthor; //TODO allow individual items to override the author.
+        public GBXLBS DefaultAuthor;
 
-        public BlockToItem[] BlockToItems;
+        public FlagName SecondaryTerrainFlag;
+        [XmlElement(IsNullable = false, ElementName = "BlockIgnoreFlag")]
+        public FlagName[] BlockIgnoreFlags;
+
+        public List<BlockData> Blocks;
+        private readonly Dictionary<string, BlockData> _blockNameDict;
+
+        public FlagName ItemCountStatistic;
+
+        public BlockToItemConversion()
+        {
+            _blockNameDict = new Dictionary<string, BlockData>();
+        }
+
+        internal override void Initialize()
+        {
+            foreach (var block in Blocks)
+            {
+                block.Initialize();
+                //TODO Add method getnames to blockData
+                _blockNameDict.Add(block.BlockName, block);
+                if(block.SecondaryTerrainName is string s)
+                {
+                    _blockNameDict.Add(s, block);
+                }
+            }
+        }
 
         public override void Convert(GBXFile file)
         {
+            int itemCount = 0;
 
             var blockChunk = (Challenge0304301F)file.GetChunk(Chunk.challenge0304301FKey);
             var itemChunk = (Challenge03043040)file.GetChunk(Chunk.challenge03043040Key);
 
-            if (itemChunk == null) {
+            if (itemChunk == null)
+            {
                 itemChunk = new Challenge03043040(false);
                 file.AddBodyChunk(Chunk.challenge03043040Key, itemChunk);
             }
 
             foreach (var block in blockChunk.Blocks)
             {
-                foreach (var blockToItem in BlockToItems)
+                if (BlockIgnoreFlags != null)
                 {
-                    if(block.BlockName.Equals(blockToItem.BlockName))
+                    foreach (var blockIgnoreFlag in BlockIgnoreFlags)
                     {
-                        //Block which needs to be replaced with an item has been detected
-                        //Searching for the item for the current block variant.
-                        var coords = ConvertCoords(block, blockToItem.YOffset);
-                        bool blockConverted = false;
-                        uint blockFlags = block.Flags.Value;
+                        if (file.TestFlag(blockIgnoreFlag.Name, block.Coords.X, block.Coords.Z))
+                            goto nextBlock; // D: Goto?!? What a maniac.
+                    }
+                }
 
-                        foreach (var blockVariant in blockToItem.BlockVariants)
+                //Block cannot not be ignored
+                var success = ConvertBlock(file, block, itemChunk);
+                if (success)
+                    itemCount++;
+
+                nextBlock:;
+            }
+
+            if (ItemCountStatistic != null)
+            {
+                file.AddStatistic(ItemCountStatistic.Name, itemCount);
+            }
+        }
+
+        private bool ConvertBlock(GBXFile file, Block block, Challenge03043040 itemChunk)
+        {
+            bool isSecondaryTerrain;
+            if (SecondaryTerrainFlag != null)
+            {
+                isSecondaryTerrain = file.TestFlag(SecondaryTerrainFlag.Name, block.Coords.X, block.Coords.Z);
+            }
+            else
+            {
+                isSecondaryTerrain = false;
+            }
+
+            var blockName = block.BlockName.Content;
+            if (_blockNameDict.ContainsKey(blockName))
+            {
+                var blockData = _blockNameDict[blockName];
+                var itemInfo = blockData.GetItemInfo(new Identifier(block, isSecondaryTerrain));
+
+                if (itemInfo != null)
+                {
+                    //Getting item data
+                    itemInfo.PlaceRelToBlock(file, block, itemChunk, Collection, DefaultAuthor.Content);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private class BlockDataLoc
+        {
+            internal BlockToItem bti;
+            internal (byte x, byte y, byte z, byte rot) itemCoords;
+
+            public BlockDataLoc(BlockToItem bti, (byte x, byte y, byte z, byte rot) itemCoords)
+            {
+                this.bti = bti;
+                this.itemCoords = itemCoords;
+            }
+        }
+
+        public void PropagateClips(GBXFile file, string ReferenceBlockName, string referenceClip)
+        {
+            Initialize();
+
+            var blockChunk = (Challenge0304301F)file.GetChunk(Chunk.challenge0304301FKey);
+
+            //Map blocktoitem objects for all blocks
+            var blockDataMap = new BlockDataLoc[GBXFile.MaxMapXSize, GBXFile.MaxMapYSize, GBXFile.MaxMapZSize];
+            foreach (var block in blockChunk.Blocks)
+            {
+                ItemInfo itemInfo;
+                bool isSecondaryTerrain = SecondaryTerrainFlag == null ? false : file.TestFlag(SecondaryTerrainFlag.Name, block.Coords.X, block.Coords.Z);
+
+                foreach (var blockData in Blocks)
+                {
+
+                    itemInfo = blockData.GetItemInfo(new Identifier(block, isSecondaryTerrain));
+                    if (itemInfo != null)
+                    {
+                        //Find the place in the BlockData-Tree where the clip should be stored
+                        BlockToItem clipLoc = null;
+                        foreach (var child in blockData.childrenList)
                         {
-                            if((blockFlags & 0x3F) == blockVariant.Variant && (((blockFlags & 0x1000) != 0) == blockVariant.IsGroundVariant))
+                            if (child is BlockVariantData blockVariantData && blockVariantData._variant is byte variant && (block.Flags.Value & 0x3F) == variant)
                             {
-                                bool blockVariantConverted = false;
-                                foreach (var randomVariant in blockVariant.RandomVariants)
-                                {
-                                    if(((blockFlags >> 6) & 0x3F) == randomVariant.Variant)
-                                    {
-                                        //Create and add item
-                                        var anchoredObject = new AnchoredObject03101002(
-                                            new GBXUInt(7),
-                                            GenerateItemMeta(randomVariant),
-                                            ConvertRot(block, blockVariant.RotOffset),
-                                            (GBXByte3)block.Coords.DeepClone(),
-                                            new GBXUInt(0xFFFFFFFF),
-                                            coords,
-                                            new GBXUInt(0xFFFFFFFF),
-                                            new GBXUShort(1),
-                                            GenerateUnknownVec(),
-                                            new GBXFloat(1)
-                                        );
-
-                                        var itemNode = new Node(0x03101000);
-                                        itemNode.AddChunk(Chunk.anchoredObject03101002Key, anchoredObject);
-
-                                        itemChunk.Items.Add(itemNode);
-
-                                        blockVariantConverted = blockConverted = true;
-
-                                        break;
-                                    }
-                                }
-
-                                //Add markers for block variant
-                                if (blockVariantConverted)
-                                    AddMarkers(file, blockVariant.Markers, coords);
-
+                                clipLoc = blockVariantData;
                                 break;
                             }
                         }
+                        clipLoc ??= blockData;
 
-                        //Add markers for block
-                        if (blockConverted)
-                            AddMarkers(file, blockToItem.Markers, coords);
+                        //Find the cell where the item should be placed.
+                        var blockRot = block.Rot.Value;
+                        var adjustedRot = (byte)((blockRot + itemInfo.RotOffset) % 4);
+                        var adjustedBlockCoords = ItemInfo.ApplyBlockOffset(block, itemInfo.BlockSize, itemInfo.Offset);
 
-                        //No need to check this block with more blockToItem rules;
+                        //Place a referenve to the BlockData-Object and the position of the item
+                        //At all cells where the block is.
+                        (byte x, byte z) blockDimensions;
+                        if (block.Rot.Value % 2 == 0)
+                            blockDimensions = itemInfo.BlockSize;
+                        else
+                            blockDimensions = (itemInfo.BlockSize.z, itemInfo.BlockSize.x);
+
+                        for (int x = 0; x < blockDimensions.x; x++)
+                        {
+                            for (int z = 0; z < blockDimensions.z; z++)
+                            {
+                                var itemCoords = (adjustedBlockCoords.x, adjustedBlockCoords.y, adjustedBlockCoords.z, adjustedRot);
+                                blockDataMap[block.Coords.X + x, block.Coords.Y, block.Coords.Z + z] = new BlockDataLoc(clipLoc, itemCoords);
+                            }
+                        }
                         break;
+                    }
+                }
+            }
+
+            //Get Clips from the referenceblock
+            foreach (var block in blockChunk.Blocks)
+                if (block.BlockName.Content == ReferenceBlockName)
+                    ConvertBlock(file, block, null);
+
+            //Add clips to other blocks, avoid doubles.
+            var clips = file.GetClips(referenceClip);
+            foreach (var clip in clips)
+            {
+                BlockDataLoc blockDataLoc = null;
+                for (int i = 0; i < 5 && clip.Y - i >= 0; i++) //TODO add const var for 5. it is the maximum amount the converter looks downwards
+                {
+                    blockDataLoc = blockDataMap[clip.X, clip.Y - i, clip.Z];
+                    if (blockDataLoc != null)
+                    {
+                        break;
+                    }
+                }
+
+                if (blockDataLoc != null)
+                {
+                    //Add clipp to blockDataLoc.
+                    (int x, int z) newClipAbsCoords = clip.Rot switch
+                    {
+                        0 => (clip.X, clip.Z + 1),
+                        1 => (clip.X - 1, clip.Z),
+                        2 => (clip.X, clip.Z - 1),
+                        3 => (clip.X + 1, clip.Z),
+                        _ => throw new InternalException()
+                    };
+
+                    int dx = blockDataLoc.itemCoords.x - newClipAbsCoords.x;
+                    int dz = blockDataLoc.itemCoords.z - newClipAbsCoords.z;
+
+                    (int x, int z) newClipRelCoords = blockDataLoc.itemCoords.rot switch
+                    {
+                        0 => (-dx, -dz),
+                        1 => (-dz, +dx),
+                        2 => (+dx, +dz),
+                        3 => (+dz, -dx),
+                        _ => throw new InternalException()
+                    };
+
+                    var newClip = new Clip(
+                        clip.Name,
+                        (short)newClipRelCoords.x,
+                        (short)(clip.Y - blockDataLoc.itemCoords.y),
+                        (short)newClipRelCoords.z,
+                        (byte)((clip.Rot - blockDataLoc.itemCoords.rot + 6) % 4)
+                    );
+
+                    if (blockDataLoc.bti.Clips == null)
+                    {
+                        blockDataLoc.bti.Clips = new Clip[] { newClip };
+                    }
+                    else if (!blockDataLoc.bti.Clips.Contains(newClip))
+                    {
+                        blockDataLoc.bti.Clips = blockDataLoc.bti.Clips.Concat(newClip.AsEnumerable()).ToArray();
                     }
                 }
             }
         }
 
-        private Meta GenerateItemMeta(RandomVariant randomVariant)
+        public void AddPylonsToClips(string clipName, short heightOffset)
         {
-            return new Meta(
-               new GBXLBS(randomVariant.ItemName),
-               (GBXLBS)Collection.DeepClone(),
-               (GBXLBS)DefaultAuthor.DeepClone()
-            );
-        }
+            Initialize();
 
-        private void AddMarkers(GBXFile file, Marker[] markers, GBXVec3 coords)
-        {
-            if (markers == null)
-                return;
-
-            foreach(var marker in markers)
+            foreach(var blockData in Blocks)
             {
-                file.AddMarker(marker.Name, coords);
+                var enumerator = blockData.GetTreeEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    var leaf = enumerator.Current.Peek();
+                    //if (leaf is BlockTypeData btd && btd.TypeOfBlock == Type.Air)
+                    if(leaf is BlockVariantData)
+                    {
+                        //Add Pylons
+                        foreach(var blockToItem in enumerator.Current)
+                        {
+                            foreach(var clip in blockToItem.Clips ?? Enumerable.Empty<Clip>())
+                            {
+                                if(clip.Name == clipName)
+                                {
+                                    leaf.MultiPylons ??= new MultiPylon[0];
+
+                                    var pylon = new MultiPylon
+                                    {
+                                        Pos = PylonPosition.Both,
+                                        Type = PylonType.Top,
+                                        X = clip.X,
+                                        Y = (short)(clip.Y + heightOffset),
+                                        Z = clip.Z,
+                                        Rot = MultiPylon.GetRot(clip.Rot)
+                                    };
+                                    if(!leaf.MultiPylons.Contains(pylon))
+                                    {
+                                        leaf.MultiPylons = leaf.MultiPylons.Concat(pylon.AsEnumerable()).ToArray();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        private GBXVec3 ConvertRot(Block block, byte rotOffset)
+        public void AddPylonsToGround(string flagname)
         {
-            switch((block.Rot.Value + rotOffset) % 4)
+            Initialize();
+
+            foreach(var blockData in Blocks)
             {
-                case 0:
-                    return new GBXVec3(Yaw0, 0, 0); //TODO
-                case 1:
-                    return new GBXVec3(Yaw1, 0, 0);
-                case 2:
-                    return new GBXVec3(Yaw2, 0, 0);
-                case 3:
-                    return new GBXVec3(Yaw3, 0, 0);
-                default: throw new Exception();
+                if (blockData.BlockXSize == 1 && blockData.BlockZSize == 1)
+                {
+                    var enumerator = blockData.GetTreeEnumerator();
+                    while (enumerator.MoveNext())
+                    {
+                        var leaf = enumerator.Current.Peek();
+                        if (leaf.Flags is Flag[] flags && flags.Length == 1 && flags.Single().Name == flagname)
+                        {
+                            leaf.MultiPylons ??= new MultiPylon[0];
+
+                            var pylon = new MultiPylon
+                            {
+                                Pos = PylonPosition.Both,
+                                Type = PylonType.Bottom,
+                                X = 0,
+                                Y = 0,
+                                Z = 0,
+                                Rot = MultiRot.All
+                            };
+                            if (!leaf.MultiPylons.Contains(pylon))
+                            {
+                                leaf.MultiPylons = leaf.MultiPylons.Concat(pylon.AsEnumerable()).ToArray();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(blockData.BlockName);
+                }
             }
         }
-
-        private GBXVec3 ConvertCoords(Block block, float yOffset)
-        {
-            return new GBXVec3(
-                block.Coords.X * GridSize.X + GridOffset.X,
-                block.Coords.Y * GridSize.Y + GridOffset.Y + yOffset,
-                block.Coords.Z * GridSize.Z + GridOffset.Z
-            );
-        }
-
-        private GBXVec3 GenerateUnknownVec()
-        {
-            return new GBXVec3(0, 0, 0);
-        }
-    }
-
-    public class BlockToItem
-    {
-        [XmlAttribute]
-        public float YOffset;
-        public GBXLBS BlockName;
-
-        public BlockVariant[] BlockVariants;
-        [XmlElement(IsNullable = false)]
-        public Marker[] Markers;
-    }
-
-    public class BlockVariant
-    {
-        [XmlAttribute]
-        public byte Variant;
-        [XmlAttribute]
-        public bool IsGroundVariant;
-        [XmlAttribute]
-        public byte RotOffset;
-
-        public RandomVariant[] RandomVariants;
-        [XmlElement(IsNullable = false)]
-        public Marker[] Markers;
-    }
-
-    public class RandomVariant
-    {
-        [XmlAttribute]
-        public byte Variant;
-
-        [XmlAttribute]
-        public string ItemName;
     }
 }

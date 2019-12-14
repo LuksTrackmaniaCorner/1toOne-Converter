@@ -1,4 +1,5 @@
-﻿using _1toOne_Converter.src.gbx.core.primitives;
+﻿using _1toOne_Converter.src.gbx.core;
+using _1toOne_Converter.src.gbx.core.primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _1toOne_Converter.src.gbx.core.chunks
+namespace _1toOne_Converter.src.gbx.chunks
 {
     public class Challenge03043011 : Chunk
     {
@@ -21,13 +22,13 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public Challenge03043011(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             collectorList = list.ReadGBXNodeRef(s, context);
-            AddChildDeprevated(collectorListKey, collectorList);
+            AddChildDeprecated(collectorListKey, collectorList);
 
             challengeParameters = list.ReadGBXNodeRef(s, context);
-            AddChildDeprevated(challengeParametersKey, challengeParameters);
+            AddChildDeprecated(challengeParametersKey, challengeParameters);
 
             kind = new GBXUInt(s);
-            AddChildDeprevated(kindKey, kind);
+            AddChildDeprecated(kindKey, kind);
         }
     }
 }

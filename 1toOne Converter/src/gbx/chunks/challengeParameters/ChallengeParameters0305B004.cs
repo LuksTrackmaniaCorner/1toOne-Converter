@@ -25,19 +25,19 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public ChallengeParameters0305B004(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             bronzeTime = new GBXUInt(s);
-            AddChildDeprevated(bronzeTimeKey, bronzeTime);
+            AddChildDeprecated(bronzeTimeKey, bronzeTime);
 
             silverTime = new GBXUInt(s);
-            AddChildDeprevated(silverTimeKey, silverTime);
+            AddChildDeprecated(silverTimeKey, silverTime);
 
             goldTime = new GBXUInt(s);
-            AddChildDeprevated(goldTimeKey, goldTime);
+            AddChildDeprecated(goldTimeKey, goldTime);
 
             authorTime = new GBXUInt(s);
-            AddChildDeprevated(authorTimeKey, authorTime);
+            AddChildDeprecated(authorTimeKey, authorTime);
 
             ignored = new GBXUInt(s);
-            AddChildDeprevated(ignoredKey, ignored);
+            AddChildDeprecated(ignoredKey, ignored);
         }
     }
 }

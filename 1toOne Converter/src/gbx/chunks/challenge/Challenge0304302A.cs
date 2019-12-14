@@ -17,7 +17,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public Challenge0304302A(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             unknown = new GBXBool(s);
-            AddChildDeprevated(unknownKey, unknown);
+            AddChildDeprecated(unknownKey, unknown);
         }
     }
 }

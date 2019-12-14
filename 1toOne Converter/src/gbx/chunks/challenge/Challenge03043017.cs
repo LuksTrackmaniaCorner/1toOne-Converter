@@ -19,10 +19,10 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public Challenge03043017(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             checkPointCount = new GBXUInt(s);
-            AddChildDeprevated(checkPointCountKey, checkPointCount);
+            AddChildDeprecated(checkPointCountKey, checkPointCount);
 
             checkPointArray = new Array<GBXNat3>(checkPointCount.Value, () => new GBXNat3(s));
-            AddChildDeprevated(checkPointArrayKey, checkPointArray);
+            AddChildDeprecated(checkPointArrayKey, checkPointArray);
         }
     }
 }
