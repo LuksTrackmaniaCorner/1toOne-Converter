@@ -170,7 +170,7 @@
     <Compile Include="src\Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\util\Marker.cs" />
-    <Compile Include="src\util\MiniLZO.cs" />
+    <Compile Include="src\lzo\MiniLZO.cs" />
     <Compile Include="src\util\EnumeratorExtensions.cs" />
     <Compile Include="src\util\Pylon.cs" />
     <Compile Include="src\util\StreamExtensions.cs" />
