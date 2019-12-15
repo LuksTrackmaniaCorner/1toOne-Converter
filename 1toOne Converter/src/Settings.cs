@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace _1toOne_Converter.src
         /// </summary>
         public static void GenerateSettings()
         {
-            const string defaultPath = @".\Settings.xml";
+            string defaultPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @".\Settings.xml";
 
             if (File.Exists(defaultPath))
             {
