@@ -250,7 +250,7 @@ namespace _1toOne_Converter.src.gbx
                 if(chunk03043028 != null && chunk03043028.SnapshotPosition is GBXVec3 pos)
                 {
                     pos.X += GridSize.X * x;
-                    pos.Y += GridSize.Y * y;
+                    pos.Y += GridSize.Y * y; //TODO not generally true, find a better way to move the map
                     pos.Z += GridSize.Z * z;
                 }
             }
