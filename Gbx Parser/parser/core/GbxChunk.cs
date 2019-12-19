@@ -1,4 +1,5 @@
-﻿using gbx.parser.visitor;
+﻿using gbx.parser.info;
+using gbx.parser.visitor;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,14 +10,12 @@ namespace gbx.parser.core
     {
         public static uint Facade = 0xFACADE01;
 
-        //Only relevant for chunks of the Main Node
-        public bool IsHeaderChunk { get; set; }
-        public bool IsSkippable { get; set; }
-        public uint ChunkID { get; }
+        //All the metadata of the chunk is stored here
+        public GbxChunkInfo ChunkInfo { get; }
 
-        public GbxChunk(uint chunkID)
+        public GbxChunk(GbxChunkInfo chunkInfo)
         {
-            ChunkID = chunkID;
+            ChunkInfo = chunkInfo;
         }
 
         internal override TOut Accept<TIn, TOut>(InOutVisitor<TIn, TOut> visitor, TIn arg)
@@ -26,7 +25,7 @@ namespace gbx.parser.core
 
         public int CompareTo(GbxChunk other)
         {
-            return this.ChunkID.CompareTo(other.ChunkID);
+            return this.ChunkInfo.ChunkID.CompareTo(other.ChunkInfo.ChunkID);
         }
     }
 }

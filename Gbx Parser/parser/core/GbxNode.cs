@@ -25,7 +25,7 @@ namespace gbx.parser.core
         {
             foreach(var child in Children)
             {
-                yield return (child.ChunkID.ToString("x"), child);
+                yield return (child.ChunkInfo.Description, child);
             }
         }
 
