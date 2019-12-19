@@ -1,4 +1,5 @@
-﻿using gbx.parser.visitor;
+﻿using gbx.parser.info;
+using gbx.parser.visitor;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,23 +8,39 @@ namespace gbx.parser.core
 {
     public class GbxNode : GbxComposite<GbxChunk>
     {
-        public uint ClassID { get; }
+        public GbxClassInfo ClassInfo { get; }
 
-        public SortedSet<GbxChunk> Children { get; }
+        private readonly SortedSet<GbxChunk> _chunks;
 
-        public GbxNode()
+        public GbxNode(GbxClassInfo classInfo)
         {
-            Children = new SortedSet<GbxChunk>();
+            ClassInfo = classInfo;
+
+            _chunks = new SortedSet<GbxChunk>();
+        }
+
+        public void Add(GbxChunk chunk)
+        {
+            //Test if this chunk is a part of this chunk
+            if (!ClassInfo.CanContain(chunk.ChunkInfo))
+                throw new Exception();
+
+            _chunks.Add(chunk);
+        }
+
+        public void Remove(GbxChunk chunk)
+        {
+            _chunks.Remove(chunk);
         }
 
         public override IEnumerable<GbxChunk> GetChildren()
         {
-            return Children;
+            return _chunks;
         }
 
         public override IEnumerable<(string, GbxChunk)> GetNamedChildren()
         {
-            foreach(var child in Children)
+            foreach(var child in _chunks)
             {
                 yield return (child.ChunkInfo.Description, child);
             }

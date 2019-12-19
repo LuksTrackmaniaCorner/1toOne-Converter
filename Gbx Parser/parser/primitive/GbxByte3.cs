@@ -7,17 +7,9 @@ namespace gbx.parser.primitive
 {
     public class GbxByte3 : GbxPrimitive3<byte>
     {
-        public GbxByte3(
-            byte initialX = 0,
-            byte initialY = 0,
-            byte initialZ = 0,
-            Func<byte, bool>? xConstraint = null,
-            Func<byte, bool>? yConstraint = null,
-            Func<byte, bool>? zConstraint = null) :
-        base(
-            new GbxByte(initialX, xConstraint),
-            new GbxByte(initialY, yConstraint),
-            new GbxByte(initialZ, zConstraint))
+        public GbxByte3(byte initialX = 0, byte initialY = 0, byte initialZ = 0,
+            Predicate<byte>? xConstraint = null, Predicate<byte>? yConstraint = null, Predicate<byte>? zConstraint = null) :
+        base(new GbxByte(initialX, xConstraint), new GbxByte(initialY, yConstraint), new GbxByte(initialZ, zConstraint))
         {
         }
     }

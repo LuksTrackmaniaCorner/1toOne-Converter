@@ -8,7 +8,7 @@ namespace gbx.parser.primitive
 {
     public class GbxBool : GbxPrimitive<bool>
     {
-        public GbxBool(bool initialValue = false, Func<bool, bool>? constraint = null) : base(initialValue, constraint)
+        public GbxBool(bool initialValue = false, Predicate<bool>? constraint = null) : base(initialValue, constraint)
         {
         }
 

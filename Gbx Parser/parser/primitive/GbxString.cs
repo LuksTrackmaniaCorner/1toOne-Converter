@@ -9,7 +9,7 @@ namespace gbx.parser.primitive
 {
     public class GbxString : GbxPrimitive<string>
     {
-        public GbxString(string value = "", Func<string, bool>? valueChecker = null) : base(value, valueChecker)
+        public GbxString(string value = "", Predicate<string>? valueChecker = null) : base(value, valueChecker)
         {
         }
 

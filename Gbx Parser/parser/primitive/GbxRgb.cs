@@ -11,20 +11,10 @@ namespace gbx.parser.primitive
         public GbxPrimitive<float> Green { get => Y; }
         public GbxPrimitive<float> Blue { get => Z; }
 
-        public GbxRgb(
-            float initialRed = 0,
-            float initialGreen = 0,
-            float initialBlue = 0,
-            Func<float, bool>? redConstraint = null,
-            Func<float, bool>? greenConstraint = null,
-            Func<float, bool>? blueConstraint = null) :
-        base(
-            initialRed,
-            initialGreen,
-            initialBlue,
-            redConstraint,
-            greenConstraint,
-            blueConstraint)
+        public GbxRgb(float initialRed = 0, float initialGreen = 0, float initialBlue = 0,
+            Predicate<float>? redConstraint = null, Predicate<float>? greenConstraint = null, Predicate<float>? blueConstraint = null) :
+        base(initialRed, initialGreen, initialBlue,
+            redConstraint, greenConstraint, blueConstraint)
         {
         }
 

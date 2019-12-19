@@ -22,7 +22,7 @@ namespace gbx.parser.core
             set => _var.SetValue(value, NotifyChange);
         }
 
-        protected GbxPrimitive(T initialValue, Func<T, bool>? constraint = null)
+        protected GbxPrimitive(T initialValue, Predicate<T>? constraint = null)
         {
             _var = new ControlledVar<T>(initialValue, constraint);
         }
@@ -52,6 +52,11 @@ namespace gbx.parser.core
                 //Remove eventhandler from event so that it only executes once.
                 OnChange -= MakeConstOnChange;
             }
+        }
+
+        public static implicit operator T(GbxPrimitive<T> primitive)
+        {
+            return primitive.Value;
         }
 
         public override string ToString() => _var.ToString();

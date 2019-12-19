@@ -8,7 +8,7 @@ namespace gbx.parser.primitive
 {
     public class GbxByte : GbxPrimitive<byte>
     {
-        public GbxByte(byte initialValue = 0, Func<byte, bool>? constraint = null) : base(initialValue, constraint)
+        public GbxByte(byte initialValue = 0, Predicate<byte>? constraint = null) : base(initialValue, constraint)
         {
         }
 

@@ -8,7 +8,7 @@ namespace gbx.parser.primitive
 {
     public class GbxUShort : GbxPrimitive<ushort>
     {
-        public GbxUShort(ushort initialValue = 0, Func<ushort, bool>? constraint = null) : base(initialValue, constraint)
+        public GbxUShort(ushort initialValue = 0, Predicate<ushort>? constraint = null) : base(initialValue, constraint)
         {
         }
 

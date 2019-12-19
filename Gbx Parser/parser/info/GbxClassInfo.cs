@@ -48,9 +48,24 @@ namespace gbx.parser.info
                 throw new Exception();
         }
 
-        public void AddChunkInfo(GbxChunkInfo chunkInfo)
+        public void Add(GbxChunkInfo chunkInfo)
         {
+            //TODO Exception
             _chunkDict.Add(chunkInfo.ChunkID, chunkInfo);
+        }
+
+        public bool CanContain(GbxChunkInfo chunkInfo)
+        {
+            var chunkID = chunkInfo.ChunkID;
+
+            if (_chunkDict.ContainsKey(chunkID))
+                return object.ReferenceEquals(chunkInfo, _chunkDict[chunkID]);
+
+            if (Parent != null)
+                return Parent.CanContain(chunkInfo);
+
+            //chunkid not found in this classinfo or its parents.
+            return false;
         }
 
         public bool Equals([AllowNull] GbxClassInfo other)

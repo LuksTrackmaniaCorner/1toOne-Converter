@@ -13,12 +13,12 @@ namespace gbx.parser.core
     public abstract class GbxStructure : GbxComposite<GbxComponent>
     {
         private static readonly MethodInfo _delegateHelperMethod;
-        private static readonly Dictionary<Type, List<(string name, PropertyGetter<GbxStructure> getter)>> _autoStructureProperties;
+        private static readonly Dictionary<Type, List<(string name, PropertyGetter getter)>> _autoStructureProperties;
 
         static GbxStructure()
         {
             _delegateHelperMethod = typeof(GbxStructure).GetMethod(nameof(MethodToDelegateHelper), BindingFlags.Static | BindingFlags.NonPublic)!;
-            _autoStructureProperties = new Dictionary<Type, List<(string name, PropertyGetter<GbxStructure> getter)>>();
+            _autoStructureProperties = new Dictionary<Type, List<(string name, PropertyGetter getter)>>();
         }
 
         private static void GeneratePropertyGetters(Type type)
@@ -36,10 +36,10 @@ namespace gbx.parser.core
 
                     //Getting the correct generic variant of the MethodToDelegate() Helper Method.
                     var delegateHelper = _delegateHelperMethod.MakeGenericMethod(type)
-                        .CreateDelegate<Func<MethodInfo, PropertyGetter<GbxStructure>>>();
+                        .CreateDelegate<Func<MethodInfo, PropertyGetter>>();
 
                     //Generate delegates for all the property getters
-                    var propertyGetters = new List<(string name, PropertyGetter<GbxStructure> getter)>();
+                    var propertyGetters = new List<(string name, PropertyGetter getter)>();
                     foreach (var property in properties)
                     {
                         var methodInfo = property.GetGetMethod()!;
@@ -64,15 +64,15 @@ namespace gbx.parser.core
         /// <typeparam name="T">The type that has the property, a subclass of GbxStructure</typeparam>
         /// <param name="methodInfo">The propertygetter as methodinfo</param>
         /// <returns>The propertygetter as weakly typed delegate</returns>
-        private static PropertyGetter<GbxStructure> MethodToDelegateHelper<T>(MethodInfo methodInfo) where T : GbxStructure
+        private static PropertyGetter MethodToDelegateHelper<T>(MethodInfo methodInfo) where T : GbxStructure
         {
-            var del = methodInfo.CreateDelegate<PropertyGetter<T>>();
+            var del = methodInfo.CreateDelegate<Func<T, GbxComponent>>();
 
             //Create a weakly typed delegate which calls the strongly typed delegate
             return (target) => del((T)target);
         }
 
-        private delegate GbxComponent PropertyGetter<T>(T target) where T : GbxStructure;
+        private delegate GbxComponent PropertyGetter(GbxStructure target);
 
 
         public sealed override IEnumerable<GbxComponent> GetChildren()

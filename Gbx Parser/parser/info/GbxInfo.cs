@@ -28,7 +28,7 @@ namespace gbx.parser.info
             return _classDict[key];
         }
 
-        public static void AddClassInfo(GbxClassInfo classInfo)
+        public static void Add(GbxClassInfo classInfo)
         {
             //TODO add exception
             _classDict.Add(classInfo.ClassID, classInfo);

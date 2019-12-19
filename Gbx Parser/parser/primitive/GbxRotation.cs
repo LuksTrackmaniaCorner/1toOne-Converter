@@ -13,19 +13,10 @@ namespace gbx.parser.primitive
         public GbxPrimitive<float> Roll { get => Z; }
 
         public GbxRotation(
-            float initialPitch = 0,
-            float initialYaw = 0,
-            float initialRoll = 0,
-            Func<float, bool>? pitchConstraint = null,
-            Func<float, bool>? yawConstraint = null,
-            Func<float, bool>? rollConstraint = null) :
-        base(
-            initialPitch,
-            initialYaw,
-            initialRoll,
-            pitchConstraint,
-            yawConstraint,
-            rollConstraint)
+            float initialPitch = 0, float initialYaw = 0, float initialRoll = 0,
+            Predicate<float>? pitchConstraint = null, Predicate<float>? yawConstraint = null, Predicate<float>? rollConstraint = null) :
+        base(initialPitch, initialYaw, initialRoll,
+            pitchConstraint, yawConstraint, rollConstraint)
         {
         }
 

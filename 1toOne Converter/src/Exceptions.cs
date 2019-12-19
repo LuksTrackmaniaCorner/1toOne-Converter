@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace _1toOne_Converter.src
 {
+    [Serializable]
     public class ParsingException : Exception
     {
         public ParsingException()
@@ -26,6 +27,7 @@ namespace _1toOne_Converter.src
         }
     }
 
+    [Serializable]
     public class UnknownChunkException : ParsingException
     {
         public UnknownChunkException()
@@ -45,6 +47,8 @@ namespace _1toOne_Converter.src
         }
     }
 
+
+    [Serializable]
     public class InternalException : Exception
     {
         public InternalException()
@@ -64,6 +68,8 @@ namespace _1toOne_Converter.src
         }
     }
 
+
+    [Serializable]
     public class UnsupportedMapBaseException : Exception
     {
         public UnsupportedMapBaseException()

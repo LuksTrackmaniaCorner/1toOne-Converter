@@ -8,7 +8,7 @@ namespace gbx.parser.primitive
 {
     public class GbxFloat : GbxPrimitive<float>
     {
-        public GbxFloat(float value = 0, Func<float, bool>? constraint = null) : base(value, constraint)
+        public GbxFloat(float value = 0, Predicate<float>? constraint = null) : base(value, constraint)
         {
         }
 

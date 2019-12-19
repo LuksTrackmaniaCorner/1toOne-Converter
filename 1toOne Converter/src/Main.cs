@@ -261,7 +261,7 @@ namespace _1toOne_Converter.src
         {
             string logFilePath = filePath.Replace(".Challenge.Gbx", ".txt");
 
-            using var fs = new FileStream(logFilePath, FileMode.Create);
+            var fs = new FileStream(logFilePath, FileMode.Create);
             using var sw = new StreamWriter(fs);
             file.DumpToFile(sw);
         }

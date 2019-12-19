@@ -8,17 +8,17 @@ namespace gbx.parser.core
     {
         public static bool ConstConstraint(T dummy) => false;
 
-        private Func<T, bool>? _constraint;
+        private Predicate<T>? _constraint;
 
         private T _value;
 
-        public ControlledVar(T initialValue, Func<T, bool>? constraint = null)
+        public ControlledVar(T initialValue, Predicate<T>? constraint = null)
         {
             if (initialValue == null)
                 throw new ArgumentNullException(nameof(initialValue));
 
             if (constraint != null && !constraint(initialValue))
-                throw new Exception("TODO");
+                throw new Exception();
 
             _constraint = constraint;
             _value = initialValue;
