@@ -1,9 +1,9 @@
-﻿using gbx.parser.core;
+﻿using Gbx.Parser.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace gbx.parser.compression
+namespace Gbx.Parser.Compression
 {
     public class GbxCompressionWrapper<T> : GbxWrapper<T> where T : GbxComponent
     {

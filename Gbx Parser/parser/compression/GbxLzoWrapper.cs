@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using gbx.parser.core;
-using gbx.util;
+using Gbx.Parser.Core;
+using Gbx.Util;
 
-namespace gbx.parser.compression
+namespace Gbx.Parser.Compression
 {
     public class GbxLzoWrapper<T> : GbxCompressionWrapper<T> where T : GbxComponent
     {

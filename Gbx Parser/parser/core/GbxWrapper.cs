@@ -1,9 +1,9 @@
-﻿using gbx.parser.visitor;
+﻿using Gbx.Parser.Visitor;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace gbx.parser.core
+namespace Gbx.Parser.Core
 {
     public class GbxWrapper<T> : GbxComposite<T> where T : GbxComponent
     {

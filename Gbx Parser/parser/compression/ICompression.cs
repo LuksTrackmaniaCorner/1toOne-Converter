@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace gbx.parser.compression
+namespace Gbx.Parser.Compression
 {
     public interface ICompression
     {

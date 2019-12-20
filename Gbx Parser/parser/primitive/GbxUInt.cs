@@ -1,10 +1,10 @@
-﻿using gbx.parser.core;
+﻿using Gbx.Parser.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace gbx.parser.primitive
+namespace Gbx.Parser.Primitive
 {
     public class GbxUInt : GbxPrimitive<uint>
     {

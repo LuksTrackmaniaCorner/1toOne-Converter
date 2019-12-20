@@ -1,4 +1,4 @@
-﻿using gbx.parser.visitor;
+﻿using Gbx.Parser.Visitor;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace gbx.parser.core
+namespace Gbx.Parser.Core
 {
     public class GbxUnread : GbxLeaf
     {

@@ -1,9 +1,9 @@
-﻿using gbx.parser.core;
+﻿using Gbx.Parser.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace gbx.parser.primitive
+namespace Gbx.Parser.Primitive
 {
     public class GbxVec3 : GbxPrimitive3<float>
     {

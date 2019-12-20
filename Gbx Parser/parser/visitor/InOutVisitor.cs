@@ -1,9 +1,9 @@
-﻿using gbx.parser.core;
+﻿using Gbx.Parser.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace gbx.parser.visitor
+namespace Gbx.Parser.Visitor
 {
     public abstract class InOutVisitor<TIn, TOut>
     {
@@ -21,6 +21,10 @@ namespace gbx.parser.visitor
         protected internal virtual TOut Visit<T>(GbxComposite<T> composite, TIn arg) where T : GbxComponent => Visit((GbxComponent)composite, arg);
 
         protected internal virtual TOut Visit(GbxNode node, TIn arg) => Visit((GbxComposite<GbxChunk>)node, arg);
+
+        protected internal virtual TOut Visit(GbxNodeReference nodeReference, TIn arg) => Visit((GbxComposite<GbxNode>)nodeReference, arg);
+
+        protected internal virtual TOut Visit(GbxLookBackString lookBackString, TIn arg) => Visit((GbxComposite<GbxLeaf>)lookBackString, arg);
 
         protected internal virtual TOut Visit<T>(GbxArray<T> array, TIn arg) where T : GbxComponent => Visit((GbxComposite<T>)array, arg);
 

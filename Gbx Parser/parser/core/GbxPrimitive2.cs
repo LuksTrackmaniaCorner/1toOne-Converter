@@ -1,17 +1,37 @@
-﻿using System;
+﻿using Gbx.Parser.Visitor;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace gbx.parser.core
+namespace Gbx.Parser.Core
 {
     public abstract class GbxPrimitive2<T> : GbxComposite<GbxPrimitive<T>> where T : IEquatable<T>
     {
-        /*
-        public override abstract string ToString();
-        public abstract void FromString();
-        public abstract void ToBytes(StreamWriter writer);
-        public abstract void FromBytes(StreamReader reader);
-        */
+        public GbxPrimitive<T> X { get; }
+        public GbxPrimitive<T> Y { get; }
+
+        protected GbxPrimitive2(GbxPrimitive<T> x, GbxPrimitive<T> y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public override IEnumerable<GbxPrimitive<T>> GetChildren()
+        {
+            yield return X;
+            yield return Y;
+        }
+
+        public override IEnumerable<(string, GbxPrimitive<T>)> GetNamedChildren()
+        {
+            yield return (nameof(X), X);
+            yield return (nameof(Y), Y);
+        }
+
+        internal override TOut Accept<TIn, TOut>(InOutVisitor<TIn, TOut> visitor, TIn arg)
+        {
+            return visitor.Visit(this, arg);
+        }
     }
 }

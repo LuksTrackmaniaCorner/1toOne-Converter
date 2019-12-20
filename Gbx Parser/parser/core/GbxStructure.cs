@@ -1,14 +1,14 @@
-﻿using gbx.parser.visitor;
+﻿using Gbx.Parser.Visitor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using gbx.util;
+using Gbx.Util;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace gbx.parser.core
+namespace Gbx.Parser.Core
 {
     public abstract class GbxStructure : GbxComposite<GbxComponent>
     {

@@ -1,12 +1,12 @@
-﻿using gbx.parser.core;
-using gbx.util;
+﻿using Gbx.Parser.Core;
+using Gbx.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace gbx.parser.compression
+namespace Gbx.Parser.Compression
 {
     public class GbxZlibDeflateWrapper<T> : GbxCompressionWrapper<T> where T : GbxComponent
     {

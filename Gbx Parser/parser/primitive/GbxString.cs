@@ -1,11 +1,11 @@
-﻿using gbx.parser.core;
-using gbx.util;
+﻿using Gbx.Parser.Core;
+using Gbx.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace gbx.parser.primitive
+namespace Gbx.Parser.Primitive
 {
     public class GbxString : GbxPrimitive<string>
     {

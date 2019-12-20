@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using gbx.parser.primitive;
-using gbx.parser.visitor;
-using gbx.util;
+using Gbx.Parser.Primitive;
+using Gbx.Parser.Visitor;
+using Gbx.Util;
 
-namespace gbx.parser.core
+namespace Gbx.Parser.Core
 {
     public sealed class GbxLookBackString : GbxComposite<GbxLeaf>
     {

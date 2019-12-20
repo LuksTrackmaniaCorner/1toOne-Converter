@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace gbx.util
+namespace Gbx.Util
 {
     internal static class BinaryReaderWriterExtensions
     {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using gbx.parser.visitor;
+using Gbx.Parser.Visitor;
 
-namespace gbx.parser.core
+namespace Gbx.Parser.Core
 {
     public abstract class GbxLeaf : GbxComponent
     {

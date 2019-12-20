@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace gbx.util
+namespace Gbx.Util
 {
     public static class ReflectionExtensions
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace gbx.parser.core
+namespace Gbx.Parser.Core
 {
     internal sealed class ControlledVar<T> where T : IEquatable<T>
     {

@@ -1,10 +1,10 @@
-﻿using gbx.parser.info;
-using gbx.parser.visitor;
+﻿using Gbx.Parser.info;
+using Gbx.Parser.Visitor;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace gbx.parser.core
+namespace Gbx.Parser.Core
 {
     public abstract class GbxChunk : GbxStructure, IComparable<GbxChunk>
     {

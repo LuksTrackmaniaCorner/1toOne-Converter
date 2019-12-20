@@ -1,8 +1,8 @@
-﻿using gbx.parser.visitor;
+﻿using Gbx.Parser.Visitor;
 using System;
 using System.Collections.Generic;
 
-namespace gbx.parser.core
+namespace Gbx.Parser.Core
 {
     public abstract class GbxComponent
     {

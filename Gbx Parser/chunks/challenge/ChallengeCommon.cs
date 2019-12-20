@@ -1,11 +1,11 @@
-﻿using gbx.parser.core;
-using gbx.parser.info;
-using gbx.parser.primitive;
+﻿using Gbx.Parser.Core;
+using Gbx.Parser.info;
+using Gbx.Parser.Primitive;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace gbx.chunks
+namespace Gbx.Chunks.Challenge
 {
     public class ChallengeCommon : GbxChunk
     {
@@ -18,11 +18,11 @@ namespace gbx.chunks
         public GbxMeta DecorationMeta { get; }
         public GbxVec2 MapOrigin { get; }
         public GbxVec2 MapTarget { get; }
-        public GbxUnread UnknownUInt128 { get; }
+        public GbxUnread UnknownUInt128 { get; } //Todo replace with GbxULong128
         public GbxString MapType { get; }
         public GbxString MapStyle { get; }
         public GbxBool UnknownBool { get; }
-        public GbxULong LightmapCacheUID { get; }
+        public GbxUnread LightmapCacheUID { get; } //TODO replace with GbxULong
         public GbxByte LightmapVersion { get; }
         public GbxLookBackString TitleUID { get; }
 
@@ -41,7 +41,7 @@ namespace gbx.chunks
             MapType = new GbxString();
             MapStyle = new GbxString();
             UnknownBool = new GbxBool();
-            LightmapCacheUID = new GbxULong();
+            LightmapCacheUID = new GbxUnread(8);
             LightmapVersion = new GbxByte();
             TitleUID = new GbxLookBackString();
 
