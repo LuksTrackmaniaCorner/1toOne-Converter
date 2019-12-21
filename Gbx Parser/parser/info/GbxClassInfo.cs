@@ -26,7 +26,7 @@ namespace Gbx.Parser.info
         /// </summary>
         /// <param name="classID">The new class ID for the other GbxClassInfo</param>
         /// <param name="other">The GbxClassInfo for which an alias should be created</param>
-        public GbxClassInfo(uint classID, GbxClassInfo other)
+        internal GbxClassInfo(uint classID, GbxClassInfo other)
         {
             //TODO masking
             //Shallow copy, an alias

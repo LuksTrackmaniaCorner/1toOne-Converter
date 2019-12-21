@@ -33,5 +33,12 @@ namespace Gbx.Parser.info
             //TODO add exception
             _classDict.Add(classInfo.ClassID, classInfo);
         }
+
+        public static void AddAlias(GbxClassInfo classInfo, uint newAlias)
+        {
+            var alias = new GbxClassInfo(newAlias, classInfo);
+
+            Add(alias);
+        }
     }
 }

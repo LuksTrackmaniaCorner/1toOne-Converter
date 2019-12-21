@@ -29,6 +29,7 @@ namespace Gbx.Chunks.Challenge
         public ChallengeCommon(GbxChunkInfo chunkInfo) : base(chunkInfo)
         {
             Version = new GbxByte();
+            Version.OnChange += (x) => NotifyChange();
             TrackMeta = new GbxMeta();
             TrackName = new GbxString();
             Kind = new GbxByte();
@@ -44,8 +45,6 @@ namespace Gbx.Chunks.Challenge
             LightmapCacheUID = new GbxUnread(8);
             LightmapVersion = new GbxByte();
             TitleUID = new GbxLookBackString();
-
-            Version.OnChange += (x) => NotifyChange();
         }
 
         public override IEnumerable<(string, GbxComponent)> GetNamedChildren()
