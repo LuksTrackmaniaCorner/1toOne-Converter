@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Gbx.Parser.Core;
-using Gbx.Parser.info;
+using Gbx.Parser.Info;
 
 namespace Gbx.Parser.Visitor
 {

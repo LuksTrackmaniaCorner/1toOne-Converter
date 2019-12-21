@@ -1,4 +1,4 @@
-﻿using Gbx.Parser.info;
+﻿using Gbx.Parser.Info;
 using Gbx.Parser.Visitor;
 using System;
 using System.Collections.Generic;

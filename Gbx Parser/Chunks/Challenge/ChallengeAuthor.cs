@@ -1,5 +1,5 @@
 ﻿using Gbx.Parser.Core;
-using Gbx.Parser.info;
+using Gbx.Parser.Info;
 using Gbx.Parser.Primitive;
 using System;
 using System.Collections.Generic;

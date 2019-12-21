@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gbx.Parser.info
+namespace Gbx.Parser.Info
 {
     public static class GbxInfo
     {

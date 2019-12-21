@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace Gbx.Parser.info
+namespace Gbx.Parser.Info
 {
     public sealed class GbxClassInfo : IEquatable<GbxClassInfo>
     {

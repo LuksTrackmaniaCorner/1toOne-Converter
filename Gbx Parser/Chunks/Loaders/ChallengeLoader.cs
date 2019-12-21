@@ -1,5 +1,5 @@
 ﻿using Gbx.Chunks.Challenge;
-using Gbx.Parser.info;
+using Gbx.Parser.Info;
 using System;
 using System.Collections.Generic;
 using System.Text;
