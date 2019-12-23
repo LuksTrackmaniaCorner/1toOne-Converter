@@ -196,9 +196,11 @@ namespace _1toOne_Converter.src
 
                 var converter = new Converter(filePath);
 
+#if DEBUG
                 //Optional Tasks
                 //CreateLog(converter.file, filePath);
                 //PropagateClips(converter.file);
+#endif
 
                 conversion.Convert(converter.file);
 
