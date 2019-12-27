@@ -84,6 +84,7 @@
     <Compile Include="src\conversion\BlockToItem.cs" />
     <Compile Include="src\conversion\GridDefineConversion.cs" />
     <Compile Include="src\gbx\chunks\challenge\Challenge03043011.cs" />
+    <Compile Include="src\gbx\chunks\challenge\Challenge03043051.cs" />
     <Compile Include="src\gbx\primitives\GBXXml.cs" />
     <Compile Include="src\Settings.cs" />
     <Compile Include="src\conversion\BlockAddConversion.cs" />
@@ -174,6 +175,7 @@
     <Compile Include="src\lzo\MiniLZO.cs" />
     <Compile Include="src\util\EnumeratorExtensions.cs" />
     <Compile Include="src\util\Pylon.cs" />
+    <Compile Include="src\util\RandomExtensions.cs" />
     <Compile Include="src\util\StreamExtensions.cs" />
     <Compile Include="src\util\MailUtil.cs" />
   </ItemGroup>

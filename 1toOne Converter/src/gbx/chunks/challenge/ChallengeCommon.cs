@@ -1,4 +1,5 @@
 ﻿using _1toOne_Converter.src.gbx.core.primitives;
+using _1toOne_Converter.src.util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -138,15 +139,15 @@ namespace _1toOne_Converter.src.gbx.core.chunks
             if (UnknownUInt128 == null)
                 UnknownUInt128 = new Unread(16);
             if (MapType == null)
-                MapType = new GBXString("");
+                MapType = new GBXString("Trackmania/Race");
             if (MapStyle == null)
                 MapStyle = new GBXString("");
-            unknownBool = null; //Can't set the property to null directly.
+            unknownBool = null;
             MarkAsChanged();
             if (LightmapCacheUID == null)
-                LightmapCacheUID = new GBXULong(0);
+                LightmapCacheUID = new GBXULong(new Random().NextULong());
             if (LightmapVersion == null)
-                LightmapVersion = new GBXByte(0);
+                LightmapVersion = new GBXByte(7);
             if (TitleUID == null)
                 TitleUID = new GBXLBS("");
         }

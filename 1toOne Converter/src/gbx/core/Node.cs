@@ -204,13 +204,12 @@ namespace _1toOne_Converter.src.gbx.core
 
         public void WriteBodyChunk(Stream s)
         {
-            var bodyChunks = new List<Chunk>();
-
-            foreach (var child in this)
-            {
-                if (child is Chunk chunk && !chunk.IsHeaderChunk)
-                    bodyChunks.Add(chunk);
-            }
+            var bodyChunks = from namedChild in Children
+                             let chunk = namedChild.Child as Chunk
+                             where chunk != null
+                             where !chunk.IsHeaderChunk
+                             orderby chunk.ChunkID & 0xFFF
+                             select chunk;
 
             byte[] uncompressedBody;
 

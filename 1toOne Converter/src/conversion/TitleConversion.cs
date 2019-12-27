@@ -1,4 +1,5 @@
 ﻿using _1toOne_Converter.src.gbx;
+using _1toOne_Converter.src.gbx.chunks;
 using _1toOne_Converter.src.gbx.core;
 using _1toOne_Converter.src.gbx.core.chunks;
 using _1toOne_Converter.src.gbx.core.primitives;
@@ -22,6 +23,16 @@ namespace _1toOne_Converter.src.conversion
 
             var communityChunk = (ChallengeCommunity)file.GetChunk(Chunk.challengeCommunityKey);
             communityChunk.CommunityXml.Xml.Title = TitleUID.Content;
+
+            var titlepackChunk = (Challenge03043051)file.GetChunk(Chunk.challenge03043051Key);
+
+            if(titlepackChunk == null)
+            {
+                titlepackChunk = new Challenge03043051(false);
+                file.AddBodyChunk(Chunk.challenge03043051Key, titlepackChunk);
+            }
+
+            titlepackChunk.TitlePack.Content = TitleUID.Content;
         }
     }
 }

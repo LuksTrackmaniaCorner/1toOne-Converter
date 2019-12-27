@@ -189,5 +189,13 @@ namespace _1toOne_Converter.src.gbx.core.primitives
                 }
             }
         }
+
+        internal void SkipVersion()
+        {
+            if (_storedStringsWrite == null) //First Lookbackstring encountered, need to write version
+            {
+                _storedStringsWrite = new List<GBXString>();
+            }
+        }
     }
 }

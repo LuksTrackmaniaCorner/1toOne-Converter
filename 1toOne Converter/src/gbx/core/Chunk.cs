@@ -43,6 +43,7 @@ namespace _1toOne_Converter.src.gbx.core
         public static readonly string challenge0304302AKey = "Challenge 0304302A";
         public static readonly string challenge03043040Key = "Challenge 03043040";
         public static readonly string challenge03043049Key = "Challenge 03043049";
+        public static readonly string challenge03043051Key = "Challenge 03043051";
 
         public static readonly string collectorList0301B000Key = "Collector List 0301B000";
 
@@ -168,6 +169,9 @@ namespace _1toOne_Converter.src.gbx.core
             chunkInfos.Add(0x03043049, challenge03043049Info);
             chunkInfos.Add(0x24003049, challenge03043049Info);
 
+            var challenge03043051Info = new ChunkInfo(challenge03043051Key, true, (s, c, l) => new Challenge03043051(s, c));
+            chunkInfos.Add(0x03043051, challenge03043051Info);
+            //TODO
 
             //CollectorList
             var collectorList0301B000Info = new ChunkInfo(collectorList0301B000Key, false, (s, c, l) => new CollectorList0301B000(s, c, l));
