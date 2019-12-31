@@ -7,7 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1toOne Converter", "1toOne 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gbx Parser", "Gbx Parser\Gbx Parser.csproj", "{9B316E02-604B-4850-AB75-319B53BFEF1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gbx Parser Test", "Gbx Parser Test\Gbx Parser Test.csproj", "{BFBE460C-2E29-4868-B8BC-4DF61CEB0325}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gbx Parser Test", "Gbx Parser Test\Gbx Parser Test.csproj", "{BFBE460C-2E29-4868-B8BC-4DF61CEB0325}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AED5555E-8B74-4093-B758-0495A920D97E}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

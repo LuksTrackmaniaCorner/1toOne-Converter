@@ -25,7 +25,7 @@ namespace Gbx.Parser.Core
             _autoStructureProperties = new Dictionary<Type, List<(string name, PropertyGetter getter)>>();
         }
 
-        public int Order { get; private set; }
+        public int Order { get; }
 
         public AutoStructureAttribute([CallerLineNumber]int order = 0)
         {
@@ -47,8 +47,6 @@ namespace Gbx.Parser.Core
                 Debug.Assert(child != null);
                 yield return (name, child);
             }
-
-
         }
 
         private static void GeneratePropertyGetters(Type type)

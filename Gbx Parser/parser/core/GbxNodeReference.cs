@@ -9,9 +9,9 @@ namespace Gbx.Parser.Core
     public class GbxNodeReference : GbxComposite<GbxNode>
     {
         public GbxNode? Node { get; private set; }
-        public GbxClassInfo? NodeClassInfo { get; }
+        public GbxClassInfo NodeClassInfo { get; }
 
-        public GbxNodeReference(GbxClassInfo? nodeClassInfo = null)
+        public GbxNodeReference(GbxClassInfo nodeClassInfo)
         {
             NodeClassInfo = nodeClassInfo;
         }

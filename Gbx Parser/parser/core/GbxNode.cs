@@ -20,6 +20,9 @@ namespace Gbx.Parser.Core
 
         public GbxNode(GbxClassInfo classInfo)
         {
+            if (!CanAccept(classInfo))
+                throw new ArgumentException(nameof(classInfo));
+
             ClassInfo = classInfo;
 
             _chunks = new SortedSet<GbxChunk>();
@@ -30,7 +33,7 @@ namespace Gbx.Parser.Core
         {
             //Test if this chunk is a part of this chunk
             if (!ClassInfo.CanContain(chunk.ChunkInfo))
-                throw new Exception();
+                throw new ArgumentException(nameof(chunk));
 
             _chunks.Add(chunk);
         }
@@ -53,6 +56,11 @@ namespace Gbx.Parser.Core
         internal void RemoveNodeReference(GbxNodeReference nodeReference)
         {
             Trace.Assert(_nodeReferences.Remove(nodeReference));
+        }
+
+        protected virtual bool CanAccept(GbxClassInfo classInfo)
+        {
+            return true;
         }
 
         public override IEnumerable<GbxChunk> GetChildren()

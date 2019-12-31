@@ -8,7 +8,7 @@ using Gbx.Parser.Info;
 
 namespace Gbx.Parser.Visitor
 {
-    public class FileParserVisitor : InOutVisitor<ParsingArgs, object>
+    public class FileReadParser : InOutVisitor<ParsingArgs, object>
     {
         private const uint Facade = 0xFACADE01;
 
