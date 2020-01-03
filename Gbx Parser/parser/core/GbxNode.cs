@@ -43,6 +43,9 @@ namespace Gbx.Parser.Core
             _chunks.Remove(chunk);
         }
 
+        /// <summary>
+        /// Removes all chunks from the node.
+        /// </summary>
         public void Clear()
         {
             _chunks.Clear();
