@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Gbx.Parser.Primitive;
-using Gbx.Parser.Visitor;
+using Gbx.Parser.Visit;
 using Gbx.Util;
 
 namespace Gbx.Parser.Core
@@ -128,9 +128,9 @@ namespace Gbx.Parser.Core
             }
         }
 
-        internal override TOut Accept<TIn, TOut>(InOutVisitor<TIn, TOut> visitor, TIn arg)
+        internal override void Accept(Visitor visitor)
         {
-            return visitor.Visit(this, arg);
+            visitor.Visit(this);
         }
     }
 

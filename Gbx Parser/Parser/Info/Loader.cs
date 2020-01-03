@@ -13,7 +13,8 @@ namespace Gbx.Parser.Info
         public void Load()
         {
             if (_isLoaded == true)
-                throw new Exception();
+                throw new Exception("Class has been already loaded");
+                //
 
             _isLoaded = true;
 

@@ -1,4 +1,4 @@
-﻿using Gbx.Parser.Visitor;
+﻿using Gbx.Parser.Visit;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,9 +29,9 @@ namespace Gbx.Parser.Core
             yield return (nameof(Y), Y);
         }
 
-        internal override TOut Accept<TIn, TOut>(InOutVisitor<TIn, TOut> visitor, TIn arg)
+        internal override void Accept(Visitor visitor)
         {
-            return visitor.Visit(this, arg);
+            visitor.Visit(this);
         }
     }
 }

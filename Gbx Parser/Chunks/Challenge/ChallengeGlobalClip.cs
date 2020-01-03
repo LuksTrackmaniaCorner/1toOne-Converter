@@ -12,7 +12,7 @@ namespace Gbx.Chunks.Challenge
 
         public ChallengeGlobalClip(GbxChunkInfo chunkInfo) : base(chunkInfo)
         {
-            GlobalClip = new GbxNodeReference(); //TODO specify type
+            GlobalClip = new GbxNodeReference(null); //TODO specify type
         }
 
         public override IEnumerable<(string, GbxComponent)> GetNamedChildren()

@@ -6,65 +6,68 @@ using System.Text;
 using Gbx.Parser.Core;
 using Gbx.Parser.Info;
 
-namespace Gbx.Parser.Visitor
+namespace Gbx.Parser.Visit
 {
-    public class FileReadParser : InOutVisitor<ParsingArgs, object>
+    public class FileReadParser : Visitor
     {
         private const uint Facade = 0xFACADE01;
 
-        protected internal override object Visit(GbxComponent component, ParsingArgs arg)
+        private ParsingArgs _arg;
+
+        public FileReadParser(BinaryReader reader)
+        {
+            _arg = new ParsingArgs(reader);
+        }
+
+        protected internal override void Visit(GbxComponent component)
         {
             throw new NotImplementedException();
         }
 
-        protected internal override object Visit(GbxLeaf leaf, ParsingArgs arg)
+        protected internal override void Visit(GbxLeaf leaf)
         {
-            leaf.FromStream(arg.Reader);
+            leaf.FromStream(_arg.Reader);
 
             throw new NotImplementedException();
         }
 
-        protected internal override object Visit<T>(GbxComposite<T> composite, ParsingArgs arg)
+        protected internal override void Visit<T>(GbxComposite<T> composite)
         {
             foreach(var child in composite)
             {
-                Dispatch(child, arg);
+                Dispatch(child);
             }
 
             throw new NotImplementedException();
         }
 
-        protected internal override object Visit(GbxLookBackString lookBackString, ParsingArgs arg)
+        protected internal override void Visit(GbxLookBackString lookBackString)
         {
-            if (arg.LookBackStringVersion == null)
+            if (_arg.LookBackStringVersion == null)
             {
-                var version = arg.Reader.ReadUInt32();
+                var version = _arg.Reader.ReadUInt32();
                 Trace.Assert(version == 3, "Unsupported Version of the Lookbackstrings");
             }
 
-            lookBackString.FromStream(arg.Reader, arg.StoredStrings);
-
-            throw new NotImplementedException();
+            lookBackString.FromStream(_arg.Reader, _arg.StoredStrings);
         }
 
-        protected internal override object Visit<T>(GbxArray<T> array, ParsingArgs arg)
+        protected internal override void Visit<T>(GbxArray<T> array)
         {
-            var count = arg.Reader.ReadUInt32();
+            var count = _arg.Reader.ReadUInt32();
             if (count < 0)
                 throw new Exception();
 
             array.Clear();
             for(int i = 0; i < count; i++)
             {
-                Dispatch(array.AddNew(), arg); //Parse all the child elements
+                Dispatch(array.AddNew()); //Parse all the child elements
             }
-
-            throw new NotImplementedException();
         }
 
-        protected internal override object Visit(GbxNode node, ParsingArgs arg)
+        protected internal override void Visit(GbxNode node)
         {
-            var classID = arg.Reader.ReadUInt32();
+            var classID = _arg.Reader.ReadUInt32();
             var classInfo = GbxInfo.GetClassInfo(classID);
 
             if (node.ClassInfo != classInfo)
@@ -72,60 +75,55 @@ namespace Gbx.Parser.Visitor
 
             node.Clear();
 
-            var chunkID = arg.Reader.ReadUInt32();
+            var chunkID = _arg.Reader.ReadUInt32();
 
             while(chunkID != Facade)
             {
                 var newChunk = GbxInfo.CreateChunk(chunkID);
-                Dispatch(newChunk, arg);
+                Dispatch(newChunk);
 
-                chunkID = arg.Reader.ReadUInt32();
+                chunkID = _arg.Reader.ReadUInt32();
             }
-
-            throw new NotImplementedException();
         }
 
-        protected internal override object Visit(GbxNodeReference nodeReference, ParsingArgs arg)
+        protected internal override void Visit(GbxNodeReference nodeReference)
         {
-            var index = arg.Reader.ReadInt32();
+            var index = _arg.Reader.ReadInt32();
             if (index == -1)
             {
                 nodeReference.RemoveNode();
             }
-            else if (index == arg.Nodes.Count)
+            else if (index == _arg.Nodes.Count)
             {
                 //New Node, read node and append to list
                 var newNode = new GbxNode(nodeReference.NodeClassInfo!); //TODO consider the null case
-                Visit(newNode, arg);
+                Visit(newNode);
                 nodeReference.SetNode(newNode);
-                arg.Nodes.Add(newNode);
+                _arg.Nodes.Add(newNode);
             }
             else
             {
                 //Lookup node in the NodeList
-                nodeReference.SetNode(arg.Nodes[index]);
+                nodeReference.SetNode(_arg.Nodes[index]);
             }
-
-            throw new NotImplementedException();
         }
-    }
 
-    //TODO make nested class
-    public class ParsingArgs
-    {
-        public BinaryReader Reader { get; }
-
-        public uint? LookBackStringVersion { get; internal set; }
-
-        public List<string> StoredStrings { get; }
-
-        public List<GbxNode> Nodes { get; }
-
-        public ParsingArgs(BinaryReader reader)
+        private class ParsingArgs
         {
-            Reader = reader;
-            StoredStrings = new List<string>();
-            Nodes = new List<GbxNode>();
+            public BinaryReader Reader { get; }
+
+            public uint? LookBackStringVersion { get; internal set; }
+
+            public List<string> StoredStrings { get; }
+
+            public List<GbxNode> Nodes { get; }
+
+            public ParsingArgs(BinaryReader reader)
+            {
+                Reader = reader;
+                StoredStrings = new List<string>();
+                Nodes = new List<GbxNode>();
+            }
         }
     }
 }

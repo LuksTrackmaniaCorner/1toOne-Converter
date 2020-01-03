@@ -15,8 +15,8 @@ namespace Gbx.Chunks.Challenge
 
         public ChallengeParameter(GbxChunkInfo chunkInfo) : base(chunkInfo)
         {
-            CollectorList = new GbxNodeReference(); //TODO specify type
-            ChallengeParameters = new GbxNodeReference(); //TODO specify type
+            CollectorList = new GbxNodeReference(null); //TODO specify type
+            ChallengeParameters = new GbxNodeReference(null); //TODO specify type
             Kind = new GbxUInt();
         }
 

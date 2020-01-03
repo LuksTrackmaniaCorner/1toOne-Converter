@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Gbx.Parser.Visitor;
+using Gbx.Parser.Visit;
 
 namespace Gbx.Parser.Core
 {
@@ -16,6 +16,6 @@ namespace Gbx.Parser.Core
 
         public abstract void FromStream(BinaryReader reader);
 
-        internal override abstract TOut Accept<TIn, TOut>(InOutVisitor<TIn, TOut> visitor, TIn arg);
+        internal override abstract void Accept(Visitor visitor);
     }
 }

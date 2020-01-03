@@ -1,4 +1,4 @@
-﻿using Gbx.Parser.Visitor;
+﻿using Gbx.Parser.Visit;
 using System;
 using System.Collections.Generic;
 
@@ -43,6 +43,6 @@ namespace Gbx.Parser.Core
 
         //public GbxComponent DeepClone();
 
-        internal abstract TOut Accept<TIn, TOut>(InOutVisitor<TIn, TOut> visitor, TIn arg);
+        internal abstract void Accept(Visitor visitor);
     }
 }

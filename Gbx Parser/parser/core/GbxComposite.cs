@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Gbx.Parser.Visitor;
+using Gbx.Parser.Visit;
 
 namespace Gbx.Parser.Core
 {
@@ -22,6 +22,6 @@ namespace Gbx.Parser.Core
             return GetEnumerator();
         }
 
-        internal override abstract TOut Accept<TIn, TOut>(InOutVisitor<TIn, TOut> visitor, TIn arg);
+        internal override abstract void Accept(Visitor visitor);
     }
 }
