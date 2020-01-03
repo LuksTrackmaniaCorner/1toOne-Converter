@@ -10,7 +10,8 @@ namespace Gbx.Parser.Visit
 {
     public class FileReadParser : Visitor
     {
-        private const uint Facade = 0xFACADE01;
+        public const uint Facade = 0xFACADE01;
+        public const uint Skip = 0x534B4950;
 
         private ParsingArgs _arg;
 
@@ -65,46 +66,74 @@ namespace Gbx.Parser.Visit
             }
         }
 
+        protected internal override void Visit(GbxNodeReference nodeReference)
+        {
+            var index = _arg.Reader.ReadInt32();
+            var nodeCount = _arg.Nodes.Count;
+
+            if (index == -1)
+            {
+                nodeReference.RemoveNode();
+            }
+            else if (index == nodeCount)
+            {
+                //New Node, read node and append to list
+                var newNode = new GbxNode(nodeReference.NodeClassInfo);
+                Visit(newNode);
+                nodeReference.SetNode(newNode);
+                _arg.Nodes.Add(newNode);
+            }
+            else if(index >= nodeCount)
+            {
+                //Lookup node in the NodeList
+                nodeReference.SetNode(_arg.Nodes[index]);
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+
         protected internal override void Visit(GbxNode node)
         {
             var classID = _arg.Reader.ReadUInt32();
             var classInfo = GbxInfo.GetClassInfo(classID);
 
             if (node.ClassInfo != classInfo)
-                throw new Exception();
+                throw new Exception("Found a different class than expected");
 
             node.Clear();
 
-            var chunkID = _arg.Reader.ReadUInt32();
+            uint chunkID;
 
-            while(chunkID != Facade)
+            while ((chunkID = _arg.Reader.ReadUInt32()) != Facade)
             {
-                var newChunk = GbxInfo.CreateChunk(chunkID);
-                Dispatch(newChunk);
+                var newChunk = GbxInfo.CreateChunk(chunkID)!; //TODO Chunk not found case
+                if (newChunk.ChunkInfo.IsSkippable)
+                {
+                    //Read Chunk
+                    Dispatch(newChunk);
+                }
+                else
+                {
+                    //Read Skippable Chunk
+                    var skip = _arg.Reader.ReadUInt32();
+                    if (skip != Skip)
+                        throw new Exception("Chunk was expected to be skippable, but it was not");
 
-                chunkID = _arg.Reader.ReadUInt32();
-            }
-        }
+                    var length = _arg.Reader.ReadUInt32();
+                    var startPos = _arg.Reader.BaseStream.Position;
 
-        protected internal override void Visit(GbxNodeReference nodeReference)
-        {
-            var index = _arg.Reader.ReadInt32();
-            if (index == -1)
-            {
-                nodeReference.RemoveNode();
-            }
-            else if (index == _arg.Nodes.Count)
-            {
-                //New Node, read node and append to list
-                var newNode = new GbxNode(nodeReference.NodeClassInfo!); //TODO consider the null case
-                Visit(newNode);
-                nodeReference.SetNode(newNode);
-                _arg.Nodes.Add(newNode);
-            }
-            else
-            {
-                //Lookup node in the NodeList
-                nodeReference.SetNode(_arg.Nodes[index]);
+                    var temp = _arg;
+                    _arg = new ParsingArgs(temp.Reader); //Reset all the ParsingArg data.
+                    Dispatch(newChunk);
+                    _arg = temp;
+
+                    var endPos = _arg.Reader.BaseStream.Position;
+
+                    if (startPos - endPos != length)
+                        throw new Exception("Chunk length does not match expected Value.");
+                }
             }
         }
 
