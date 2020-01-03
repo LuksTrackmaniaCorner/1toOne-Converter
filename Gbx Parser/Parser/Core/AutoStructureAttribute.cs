@@ -102,4 +102,12 @@ namespace Gbx.Parser.Core
 
         private delegate GbxComponent PropertyGetter(GbxStructure target);
     }
+
+    public static class AutoStructureExtensions
+    {
+        public static IEnumerable<(string name, GbxComponent child)> AutoGetNamedChildren(this GbxStructure structure)
+        {
+            return AutoStructureAttribute.AutoGetNamedChildren(structure);
+        }
+    }
 }

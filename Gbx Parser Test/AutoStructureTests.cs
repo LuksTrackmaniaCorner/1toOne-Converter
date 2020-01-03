@@ -42,7 +42,7 @@ namespace Gbx_Test
 
         public override IEnumerable<(string, GbxComponent)> GetNamedChildren()
         {
-            return AutoGetNamedChildren();
+            return this.AutoGetNamedChildren();
         }
     }
 }
