@@ -36,6 +36,8 @@ namespace Gbx.Parser.Visit
 
         protected internal virtual void Visit(GbxStructure structure) => Visit((GbxComposite<GbxComponent>)structure);
 
+        protected internal virtual void Visit(GbxFileReference fileReference) => Visit((GbxStructure)fileReference);
+
         protected internal virtual void Visit(GbxChunk chunk) => Visit((GbxStructure)chunk);
     }
 }

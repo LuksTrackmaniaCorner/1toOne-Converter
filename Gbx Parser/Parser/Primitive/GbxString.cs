@@ -9,6 +9,8 @@ namespace Gbx.Parser.Primitive
 {
     public class GbxString : GbxPrimitive<string>
     {
+        public int Length => Value.Length;
+
         public GbxString(string value = "", Predicate<string>? valueChecker = null) : base(value, valueChecker)
         {
         }

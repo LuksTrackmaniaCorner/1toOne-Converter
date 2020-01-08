@@ -18,7 +18,7 @@ namespace Gbx.Parser.Core
             ChunkInfo = chunkInfo;
         }
 
-        internal override void Accept(Visitor visitor)
+        internal sealed override void Accept(Visitor visitor)
         {
             visitor.Visit(this);
         }
