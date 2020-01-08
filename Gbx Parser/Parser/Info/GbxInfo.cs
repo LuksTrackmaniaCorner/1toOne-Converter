@@ -19,7 +19,12 @@ namespace Gbx.Parser.Info
 
         public static GbxChunk CreateChunk(uint chunkID)
         {
-            return GetClassInfo(chunkID).GetChunkInfo(chunkID).CreateChunk();
+            return GetChunkInfo(chunkID).CreateChunk();
+        }
+
+        public static GbxChunkInfo GetChunkInfo(uint chunkID)
+        {
+            return GetClassInfo(chunkID).GetChunkInfo(chunkID);
         }
 
         public static GbxClassInfo GetClassInfo(uint classID)
