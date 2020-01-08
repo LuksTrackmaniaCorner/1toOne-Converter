@@ -20,12 +20,12 @@ namespace Gbx.Parser.Primitive
 
         public override void ToStream(BinaryWriter writer)
         {
-            writer.WriteUTF8(Value);
+            writer.WriteUTF8String(Value);
         }
 
         public override void FromStream(BinaryReader reader)
         {
-            Value = reader.ReadUTF8();
+            Value = reader.ReadUTF8String();
         }
     }
 }
