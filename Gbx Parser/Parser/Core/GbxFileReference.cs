@@ -10,12 +10,20 @@ namespace Gbx.Parser.Core
     {
         public const int ChecksumLength = 32;
 
-        public GbxByte Version { get; } = new GbxByte();
-        public GbxUnread Checksum { get; } = new GbxUnread(ChecksumLength);
-        public GbxString FilePath { get; } = new GbxString();
-        public GbxString LocatorUrl { get; } = new GbxString();
+        public GbxByte Version { get; }
+        public GbxUnread Checksum { get; }
+        public GbxString FilePath { get; }
+        public GbxString LocatorUrl { get; }
 
         public bool IsRelativePath => Version >= 2;
+
+        public GbxFileReference()
+        {
+            Version = new GbxByte();
+            Checksum = new GbxUnread(ChecksumLength);
+            FilePath = new GbxString();
+            LocatorUrl = new GbxString();
+        }
 
         public override IEnumerable<(string, GbxComponent)> GetNamedChildren()
         {

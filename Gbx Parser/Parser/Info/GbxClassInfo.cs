@@ -7,14 +7,22 @@ namespace Gbx.Parser.Info
 {
     public sealed class GbxClassInfo : IEquatable<GbxClassInfo>
     {
+        public const uint NodID = 0x01001000;
+
+        public static readonly GbxClassInfo Nod = new GbxClassInfo(NodID, "Root", Nod);
+
+        //todo add file extension
         public uint ClassID { get; }
         public string Description { get; }
-        public GbxClassInfo? Parent { get; }
+        public GbxClassInfo Parent { get; }
         private readonly Dictionary<uint, GbxChunkInfo> _chunkDict;
 
-        public GbxClassInfo(uint classID, string description, GbxClassInfo? parent = null)
+        public GbxClassInfo(uint classID, string description) : this(classID, description, Nod)
         {
-            //TODO masking
+        }
+
+        public GbxClassInfo(uint classID, string description, GbxClassInfo parent)
+        {
             _chunkDict = new Dictionary<uint, GbxChunkInfo>();
             Description = description;
             ClassID = classID & GbxInfo.ClassMask;
@@ -28,7 +36,6 @@ namespace Gbx.Parser.Info
         /// <param name="other">The GbxClassInfo for which an alias should be created</param>
         internal GbxClassInfo(uint classID, GbxClassInfo other)
         {
-            //TODO masking
             //Shallow copy, an alias
             ClassID = classID & GbxInfo.ClassMask;
             this._chunkDict = other._chunkDict;
@@ -54,6 +61,13 @@ namespace Gbx.Parser.Info
             _chunkDict.Add(chunkInfo.ChunkID, chunkInfo);
         }
 
+        /// <summary>
+        /// Tests if this Class can contain the chunk.
+        /// The result depends on wether the chunkInfo has been added to this ClassInfo object
+        /// or one of its parent.
+        /// </summary>
+        /// <param name="chunkInfo"></param>
+        /// <returns></returns>
         public bool CanContain(GbxChunkInfo chunkInfo)
         {
             var chunkID = chunkInfo.ChunkID;
@@ -61,7 +75,7 @@ namespace Gbx.Parser.Info
             if (_chunkDict.ContainsKey(chunkID))
                 return object.ReferenceEquals(chunkInfo, _chunkDict[chunkID]);
 
-            if (Parent != null)
+            if (this != Nod) //To avoid infinte loops
                 return Parent.CanContain(chunkInfo);
 
             //chunkid not found in this classinfo or its parents.

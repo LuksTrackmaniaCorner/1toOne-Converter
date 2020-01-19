@@ -51,34 +51,34 @@ namespace Gbx.Parser.Core
 
         private static void GeneratePropertyGetters(Type type)
         {
-            lock (_autoStructureProperties)
+            //I don't think this method needs to be synchronized.
+            //It should be thread-safe anyway because this method is idempotent.
+            //Worst case, the property getters would be generated multiple times
+            //if multiple threads enter this method in the same time.
+            //Should be an acceptable risk though, and a good locking mechanism would be difficult.
+
+            //Generate the property order for this class
+            var properties = from property in type.GetProperties()
+                                let autoStructureAttribute = property.GetCustomAttribute<AutoStructureAttribute>()
+                                where autoStructureAttribute != null //filter properties with no AutoStructureAttribute
+                                orderby autoStructureAttribute.Order
+                                select property;
+
+            //Getting the correct generic variant of the MethodToDelegate() Helper Method.
+            var delegateHelper = _delegateHelperMethod.MakeGenericMethod(type)
+                .CreateDelegate<Func<MethodInfo, PropertyGetter>>();
+
+            //Generate delegates for all the property getters
+            var propertyGetters = new List<(string name, PropertyGetter getter)>();
+            foreach (var property in properties)
             {
-                if (!_autoStructureProperties.ContainsKey(type))
-                {
-                    //Generate the property order for this class
-                    var properties = from property in type.GetProperties()
-                                     let autoStructureAttribute = property.GetCustomAttribute<AutoStructureAttribute>()
-                                     where autoStructureAttribute != null //filter properties with no AutoStructureAttribute
-                                     orderby autoStructureAttribute.Order
-                                     select property;
-
-                    //Getting the correct generic variant of the MethodToDelegate() Helper Method.
-                    var delegateHelper = _delegateHelperMethod.MakeGenericMethod(type)
-                        .CreateDelegate<Func<MethodInfo, PropertyGetter>>();
-
-                    //Generate delegates for all the property getters
-                    var propertyGetters = new List<(string name, PropertyGetter getter)>();
-                    foreach (var property in properties)
-                    {
-                        var methodInfo = property.GetGetMethod()!;
-                        var getter = delegateHelper(methodInfo);
-                        propertyGetters.Add((property.Name, getter));
-                    }
-
-                    //Storing the results
-                    _autoStructureProperties.Add(type, propertyGetters);
-                }
+                var methodInfo = property.GetGetMethod()!;
+                var getter = delegateHelper(methodInfo);
+                propertyGetters.Add((property.Name, getter));
             }
+
+            //Storing the results
+            _autoStructureProperties[type] = propertyGetters;
         }
 
         /// <summary>

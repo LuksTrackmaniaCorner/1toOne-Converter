@@ -107,6 +107,10 @@ namespace Gbx.Parser.Visit
 
         public void ReadReferenceTable(GbxNode node)
         {
+            if (node is null)
+            { 
+            }
+
             var numExternalNodes = _reader.ReadUInt32();
 
             if (numExternalNodes == 0)
@@ -159,11 +163,9 @@ namespace Gbx.Parser.Visit
         protected internal override void Visit<T>(GbxArray<T> array)
         {
             var count = _reader.ReadUInt32();
-            if (count < 0)
-                throw new Exception();
 
             array.Clear();
-            for(int i = 0; i < count; i++)
+            for(uint i = 0; i < count; i++)
             {
                 Dispatch(array.AddNew()); //Parse all the child elements
             }

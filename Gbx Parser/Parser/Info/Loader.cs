@@ -14,7 +14,6 @@ namespace Gbx.Parser.Info
         {
             if (_isLoaded == true)
                 throw new Exception("Class has been already loaded");
-                //
 
             _isLoaded = true;
 
