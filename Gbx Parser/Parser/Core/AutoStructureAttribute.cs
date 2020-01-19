@@ -97,7 +97,7 @@ namespace Gbx.Parser.Core
             var del = methodInfo.CreateDelegate<Func<T, GbxComponent>>();
 
             //Create a weakly typed delegate which calls the strongly typed delegate
-            return (target) => del((T)target);
+            return (target) => del((T)target); //TODO reduce the amount of upcasts.
         }
 
         private delegate GbxComponent PropertyGetter(GbxStructure target);
