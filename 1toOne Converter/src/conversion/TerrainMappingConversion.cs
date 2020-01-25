@@ -110,7 +110,6 @@ namespace _1toOne_Converter.src.conversion
     internal interface IState
     {
         bool IsActiveState(TerrainType type, ref IState successorState);
-
     }
 
     internal class PrimaryState : IState
@@ -123,10 +122,10 @@ namespace _1toOne_Converter.src.conversion
                     return false;
                 case TerrainType.Convex:
                     successorState = new BorderState();
-                    return true;
+                    return false;
                 case TerrainType.Wall:
                     successorState = new SecondaryState();
-                    return true;
+                    return false;
                 case TerrainType.Concave:
                     throw new Exception("Illegal Terrain");
             }
@@ -146,10 +145,10 @@ namespace _1toOne_Converter.src.conversion
                     throw new Exception("Illegal Terrain");
                 case TerrainType.Wall:
                     successorState = new PrimaryState();
-                    return true;
+                    return false;
                 case TerrainType.Concave:
                     successorState = new BorderState();
-                    return true;
+                    return false;
             }
             return false;
         }
@@ -165,12 +164,12 @@ namespace _1toOne_Converter.src.conversion
                     throw new Exception("Illegal Terrain");
                 case TerrainType.Convex:
                     successorState = new PrimaryState();
-                    return true;
+                    return false;
                 case TerrainType.Wall:
-                    return true;
+                    return false;
                 case TerrainType.Concave:
                     successorState = new SecondaryState();
-                    return true;
+                    return false;
             }
             return false;
         }
