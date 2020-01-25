@@ -1,6 +1,7 @@
 ﻿using _1toOne_Converter.src.gbx;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,5 +34,16 @@ namespace _1toOne_Converter.src.conversion
         }
 
         public abstract void Convert(GBXFile file);
+
+        public static T LoadConversion<T>(string xmlFile) where T:Conversion
+        {
+            T conversion;
+            var xmls = new XmlSerializer(typeof(T));
+            using (var fs = new FileStream(xmlFile, FileMode.Open))
+                conversion = (T)xmls.Deserialize(fs);
+            conversion.Initialize();
+
+            return conversion;
+        }
     }
 }

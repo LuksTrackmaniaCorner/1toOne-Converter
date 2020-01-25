@@ -70,7 +70,7 @@ namespace _1toOne_Converter.src
 
         public static void ConvertMaps(string[] args)
         {
-            string DefaultXmlFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\AlpineConversion.xml";
+            string DefaultXmlFilePath = FileHelper.ProgramPath + @"\Default.xml";
 
             string xmlFile = null;
             var gbxFiles = new List<string>();
@@ -119,12 +119,7 @@ namespace _1toOne_Converter.src
             }
 
             //Generating the Conversion
-            //TODO check if file exists
-            Conversion conversion;
-            var xmls = new XmlSerializer(typeof(ComplexConversion));
-            using (var fs = new FileStream(xmlFile, FileMode.Open))
-                conversion = (Conversion)xmls.Deserialize(fs);
-            conversion.Initialize();
+            var conversion = Conversion.LoadConversion<SwitchConversion>(xmlFile); //TODO change to switch  
 
             //Loading the Settings
             Settings.GenerateSettings();
