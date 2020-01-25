@@ -82,4 +82,23 @@ namespace _1toOne_Converter.src
         {
         }
     }
+
+    public class UnknownConversionException : Exception
+    {
+        public UnknownConversionException()
+        {
+        }
+
+        public UnknownConversionException(string message) : base(message)
+        {
+        }
+
+        public UnknownConversionException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected UnknownConversionException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +11,8 @@ namespace _1toOne_Converter.src.util
 {
     public static class FileHelper
     {
+        public static string ProgramPath { get; } = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
         public static string GetFilePath(string extension)
         {
             var fileDialog = new OpenFileDialog();
