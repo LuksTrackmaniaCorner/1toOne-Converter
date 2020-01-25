@@ -16,13 +16,13 @@ namespace Gbx.Parser.Core
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class AutoStructureAttribute : Attribute
     {
-        private static readonly MethodInfo _delegateHelperMethod;
-        private static readonly Dictionary<Type, List<(string name, PropertyGetter getter)>> _autoStructureProperties;
+        private static readonly MethodInfo _propertyGetterHelper;
+        private static readonly Dictionary<Type, PropertyGetters> _autoStructureProperties;
 
         static AutoStructureAttribute()
         {
-            _delegateHelperMethod = typeof(GbxStructure).GetMethod(nameof(MethodToDelegateHelper), BindingFlags.Static | BindingFlags.NonPublic)!;
-            _autoStructureProperties = new Dictionary<Type, List<(string name, PropertyGetter getter)>>();
+            _propertyGetterHelper = typeof(AutoStructureAttribute).GetMethod(nameof(BuildPropertyGetters), BindingFlags.Static | BindingFlags.NonPublic)!;
+            _autoStructureProperties = new Dictionary<Type, PropertyGetters>();
         }
 
         public int Order { get; }
@@ -41,12 +41,7 @@ namespace Gbx.Parser.Core
                 GeneratePropertyGetters(type);
             }
 
-            foreach ((var name, var getter) in _autoStructureProperties[type])
-            {
-                var child = getter(structure);
-                Debug.Assert(child != null);
-                yield return (name, child);
-            }
+            return _autoStructureProperties[type](structure);
         }
 
         private static void GeneratePropertyGetters(Type type)
@@ -65,20 +60,11 @@ namespace Gbx.Parser.Core
                                 select property;
 
             //Getting the correct generic variant of the MethodToDelegate() Helper Method.
-            var delegateHelper = _delegateHelperMethod.MakeGenericMethod(type)
-                .CreateDelegate<Func<MethodInfo, PropertyGetter>>();
-
-            //Generate delegates for all the property getters
-            var propertyGetters = new List<(string name, PropertyGetter getter)>();
-            foreach (var property in properties)
-            {
-                var methodInfo = property.GetGetMethod()!;
-                var getter = delegateHelper(methodInfo);
-                propertyGetters.Add((property.Name, getter));
-            }
+            var propertyGetterHelper = _propertyGetterHelper.MakeGenericMethod(type)
+                .CreateDelegate<Func<IEnumerable<PropertyInfo>, PropertyGetters>>();
 
             //Storing the results
-            _autoStructureProperties[type] = propertyGetters;
+            _autoStructureProperties[type] = propertyGetterHelper(properties);
         }
 
         /// <summary>
@@ -92,15 +78,32 @@ namespace Gbx.Parser.Core
         /// <typeparam name="T">The type that has the property, a subclass of GbxStructure</typeparam>
         /// <param name="methodInfo">The propertygetter as methodinfo</param>
         /// <returns>The propertygetter as weakly typed delegate</returns>
-        private static PropertyGetter MethodToDelegateHelper<T>(MethodInfo methodInfo) where T : GbxStructure
+        private static PropertyGetters BuildPropertyGetters<T>(IEnumerable<PropertyInfo> propertyInfos) where T : GbxStructure
         {
-            var del = methodInfo.CreateDelegate<Func<T, GbxComponent>>();
+            var childrenGetters = new List<(string name, PropertyGetter<T> childGetter)>();
 
-            //Create a weakly typed delegate which calls the strongly typed delegate
-            return (target) => del((T)target); //TODO reduce the amount of upcasts.
+            foreach(var propertyInfo in propertyInfos)
+            {
+                var getter = propertyInfo.GetGetMethod()!.CreateDelegate<PropertyGetter<T>>();
+                childrenGetters.Add((propertyInfo.Name, getter));
+            }
+
+            return GetChildren;
+
+            IEnumerable<(string name, GbxComponent child)> GetChildren(GbxComponent weakTarget)
+            {
+                var strongTarget = (T)weakTarget;
+
+                foreach(var (name, childGetter) in childrenGetters)
+                {
+                    yield return (name, childGetter(strongTarget));
+                }
+            }
         }
 
-        private delegate GbxComponent PropertyGetter(GbxStructure target);
+        private delegate GbxComponent PropertyGetter<T>(T strongTarget) where T : GbxStructure;
+
+        private delegate IEnumerable<(string name, GbxComponent child)> PropertyGetters(GbxStructure weakTarget);
     }
 
     public static class AutoStructureExtensions
