@@ -82,5 +82,17 @@ namespace _1toOne_Converter.src.util
 
             return new Clip() { Name = Name, X = x, Y = y, Z = z, Rot = rot };
         }
+
+        public static (int x, int y, int z) GetCoordsFacing((int x, int y, int z) coords, byte rot)
+        {
+            return rot switch
+            {
+                0 => (coords.x    , coords.y, coords.z + 1),
+                1 => (coords.x - 1, coords.y, coords.z    ),
+                2 => (coords.x    , coords.y, coords.z - 1),
+                3 => (coords.x + 1, coords.y, coords.z    ),
+                _ => throw new Exception()
+            };
+        }
     }
 }

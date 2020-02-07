@@ -70,11 +70,7 @@ namespace _1toOne_Converter.src
 
         public static void ConvertMaps(string[] args)
         {
-#if !DEBUG
             string DefaultXmlFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\AlpineConversion.xml";
-#else
-            string DefaultXmlFilePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\complex.xml";
-#endif
 
             string xmlFile = null;
             var gbxFiles = new List<string>();
@@ -198,7 +194,7 @@ namespace _1toOne_Converter.src
 
 #if DEBUG
                 //Optional Tasks
-                //CreateLog(converter.file, filePath);
+                CreateLog(converter.file, filePath);
                 //PropagateClips(converter.file);
 #endif
 

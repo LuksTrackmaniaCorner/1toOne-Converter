@@ -58,6 +58,7 @@ namespace _1toOne_Converter.src.conversion
 
             foreach (var block in blockChunk.Blocks)
             {
+                //Test if block is clip and collect the needed metadata
                 bool isSecondaryTerrain;
 
                 if(block.BlockName.Equals(ClipBlock))
@@ -67,33 +68,49 @@ namespace _1toOne_Converter.src.conversion
                 else
                     continue; //Block is not a Clip, check next block.
 
-                bool isGround = (block.Flags.Value & 0x1000) != 0;
+                uint groundFlag = block.Flags.Value & 0x1000;
+                bool isGround = groundFlag != 0;
 
                 //Block is Clip
                 //Get all clips in this position
-                var clips = clipList[block.Coords.X, block.Coords.Y, block.Coords.Z];
-                if (clips != null)
+                var positionedClips = clipList[block.Coords.X, block.Coords.Y, block.Coords.Z];
+                if (positionedClips != null)
                 {
                     var placedClips = new bool[4];
 
-                    foreach (var (clipItemInfo, rot) in clips)
+                    //Get Clips by rotation
+                    var rotatedClips = from clip in positionedClips
+                                       group clip.clipItemInfo by clip.rot into g
+                                       select g;
+
+                    foreach(var rotation in rotatedClips)
                     {
-                        uint flags = isGround switch
+                        var rot = rotation.Key;
+                        var neighbourCoords = Clip.GetCoordsFacing(block.Coords.Value, rot);
+
+                        var neighbourClips = clipList[neighbourCoords.x, neighbourCoords.y, neighbourCoords.z];
+
+                        foreach(var clipItemInfo in rotation)
                         {
-                            true => 0x1000,
-                            false => 0
-                        };
+                            if(neighbourClips != null && neighbourClips.Exists(x => x.rot == (rot + 2) % 4 && x.clipItemInfo.Clip == clipItemInfo.Clip))
+                            {
+                                //clip is connected, try next clip
+                                continue;
+                            }
 
-                        var clipItem = clipItemInfo.GetItemInfo(new Identifier(null, flags, isSecondaryTerrain, null));
-                        clipItem.PlaceAt(file, block.Coords.Value, rot, itemChunk, Collection, DefaultAuthor.Content);
+                            //clip is unconnected, items must be placed
+                            var clipItem = clipItemInfo.GetItemInfo(new Identifier(null, groundFlag, isSecondaryTerrain, null));
+                            clipItem.PlaceAt(file, block.Coords.Value, rot, itemChunk, Collection, DefaultAuthor.Content);
 
-                        placedClips[rot] = true;
+                            placedClips[rot] = true;
 
-                        itemCount++;
+                            itemCount++;
+                        }
                     }
 
                     if(isGround)
                     {
+                        //Place filler items
                         for (byte rot = 0; rot < 4; rot++)
                         {
                             if (!placedClips[rot])
