@@ -194,7 +194,7 @@ namespace _1toOne_Converter.src
 
 #if DEBUG
                 //Optional Tasks
-                CreateLog(converter.file, filePath);
+                //CreateLog(converter.file, filePath);
                 //PropagateClips(converter.file);
 #endif
 
