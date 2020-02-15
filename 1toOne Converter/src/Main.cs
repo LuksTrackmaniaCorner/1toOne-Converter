@@ -70,7 +70,7 @@ namespace _1toOne_Converter.src
 
         public static void ConvertMaps(string[] args)
         {
-            string DefaultXmlFilePath = FileHelper.ProgramPath + @"\Default.xml";
+            string DefaultXmlFilePath = @"Default.xml";
 
             string xmlFile = null;
             var gbxFiles = new List<string>();
@@ -101,7 +101,11 @@ namespace _1toOne_Converter.src
             }
 
             //Setting to default conversion if nothing has been specified.
-            xmlFile ??= DefaultXmlFilePath;
+            if(xmlFile == null)
+            {
+                Directory.SetCurrentDirectory(FileHelper.ProgramPath);
+                xmlFile = DefaultXmlFilePath;
+            }
 
             //Getting the files manually, if no command line arguments have been found.
             if (gbxFiles.Count == 0)
@@ -225,10 +229,10 @@ namespace _1toOne_Converter.src
             {
                 errorMessage = "Map Error: Your map uses an unsupported oversized base, converting not possible";
             }
-            //catch(IOException)
-            //{
-            //    errorMessage = "File Error: Could not open/store file, usually because a file with this name already exists. Delete the existing file or change the OverwriteExistingFiles setting in Settings.xml";
-            //}
+            catch(IOException)
+            {
+                errorMessage = "File Error: Could not open/store file, usually because a file with this name already exists. Delete the existing file or change the OverwriteExistingFiles setting in Settings.xml";
+            }
 #if !DEBUG
             catch(Exception e)
             {
