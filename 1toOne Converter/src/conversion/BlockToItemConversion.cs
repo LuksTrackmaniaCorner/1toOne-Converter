@@ -156,12 +156,12 @@ namespace _1toOne_Converter.src.conversion
                         //Find the cell where the item should be placed.
                         var blockRot = block.Rot.Value;
                         var adjustedRot = (byte)((blockRot + itemInfo.RotOffset) % 4);
-                        var adjustedBlockCoords = ItemInfo.ApplyBlockOffset(block, itemInfo.BlockSize, itemInfo.Offset);
+                        var adjustedBlockCoords = itemInfo.ApplyBlockOffset(blockRot, block.Coords.Value);
 
                         //Place a referenve to the BlockData-Object and the position of the item
                         //At all cells where the block is.
                         (byte x, byte z) blockDimensions;
-                        if (block.Rot.Value % 2 == 0)
+                        if (blockRot % 2 == 0)
                             blockDimensions = itemInfo.BlockSize;
                         else
                             blockDimensions = (itemInfo.BlockSize.z, itemInfo.BlockSize.x);

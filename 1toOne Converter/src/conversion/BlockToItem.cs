@@ -27,9 +27,9 @@ namespace _1toOne_Converter.src.conversion
         [XmlAttribute]
         public byte RotOffset { get; set; }
         [XmlAttribute]
-        public byte XOffset { get; set; }
+        public sbyte XOffset { get; set; }
         [XmlAttribute]
-        public byte ZOffset { get; set; }
+        public sbyte ZOffset { get; set; }
 
         internal List<BlockToItem> childrenList;
 
@@ -374,14 +374,14 @@ namespace _1toOne_Converter.src.conversion
         internal string ItemName;
         internal string ItemAuthor;
         internal byte RotOffset;
-        internal (byte x, sbyte y, byte z) Offset;
+        internal (sbyte x, sbyte y, sbyte z) Offset;
         internal (byte x, byte z) BlockSize;
 
         internal List<Flag> Flags;
         internal List<Clip> Clips;
         internal List<Pylon> Pylons;
 
-        public ItemInfo(string itemName, string itemAuthor, byte rotOffset, (byte x, sbyte y, byte z) offset)
+        public ItemInfo(string itemName, string itemAuthor, byte rotOffset, (sbyte x, sbyte y, sbyte z) offset)
         {
             ItemName = itemName;
             ItemAuthor = itemAuthor;
@@ -403,10 +403,20 @@ namespace _1toOne_Converter.src.conversion
         internal void PlaceRelToBlock(GBXFile file, Block reference, Challenge03043040 itemChunk, GBXLBS collection, string defaultAuthor)
         {
             var blockRot = reference.Rot.Value;
-            var adjustedRot = (byte)((blockRot + RotOffset) % 4);
-            var adjustedCoords = ApplyBlockOffset(reference, BlockSize, Offset);
+            var adjustedCoords = ApplyBlockOffset(blockRot, reference.Coords.Value);
+            PlaceWithOffset(file, adjustedCoords, blockRot, itemChunk, collection, defaultAuthor);
+        }
 
-            PlaceAt(file, adjustedCoords, adjustedRot, itemChunk, collection, defaultAuthor);
+        internal void PlaceWithOffset(GBXFile file, (byte x, byte y, byte z) coords, byte rot, Challenge03043040 itemChunk, GBXLBS collection, string defaultAuthor)
+        {
+            var adjustedCoords = ApplyOffset(rot, coords);
+            PlaceWithRotOffset(file, adjustedCoords, rot, itemChunk, collection, defaultAuthor);
+        }
+
+        internal void PlaceWithRotOffset(GBXFile file, (byte x, byte y, byte z) coords, byte rot, Challenge03043040 itemChunk, GBXLBS collection, string defaultAuthor)
+        {
+            var adjustedRot = (byte)((rot + RotOffset) % 4);
+            PlaceAt(file, coords, adjustedRot, itemChunk, collection, defaultAuthor);
         }
 
         internal void PlaceAt(GBXFile file, (byte x, byte y, byte z) coords, byte rot, Challenge03043040 itemChunk, GBXLBS collection, string defaultAuthor)
@@ -427,33 +437,62 @@ namespace _1toOne_Converter.src.conversion
             file.AddPylons(Pylons, coords.x, coords.y, coords.z, rot);
         }
 
-        internal static (byte x, byte y, byte z) ApplyBlockOffset(Block block, (byte x, byte z) blockSize, (byte x, sbyte y, byte z) offset)
+        internal (byte x, byte y, byte z) ApplyBlockOffset(byte rot, (byte x, byte y, byte z) coords)
         {
             int xOffset;
             int zOffset;
 
-            switch (block.Rot.Value)
+            switch (rot)
             {
                 case 0:
-                    xOffset = offset.x;
-                    zOffset = offset.z;
+                    xOffset = 0;
+                    zOffset = 0;
                     break;
                 case 1:
-                    xOffset = -offset.z + blockSize.z - 1;
-                    zOffset = offset.x;
+                    xOffset = BlockSize.z - 1;
+                    zOffset = 0;
                     break;
                 case 2:
-                    xOffset = -offset.x + blockSize.x - 1;
-                    zOffset = -offset.z + blockSize.z - 1;
+                    xOffset = BlockSize.x - 1;
+                    zOffset = BlockSize.z - 1;
                     break;
                 case 3:
-                    xOffset = offset.z;
-                    zOffset = -offset.x + blockSize.x - 1;
+                    xOffset = 0;
+                    zOffset = BlockSize.x - 1;
                     break;
                 default: throw new InternalException();
             }
 
-            return ((byte)(block.Coords.X + xOffset), (byte)(block.Coords.Y + offset.y), (byte)(block.Coords.Z + zOffset));
+            return ((byte)(coords.x + xOffset), (byte)(coords.y), (byte)(coords.z + zOffset));
+        }
+
+        internal (byte x, byte y, byte z) ApplyOffset(byte rot, (byte x, byte y, byte z) coords)
+        {
+            int xOffset;
+            int zOffset;
+
+            switch (rot)
+            {
+                case 0:
+                    xOffset = Offset.x;
+                    zOffset = Offset.z;
+                    break;
+                case 1:
+                    xOffset = -Offset.z;
+                    zOffset = Offset.x;
+                    break;
+                case 2:
+                    xOffset = -Offset.x;
+                    zOffset = -Offset.z;
+                    break;
+                case 3:
+                    xOffset = Offset.z;
+                    zOffset = -Offset.x;
+                    break;
+                default: throw new InternalException();
+            }
+
+            return ((byte)(coords.x + xOffset), (byte)(coords.y + Offset.y), (byte)(coords.z + zOffset));
         }
     }
 

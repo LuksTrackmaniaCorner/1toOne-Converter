@@ -99,8 +99,14 @@ namespace _1toOne_Converter.src.conversion
                             }
 
                             //clip is unconnected, items must be placed
+
+                            if(clipItemInfo.Clip.Contains("SpeedRiverRoad"))
+                            {
+
+                            }
+
                             var clipItem = clipItemInfo.GetItemInfo(new Identifier(null, groundFlag, isSecondaryTerrain, null));
-                            clipItem.PlaceAt(file, block.Coords.Value, rot, itemChunk, Collection, DefaultAuthor.Content);
+                            clipItem.PlaceWithOffset(file, block.Coords.Value, rot, itemChunk, Collection, DefaultAuthor.Content);
 
                             placedClips[rot] = true;
 
