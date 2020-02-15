@@ -19,10 +19,10 @@ namespace _1toOne_Converter.src.conversion
         public GBXLBS Collection;
         public GBXLBS DefaultAuthor;
 
-        [XmlElement]
-        public GBXLBS ClipBlock;
-        [XmlElement(IsNullable = false)]
-        public GBXLBS SecondaryTerrainClipBlock;
+        [XmlElement(ElementName = "ClipBlock")]
+        public GBXLBS[] ClipBlocks;
+        [XmlElement(IsNullable = false, ElementName = "SecondaryTerrainClipBlock")]
+        public GBXLBS[] SecondaryTerrainClipBlocks;
         [XmlElement(IsNullable = false)]
         public ItemData ClipFiller;
 
@@ -72,9 +72,9 @@ namespace _1toOne_Converter.src.conversion
                 //Test if block is clip and collect the needed metadata
                 bool isSecondaryTerrain;
 
-                if (block.BlockName.Equals(ClipBlock))
+                if (ClipBlocks.Any(x => x.Equals(block.BlockName)))
                     isSecondaryTerrain = false;
-                else if (SecondaryTerrainClipBlock != null && block.BlockName.Equals(SecondaryTerrainClipBlock))
+                else if (SecondaryTerrainClipBlocks.Any(x => x.Equals(block.BlockName)))
                     isSecondaryTerrain = true;
                 else
                     continue; //Block is not a Clip, check next block.
