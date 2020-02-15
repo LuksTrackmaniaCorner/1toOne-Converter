@@ -41,12 +41,23 @@ namespace _1toOne_Converter.src.conversion
             var blockChunk = (Challenge0304301F)file.GetChunk(Chunk.challenge0304301FKey);
             var itemChunk = (Challenge03043040)file.GetChunk(Chunk.challenge03043040Key);
 
+            itemCount = PlaceClips(file, itemCount, blockChunk, itemChunk);
+            //itemCount = PlaceClipsForced(file, itemCount, itemChunk);
+
+            if (ItemCountStatistic != null)
+            {
+                file.AddStatistic(ItemCountStatistic.Name, itemCount);
+            }
+        }
+
+        private int PlaceClips(GBXFile file, int itemCount, Challenge0304301F blockChunk, Challenge03043040 itemChunk)
+        {
             var clipList = new List<(ClipData clipItemInfo, byte rot)>[GBXFile.MaxMapXSize, GBXFile.MaxMapYSize, GBXFile.MaxMapZSize];
 
-            foreach(var clipItemInfo in ClipItemInfos)
+            foreach (var clipItemInfo in ClipItemInfos)
             {
                 var clips = file.GetClips(clipItemInfo.Clip);
-                if(clips != null)
+                if (clips != null)
                 {
                     foreach (var clip in clips)
                     {
@@ -61,9 +72,9 @@ namespace _1toOne_Converter.src.conversion
                 //Test if block is clip and collect the needed metadata
                 bool isSecondaryTerrain;
 
-                if(block.BlockName.Equals(ClipBlock))
+                if (block.BlockName.Equals(ClipBlock))
                     isSecondaryTerrain = false;
-                else if(SecondaryTerrainClipBlock != null && block.BlockName.Equals(SecondaryTerrainClipBlock))
+                else if (SecondaryTerrainClipBlock != null && block.BlockName.Equals(SecondaryTerrainClipBlock))
                     isSecondaryTerrain = true;
                 else
                     continue; //Block is not a Clip, check next block.
@@ -83,28 +94,22 @@ namespace _1toOne_Converter.src.conversion
                                        group clip.clipItemInfo by clip.rot into g
                                        select g;
 
-                    foreach(var rotation in rotatedClips)
+                    foreach (var rotation in rotatedClips)
                     {
                         var rot = rotation.Key;
                         var neighbourCoords = Clip.GetCoordsFacing(block.Coords.Value, rot);
 
                         var neighbourClips = clipList[neighbourCoords.x, neighbourCoords.y, neighbourCoords.z];
 
-                        foreach(var clipItemInfo in rotation)
+                        foreach (var clipItemInfo in rotation)
                         {
-                            if(neighbourClips != null && neighbourClips.Exists(x => x.rot == (rot + 2) % 4 && x.clipItemInfo.Clip == clipItemInfo.Clip))
+                            if (neighbourClips != null && neighbourClips.Exists(x => x.rot == (rot + 2) % 4 && x.clipItemInfo.Clip == clipItemInfo.Clip))
                             {
                                 //clip is connected, try next clip
                                 continue;
                             }
 
                             //clip is unconnected, items must be placed
-
-                            if(clipItemInfo.Clip.Contains("SpeedRiverRoad"))
-                            {
-
-                            }
-
                             var clipItem = clipItemInfo.GetItemInfo(new Identifier(null, groundFlag, isSecondaryTerrain, null));
                             clipItem.PlaceWithOffset(file, block.Coords.Value, rot, itemChunk, Collection, DefaultAuthor.Content);
 
@@ -114,7 +119,7 @@ namespace _1toOne_Converter.src.conversion
                         }
                     }
 
-                    if(isGround)
+                    if (isGround)
                     {
                         //Place filler items
                         for (byte rot = 0; rot < 4; rot++)
@@ -133,10 +138,28 @@ namespace _1toOne_Converter.src.conversion
                 }
             }
 
-            if(ItemCountStatistic != null)
+            return itemCount;
+        }
+
+        private int PlaceClipsForced(GBXFile file, int itemCount, Challenge03043040 itemChunk)
+        {
+            foreach (var clipItemInfo in ClipItemInfos)
             {
-                file.AddStatistic(ItemCountStatistic.Name, itemCount);
+                var clips = file.GetClips(clipItemInfo.Clip);
+                if (clips != null)
+                {
+                    foreach (var clip in clips)
+                    {
+                        //TODO support the different clip types
+                        var clipItem = clipItemInfo.GetItemInfo(new Identifier(null, 0, false, null));
+                        clipItem.PlaceWithOffset(file, ((byte)clip.X, (byte)clip.Y, (byte)clip.Z), clip.Rot, itemChunk, Collection, DefaultAuthor.Content);
+
+                        itemCount++;
+                    }
+                }
             }
+
+            return itemCount;
         }
     }
 
