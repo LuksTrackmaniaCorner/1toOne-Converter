@@ -22,7 +22,9 @@ namespace _1toOne_Converter.src.conversion
             commonChunk.TitleUID = (GBXLBS) TitleUID.DeepClone();
 
             var communityChunk = (ChallengeCommunity)file.GetChunk(Chunk.challengeCommunityKey);
-            communityChunk.CommunityXml.Xml.Title = TitleUID.Content;
+
+            if(communityChunk != null)
+                communityChunk.CommunityXml.Xml.Title = TitleUID.Content;
 
             var titlepackChunk = (Challenge03043051)file.GetChunk(Chunk.challenge03043051Key);
 
