@@ -195,6 +195,7 @@ namespace _1toOne_Converter.src.gbx.core.primitives
             if (_storedStringsWrite == null) //First Lookbackstring encountered, need to write version
             {
                 _storedStringsWrite = new List<GBXString>();
+                _versionHasBeenRead = true;
             }
         }
     }

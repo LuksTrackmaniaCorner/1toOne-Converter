@@ -225,10 +225,10 @@ namespace _1toOne_Converter.src
             {
                 errorMessage = "Map Error: Your map uses an unsupported oversized base, converting not possible";
             }
-            catch(IOException)
-            {
-                errorMessage = "File Error: Could not open/store file, usually because a file with this name already exists. Delete the existing file or change the OverwriteExistingFiles setting in Settings.xml";
-            }
+            //catch(IOException)
+            //{
+            //    errorMessage = "File Error: Could not open/store file, usually because a file with this name already exists. Delete the existing file or change the OverwriteExistingFiles setting in Settings.xml";
+            //}
 #if !DEBUG
             catch(Exception e)
             {

@@ -19,9 +19,9 @@ namespace _1toOne_Converter.src.gbx.chunks
         public Challenge03043051(Stream s, GBXLBSContext c) : base(c, null)
         {
             AlwaysZero = new GBXUInt(s);
-            TitlePack = new GBXLBS(c);
-            Version = new GBXString(s);
             this.LBSContext.SkipVersion();
+            TitlePack = c.ReadLookBackString(s);
+            Version = new GBXString(s);
         }
 
         public Challenge03043051(bool dummy) : base(null, null)
