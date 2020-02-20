@@ -83,6 +83,7 @@
     <Compile Include="src\conversion\BlockToBlockConversion.cs" />
     <Compile Include="src\conversion\BlockToItem.cs" />
     <Compile Include="src\conversion\GridDefineConversion.cs" />
+    <Compile Include="src\conversion\MultiBlockAddConversion.cs" />
     <Compile Include="src\conversion\SwitchConversion.cs" />
     <Compile Include="src\gbx\chunks\challenge\Challenge03043011.cs" />
     <Compile Include="src\gbx\chunks\challenge\Challenge03043051.cs" />

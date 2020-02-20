@@ -20,6 +20,7 @@ namespace _1toOne_Converter.src.conversion
     [XmlInclude(typeof(GroundItemAddConversion))]
     [XmlInclude(typeof(ItemAddConversion))]
     [XmlInclude(typeof(ItemClipAddConversion))]
+    [XmlInclude(typeof(MultiBlockAddConversion))]
     [XmlInclude(typeof(PylonAddConversion))]
     [XmlInclude(typeof(TerrainMappingConversion))]
     [XmlInclude(typeof(TitleConversion))]
