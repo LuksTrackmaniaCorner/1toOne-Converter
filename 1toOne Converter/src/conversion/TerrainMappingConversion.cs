@@ -9,170 +9,156 @@ using _1toOne_Converter.src.gbx;
 using _1toOne_Converter.src.gbx.chunks;
 using _1toOne_Converter.src.gbx.core;
 using _1toOne_Converter.src.gbx.core.chunks;
+using _1toOne_Converter.src.gbx.core.primitives;
 using _1toOne_Converter.src.util;
 
 namespace _1toOne_Converter.src.conversion
 {
     public class TerrainMappingConversion : Conversion
     {
-        [XmlElement(IsNullable = false, ElementName = "Mapping")]
-        public Mapping[] Mappings;
+        public FlagName HeightFlag;
+        public FlagName SecondaryTerrainFlag;
+        public GBXByte BaseHeight;
 
-        private readonly Dictionary<TerrainBlock, (int mappingNr, TerrainType type)> _dict;
+        [XmlElement(IsNullable = false, ElementName = "Terrain")]
+        public Terrain[] Terrains;
+
+        private readonly Dictionary<TerrainBlock, (Terrain terrain, TerrainType type)> _dict;
 
         public TerrainMappingConversion()
         {
-            _dict = new Dictionary<TerrainBlock, (int mappingNr, TerrainType type)>();
+            _dict = new Dictionary<TerrainBlock, (Terrain terrain, TerrainType type)>();
         }
 
         public override void Convert(GBXFile file)
         {
-            var blockChunk = (Challenge0304301F)file.GetChunk(Chunk.challenge0304301FKey);
-
-            var terrains = new TerrainType[Mappings.Length][,];
-
-            //Building terrain map.
-            var terrainblock = new TerrainBlock();
-            foreach (var block in blockChunk.Blocks)
-            {
-                terrainblock.BlockName = block.BlockName.Content;
-                terrainblock.Variant = (byte)(block.Flags.Value & 0x3F);
-
-                if(!_dict.ContainsKey(terrainblock))
-                    continue; //Block not relevant for any mapping
-
-                var (mappingNr, type) = _dict[terrainblock];
-                terrains[mappingNr] ??= new TerrainType[GBXFile.MaxMapXSize, GBXFile.MaxMapZSize];
-                terrains[mappingNr][block.Coords.X, block.Coords.Z] = type;
-            }
-
-            //Mapping every mapping
-            for(int i = 0; i < Mappings.Length; i++)
-            {
-                if (terrains[i] == null)
-                    continue; //No mapping needed
-
-                CreateMap(file, terrains[i], Mappings[i].Flag);
-            }
-        }
-
-        private void CreateMap(GBXFile file, TerrainType[,] terrain, FlagName activeFlag)
-        {
-            for (byte row = 0; row < terrain.GetLength(1); row++)
-            {
-                IState state = new PrimaryState();
-
-                for (byte column = 0; column < terrain.GetLength(0); column++)
-                {
-                    if (state.IsActiveState(terrain[row, column], ref state))
-                    {
-                        file.SetFlag(new Flag(activeFlag, row, column));
-                        //Console.WriteLine("Terrain at {row}, {column}");
-                    }
-                }
-
-                Trace.Assert(state is PrimaryState, "Error reading terrain");
-            }
+            var mapper = new Mapper(file, this);
+            mapper.CalculateHeightMap(this);
         }
 
         internal override void Initialize()
         {
-            for(int i = 0; i < Mappings.Length; i++)
+            foreach(var terrain in Terrains)
             {
-                var mapping = Mappings[i];
-
-                foreach(var convexBlock in mapping.ConvexBlocks)
+                foreach(var convexBlock in terrain.ConvexBlocks)
                 {
-                    _dict.Add(convexBlock, (i, TerrainType.Convex));
+                    _dict.Add(convexBlock, (terrain, TerrainType.Convex));
                 }
 
-                foreach (var wallBlock in mapping.WallBlocks)
+                foreach (var wallBlock in terrain.WallBlocks)
                 {
-                    _dict.Add(wallBlock, (i, TerrainType.Wall));
+                    _dict.Add(wallBlock, (terrain, TerrainType.Wall));
                 }
 
-                foreach (var concaveBlock in mapping.ConcaveBlocks)
+                foreach (var concaveBlock in terrain.ConcaveBlocks)
                 {
-                    _dict.Add(concaveBlock, (i, TerrainType.Concave));
+                    _dict.Add(concaveBlock, (terrain, TerrainType.Concave));
+                }
+            }
+        }
+
+        internal class Mapper
+        {
+            private readonly GBXFile _file;
+            private readonly ((Terrain terrain, byte height) block, TerrainType type)[,] _map;
+
+            internal Mapper(GBXFile file, TerrainMappingConversion conversion)
+            {
+                _file = file;
+                _map = new ((Terrain, byte), TerrainType)[GBXFile.MaxMapXSize, GBXFile.MaxMapZSize];
+
+                var blockChunk = (Challenge0304301F)file.GetChunk(Chunk.challenge0304301FKey);
+                var dict = conversion._dict;
+
+                var terrainblock = new TerrainBlock();
+                foreach (var block in blockChunk.Blocks)
+                {
+                    terrainblock.BlockName = block.BlockName.Content;
+                    terrainblock.Variant = (byte)(block.Flags.Value & 0x3F);
+
+                    if (!dict.ContainsKey(terrainblock))
+                        continue; //Block not relevant for any mapping
+
+                    var temp = dict[terrainblock];
+                    _map[block.Coords.X, block.Coords.Z] = ((temp.terrain, block.Coords.Y), temp.type);
+                }
+            }
+
+            internal void CalculateHeightMap(TerrainMappingConversion conversion)
+            {
+                var baseHeight = conversion.BaseHeight.Value;
+
+                for (byte row = 0; row < _map.GetLength(1); row++)
+                {
+                    for (byte column = 0; column < _map.GetLength(0); column++)
+                    {
+                        while (_map[row, column].block.terrain != null)
+                            CalculateHeightMap(conversion, baseHeight, row, ref column);
+
+                        _file.SetFlag(new Flag(conversion.HeightFlag.Name, row, (byte) baseHeight, column));
+
+                        Trace.Assert(column < _map.GetLength(0));
+                    }
+                }
+            }
+
+            private void CalculateHeightMap(TerrainMappingConversion conversion, int oldHeight, byte row, ref byte column)
+            {
+                IState state = PrimaryState.Instance;
+                var (currentBlock, type) = _map[row, column];
+                //The type of terrain handled in this call of the function
+                var block = currentBlock;
+                var terrain = block.terrain;
+                var secondaryTerrain = terrain.SecondaryTerrain;
+                var newHeight = oldHeight + terrain.Height;
+                var includeEdges = terrain.Height < 0;
+
+                while (true)
+                {
+                    //Field belongs to the terrain.
+                    //Console.WriteLine($"{height} at {row}, {column}");
+                    //Set Secondary Terrain
+                    if (secondaryTerrain)
+                        _file.SetFlag(new Flag(conversion.SecondaryTerrainFlag, row, column));
+                    //Set Height
+                    int thisHeight;
+                    if (includeEdges || state.IsActive == true)
+                        thisHeight = newHeight;
+                    else
+                        thisHeight = oldHeight;
+                    
+                    _file.SetFlag(new Flag(conversion.HeightFlag.Name, row, (byte) thisHeight, column));
+
+                    //Move to next field
+                    column++;
+                    state = state.GetNext(type);
+
+                    if (state.IsActive == false)
+                        break;
+                    
+                    //Terrain not over
+                    (currentBlock, type) = _map[row, column];
+
+                    //Handle Terrain placed over this terrain, recursively
+                    while (state.IsActive == true && currentBlock.terrain != null && currentBlock != block)
+                    {
+                        CalculateHeightMap(conversion, newHeight, row, ref column);
+                        (currentBlock, type) = _map[row, column];
+                    }
                 }
             }
         }
     }
 
-    public class Mapping
+    public class Terrain
     {
         public TerrainBlock[] ConvexBlocks;
         public TerrainBlock[] WallBlocks;
         public TerrainBlock[] ConcaveBlocks;
-        public FlagName Flag;
-    }
-
-    internal interface IState
-    {
-        bool IsActiveState(TerrainType type, ref IState successorState);
-    }
-
-    internal class PrimaryState : IState
-    {
-        public bool IsActiveState(TerrainType type, ref IState successorState)
-        {
-            switch (type)
-            {
-                case TerrainType.Standard:
-                    return false;
-                case TerrainType.Convex:
-                    successorState = new BorderState();
-                    return false;
-                case TerrainType.Wall:
-                    successorState = new SecondaryState();
-                    return false;
-                case TerrainType.Concave:
-                    throw new Exception("Illegal Terrain");
-            }
-            return false;
-        }
-    }
-
-    internal class SecondaryState : IState
-    {
-        public bool IsActiveState(TerrainType type, ref IState successorState)
-        {
-            switch (type)
-            {
-                case TerrainType.Standard:
-                    return true;
-                case TerrainType.Convex:
-                    throw new Exception("Illegal Terrain");
-                case TerrainType.Wall:
-                    successorState = new PrimaryState();
-                    return false;
-                case TerrainType.Concave:
-                    successorState = new BorderState();
-                    return false;
-            }
-            return false;
-        }
-    }
-
-    internal class BorderState : IState
-    {
-        public bool IsActiveState(TerrainType type, ref IState successorState)
-        {
-            switch (type)
-            {
-                case TerrainType.Standard:
-                    throw new Exception("Illegal Terrain");
-                case TerrainType.Convex:
-                    successorState = new PrimaryState();
-                    return false;
-                case TerrainType.Wall:
-                    return false;
-                case TerrainType.Concave:
-                    successorState = new SecondaryState();
-                    return false;
-            }
-            return false;
-        }
+        [XmlAttribute]
+        public int Height;
+        [XmlAttribute]
+        public bool SecondaryTerrain; //TODO
     }
 
     public class TerrainBlock : IEquatable<TerrainBlock>
@@ -209,5 +195,71 @@ namespace _1toOne_Converter.src.conversion
         Convex,
         Wall,
         Concave
+    }
+
+    internal interface IState
+    {
+        IState GetNext(TerrainType terrainType);
+        bool? IsActive { get; }
+    }
+
+    internal class PrimaryState : IState
+    {
+        public static PrimaryState Instance { get; } = new PrimaryState();
+
+        public bool? IsActive => false;
+
+        private PrimaryState() { }
+
+        public IState GetNext(TerrainType terrainType)
+        {
+            return terrainType switch
+            {
+                TerrainType.Standard => PrimaryState.Instance,
+                TerrainType.Convex => BorderState.Instance,
+                TerrainType.Wall => SecondaryState.Instance,
+                _ => throw new Exception("Illegal Terrain"),
+            };
+        }
+    }
+
+    internal class SecondaryState : IState
+    {
+        public static SecondaryState Instance { get; } = new SecondaryState();
+
+        public bool? IsActive => true;
+
+        private SecondaryState() { }
+
+        public IState GetNext(TerrainType type)
+        {
+            return type switch
+            {
+                TerrainType.Standard => SecondaryState.Instance,
+                TerrainType.Wall => PrimaryState.Instance,
+                TerrainType.Concave => BorderState.Instance,
+                _ => throw new Exception("Illegal Terrain"),
+            };
+        }
+    }
+
+    internal class BorderState : IState
+    {
+        public static BorderState Instance { get; } = new BorderState();
+
+        public bool? IsActive => null;
+
+        private BorderState() { }
+
+        public IState GetNext(TerrainType type)
+        {
+            return type switch
+            {
+                TerrainType.Convex => PrimaryState.Instance,
+                TerrainType.Wall => BorderState.Instance,
+                TerrainType.Concave => SecondaryState.Instance,
+                _ => throw new Exception("Illegal Terrain"),
+            };
+        }
     }
 }

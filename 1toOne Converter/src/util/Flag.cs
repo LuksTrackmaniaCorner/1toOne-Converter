@@ -28,7 +28,15 @@ namespace _1toOne_Converter.src.util
         {
             Name = flagname.Name;
             X = x;
-            Y = flagname.Value;
+            Y = 1;
+            Z = z;
+        }
+
+        public Flag(string name, short x, byte y, short z)
+        {
+            Name = name;
+            X = x;
+            Y = y;
             Z = z;
         }
 
@@ -68,20 +76,11 @@ namespace _1toOne_Converter.src.util
         [XmlAttribute]
         public string Name;
 
-        [XmlAttribute]
-        public byte Value;
-
-        public FlagName()
-        {
-            Value = 1;
-        }
+        public FlagName() { }
 
         public FlagName(string name)
         {
             Name = name;
-            Value = 1;
         }
-
-        public bool ShouldSerializeValue() => Value > 1;
     }
 }

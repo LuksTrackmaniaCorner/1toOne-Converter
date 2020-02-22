@@ -17,7 +17,6 @@ namespace _1toOne_Converter.src.conversion
     {
         public GBXLBS Collection;
         public GBXLBS DefaultAuthor;
-        public GBXByte Height;
 
         [XmlElement(ElementName = "BlockIgnoreFlag")]
         public FlagName[] BlockIgnoreFlags;
@@ -70,7 +69,7 @@ namespace _1toOne_Converter.src.conversion
 
                     //Creating the item chunk
                     var itemInfo = GroundItem.GetItemInfo(new Identifier(null, 0, false, null));
-                    itemInfo.PlaceAt(file, (x, (byte)(Height.Value + height), z), 0, itemChunk, Collection, DefaultAuthor.Content);
+                    itemInfo.PlaceAt(file, (x, height, z), 0, itemChunk, Collection, DefaultAuthor.Content);
                 }
             }
         }

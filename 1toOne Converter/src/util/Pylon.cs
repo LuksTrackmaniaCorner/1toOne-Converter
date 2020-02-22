@@ -153,7 +153,8 @@ namespace _1toOne_Converter.src.util
         None = 0,
         Prevent = 1,
         Top = 2,
-        Bottom = 3
+        Bottom = 3,
+        Forced = 4 //For the Speed Signs
     }
 
     public enum PylonPosition : byte

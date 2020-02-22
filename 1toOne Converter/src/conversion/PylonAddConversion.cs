@@ -15,15 +15,14 @@ namespace _1toOne_Converter.src.conversion
 {
     public class PylonAddConversion : Conversion
     {
-        public GBXVec3 GridSize;
-        public GBXVec3 GridOffset;
-
         public GBXLBS Collection;
         public GBXLBS DefaultAuthor;
 
         public GBXLBS SinglePylon; //Left One
         public GBXLBS DoublePylon;
+        public GBXLBS ForcedPylon;
 
+        public FlagName HeightFlag;
         public FlagName ItemCountStatistic;
 
         public override void Convert(GBXFile file)
@@ -33,6 +32,11 @@ namespace _1toOne_Converter.src.conversion
             var itemChunk = (Challenge03043040)file.GetChunk(Chunk.challenge03043040Key);
 
             var pylonMap = new SortedSet<Pylon>[GBXFile.MaxMapXSize + 1, GBXFile.MaxMapZSize + 1, 2];
+
+            foreach(var pylon in file.GetPylons(PylonType.Forced))
+            {
+                itemCount += PlaceForced(file, pylon, itemChunk);
+            }
 
             foreach (var pylon in file.GetPylons(PylonType.Top))
             {
@@ -102,6 +106,17 @@ namespace _1toOne_Converter.src.conversion
             {
                 file.AddStatistic(ItemCountStatistic.Name, itemCount);
             }
+        }
+
+        private int PlaceForced(GBXFile file, Pylon pylon, Challenge03043040 itemChunk)
+        {
+
+            var coords = ((byte) pylon.X, (byte) pylon.Z);
+            var (x, z) = coords;
+            var top = (byte) pylon.Y;
+            var bottom = file.GetFlag(HeightFlag.Name, x, z);
+
+            return PlaceForcedPylons(file, coords, (top, bottom), pylon.Rot, PylonPosition.Both, itemChunk);
         }
 
         public int PlaceBoth(GBXFile file, Pylon bottom, byte? topLeft, byte? topRight, Challenge03043040 itemChunk)
@@ -178,6 +193,24 @@ namespace _1toOne_Converter.src.conversion
                     ConvertRot(rot, pylonPos),
                     new GBXByte3(((byte)pos.x, (byte)i, (byte)pos.z)),
                     file.ConvertPylonCoords((pos.x, i, pos.z), rot)
+                );
+            }
+
+            return y.top - y.bottom;
+        }
+
+        private int PlaceForcedPylons(GBXFile file, (byte x, byte z) pos, (byte top, byte bottom) y, byte rot, PylonPosition pylonPos, Challenge03043040 itemChunk)
+        {
+            GBXLBS itemName = ForcedPylon;
+
+            for (byte i = y.bottom; i < y.top; i++)
+            {
+                //Place Pylon
+                itemChunk.AddItem(
+                    new Meta((GBXLBS)itemName.DeepClone(), (GBXLBS)Collection.DeepClone(), (GBXLBS)DefaultAuthor.DeepClone()),
+                    ConvertRot(rot, pylonPos),
+                    new GBXByte3(((byte)pos.x, (byte)i, (byte)pos.z)),
+                    file.ConvertCoords((pos.x, i, pos.z)) //Not ConvertPylonCoords
                 );
             }
 
