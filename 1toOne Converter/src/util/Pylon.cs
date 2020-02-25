@@ -37,6 +37,9 @@ namespace _1toOne_Converter.src.util
 
         public Pylon Normalize()
         {
+            if (Type == PylonType.Forced) //No Normalizing allowed
+                return this;
+
             switch(Rot)
             {
                 case 0:

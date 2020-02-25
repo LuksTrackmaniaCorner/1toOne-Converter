@@ -74,7 +74,8 @@ namespace _1toOne_Converter.src.conversion
 
                 if (ClipBlocks.Any(x => x.Equals(block.BlockName)))
                     isSecondaryTerrain = false;
-                else if (SecondaryTerrainClipBlocks.Any(x => x.Equals(block.BlockName)))
+                else if (SecondaryTerrainClipBlocks != null && 
+                        SecondaryTerrainClipBlocks.Any(x => x.Equals(block.BlockName)))
                     isSecondaryTerrain = true;
                 else
                     continue; //Block is not a Clip, check next block.

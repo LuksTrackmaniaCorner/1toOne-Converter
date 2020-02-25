@@ -19,6 +19,8 @@ namespace _1toOne_Converter.src.gbx.chunks
         {
             modRef = new GBXFileRef(s);
             AddChildDeprecated(modRefKey, modRef);
+
+            modRef.Clear(); //TODO better solution to clear the mod
         }
     }
 }

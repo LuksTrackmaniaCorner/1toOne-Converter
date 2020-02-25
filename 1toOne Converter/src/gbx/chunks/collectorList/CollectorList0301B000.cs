@@ -18,7 +18,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
         public CollectorList0301B000(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             archiveCount = new GBXUInt(s);
-            Trace.Assert(archiveCount.Value== 0, "Unsupported Archive count");
+            Trace.Assert(archiveCount.Value == 0, "Unsupported Archive count"); //TODO support more
             AddChildDeprecated(archiveCountKey, archiveCount);
         }
     }

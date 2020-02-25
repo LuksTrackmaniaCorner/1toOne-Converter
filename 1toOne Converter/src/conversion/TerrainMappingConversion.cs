@@ -38,6 +38,9 @@ namespace _1toOne_Converter.src.conversion
 
         internal override void Initialize()
         {
+            if (Terrains == null)
+                Terrains = new Terrain[0];
+
             foreach(var terrain in Terrains)
             {
                 foreach(var convexBlock in terrain.ConvexBlocks)

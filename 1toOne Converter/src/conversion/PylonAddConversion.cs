@@ -31,11 +31,12 @@ namespace _1toOne_Converter.src.conversion
 
             var itemChunk = (Challenge03043040)file.GetChunk(Chunk.challenge03043040Key);
 
-            var pylonMap = new SortedSet<Pylon>[GBXFile.MaxMapXSize + 1, GBXFile.MaxMapZSize + 1, 2];
+            var pylonMap = new SortedSet<Pylon>[GBXFile.MaxMapXSize + 1, GBXFile.MaxMapZSize + 1, 4];
 
             foreach(var pylon in file.GetPylons(PylonType.Forced))
             {
-                itemCount += PlaceForced(file, pylon, itemChunk);
+                var pylonField = pylonMap[pylon.X, pylon.Z, pylon.Rot] ??= new SortedSet<Pylon>(Pylon.GetComparer());
+                pylonField.Add(pylon);
             }
 
             foreach (var pylon in file.GetPylons(PylonType.Top))
@@ -58,47 +59,55 @@ namespace _1toOne_Converter.src.conversion
 
             foreach(var pylonField in pylonMap)
             {
-                if(pylonField != null)
+                if (pylonField == null)
+                    goto nextPylon;
+
+                bool forced = false; //Forced pillar has already been placed
+                byte? topLeft = null, topRight = null;
+
+                foreach(var pylonInfo in pylonField)
                 {
-                    byte? topLeft = null, topRight = null;
-
-                    foreach(var pylonInfo in pylonField)
+                    switch (pylonInfo.Type, pylonInfo.Pos)
                     {
-                        switch (pylonInfo.Type, pylonInfo.Pos)
-                        {
-                            case (PylonType.Prevent, PylonPosition.Both):
-                                topLeft = topRight = null;
-                                break;
-                            case (PylonType.Prevent, PylonPosition.Left):
-                                topLeft = null;
-                                break;
-                            case (PylonType.Prevent, PylonPosition.Right):
-                                topLeft = null;
-                                break;
-                            case (PylonType.Top, PylonPosition.Both):
-                                topLeft ??= (byte)pylonInfo.Y;
-                                topRight ??= (byte)pylonInfo.Y;
-                                break;
-                            case (PylonType.Top, PylonPosition.Left):
-                                topLeft ??= (byte)pylonInfo.Y;
-                                break;
-                            case (PylonType.Top, PylonPosition.Right):
-                                topRight ??= (byte)pylonInfo.Y;
-                                break;
-                            case (PylonType.Bottom, PylonPosition.Both):
-                                itemCount += PlaceBoth(file, pylonInfo, topLeft, topRight, itemChunk);
-                                goto nextPylon;
-                            case (PylonType.Bottom, PylonPosition.Left):
-                                itemCount += PlaceLeft(file, pylonInfo, topLeft, itemChunk);
-                                goto nextPylon;
-                            case (PylonType.Bottom, PylonPosition.Right):
-                                itemCount += PlaceRight(file, pylonInfo, topRight, itemChunk);
-                                goto nextPylon;
-                        }
+                        case (PylonType.Prevent, PylonPosition.Both):
+                            topLeft = topRight = null;
+                            break;
+                        case (PylonType.Prevent, PylonPosition.Left):
+                            topLeft = null;
+                            break;
+                        case (PylonType.Prevent, PylonPosition.Right):
+                            topLeft = null;
+                            break;
+                        case (PylonType.Top, PylonPosition.Both):
+                            topLeft ??= (byte)pylonInfo.Y;
+                            topRight ??= (byte)pylonInfo.Y;
+                            break;
+                        case (PylonType.Top, PylonPosition.Left):
+                            topLeft ??= (byte)pylonInfo.Y;
+                            break;
+                        case (PylonType.Top, PylonPosition.Right):
+                            topRight ??= (byte)pylonInfo.Y;
+                            break;
+                        case (PylonType.Bottom, PylonPosition.Both):
+                            itemCount += PlaceBoth(file, pylonInfo, topLeft, topRight, itemChunk);
+                            goto nextPylon;
+                        case (PylonType.Bottom, PylonPosition.Left):
+                            itemCount += PlaceLeft(file, pylonInfo, topLeft, itemChunk);
+                            goto nextPylon;
+                        case (PylonType.Bottom, PylonPosition.Right):
+                            itemCount += PlaceRight(file, pylonInfo, topRight, itemChunk);
+                            goto nextPylon;
+                        case (PylonType.Forced, _):
+                            if (!forced)
+                            {
+                                itemCount += PlaceForced(file, pylonInfo, itemChunk);
+                                forced = true;
+                            }
+                            break;
                     }
-
-                nextPylon:;
                 }
+
+            nextPylon:;
             }
 
             //add statistic

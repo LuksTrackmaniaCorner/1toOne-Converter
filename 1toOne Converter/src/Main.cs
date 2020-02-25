@@ -27,7 +27,7 @@ namespace _1toOne_Converter.src
         private readonly GBXFile file;
         private Converter(string inputFileName)
         {
-            using var fs = new FileStream(inputFileName, FileMode.Open);
+            using var fs = new FileStream(inputFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
             file = new GBXFile(fs);
         }
 
@@ -189,7 +189,18 @@ namespace _1toOne_Converter.src
                     outputPath = Settings.GetSettings().OutputFolder + fileName;
                 }
 
-                var converter = new Converter(filePath);
+                Converter converter;
+                try
+                {
+                    converter = new Converter(filePath);
+                }
+                catch(IOException e)
+                {
+                    errorMessage += "File Error: Could not open file" +
+                        "Details: " + e.Message;
+                    goto error;
+                }
+                
 
 #if DEBUG
                 //Optional Tasks
@@ -200,8 +211,17 @@ namespace _1toOne_Converter.src
                 conversion.Convert(converter.file);
 
                 var createFileMode = Settings.GetSettings().OverwriteExistingFiles ? FileMode.Create : FileMode.CreateNew;
-                using (var fs = new FileStream(outputPath, createFileMode))
+                try
+                {
+                    using var fs = new FileStream(outputPath, createFileMode);
                     converter.WriteBack(fs);
+                }
+                catch(IOException e)
+                {
+                    errorMessage = "File Error: Could not store file, usually because a file with this name already exists. Delete the existing file or change the OverwriteExistingFiles setting in Settings.xml" + "\n" +
+                        "Details: " + e.Message;
+                    goto error;
+                }
 
                 switch (Settings.GetSettings().DisplayMode)
                 {
@@ -229,10 +249,6 @@ namespace _1toOne_Converter.src
             {
                 errorMessage = "Map Error: Your map uses an unsupported oversized base, converting not possible";
             }
-            catch(IOException)
-            {
-                errorMessage = "File Error: Could not open/store file, usually because a file with this name already exists. Delete the existing file or change the OverwriteExistingFiles setting in Settings.xml";
-            }
 #if !DEBUG
             catch(Exception e)
             {
@@ -240,6 +256,7 @@ namespace _1toOne_Converter.src
             }
 #endif
 
+         error:
             if(errorMessage != null)
             {
                 lock (ConsoleLock)

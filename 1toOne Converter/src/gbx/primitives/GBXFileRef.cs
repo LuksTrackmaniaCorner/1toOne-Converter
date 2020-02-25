@@ -46,5 +46,15 @@ namespace _1toOne_Converter.src.gbx.core.primitives
             result.AddChild(locatorUrlKey, locatorUrl);
             return result;
         }
+
+        public void Clear()
+        {
+            version.Value = 2;
+            checksum = null;
+            filePath.Value = "";
+            locatorUrl = null;
+
+            MarkAsChanged();
+        }
     }
 }

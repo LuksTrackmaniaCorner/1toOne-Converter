@@ -40,7 +40,7 @@ namespace _1toOne_Converter.src.conversion
         {
             T conversion;
             var xmls = new XmlSerializer(typeof(T));
-            using var fs = new FileStream(xmlFile, FileMode.Open);
+            using var fs = new FileStream(xmlFile, FileMode.Open, FileAccess.Read, FileShare.Read);
             conversion = (T)xmls.Deserialize(fs);
             conversion.Initialize();
 
