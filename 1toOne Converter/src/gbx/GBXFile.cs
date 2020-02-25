@@ -266,6 +266,15 @@ namespace _1toOne_Converter.src.gbx
             );
         }
 
+        public GBXVec3 ConvertCoords((byte x, byte y, byte z) coords, float smallYOffset)
+        {
+            return new GBXVec3(
+                coords.x * GridSize.X + GridOffset.X,
+                coords.y * GridSize.Y + GridOffset.Y + smallYOffset,
+                coords.z * GridSize.Z + GridOffset.Z
+            );
+        }
+
         public GBXVec3 ConvertPylonCoords((byte x, byte y, byte z) coords, byte rot)
         {
             return rot switch

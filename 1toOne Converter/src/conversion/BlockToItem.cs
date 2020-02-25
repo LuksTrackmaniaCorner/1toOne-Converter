@@ -30,6 +30,8 @@ namespace _1toOne_Converter.src.conversion
         public sbyte XOffset { get; set; }
         [XmlAttribute]
         public sbyte ZOffset { get; set; }
+        [XmlAttribute]
+        public float SmallYOffset { get; set; }
 
         internal List<BlockToItem> childrenList;
 
@@ -65,7 +67,7 @@ namespace _1toOne_Converter.src.conversion
 
             ItemInfo result = null;
             if (childrenList.Count == 0)
-                result = new ItemInfo(ItemName, ItemAuthor, RotOffset, (XOffset, YOffset, ZOffset));
+                result = new ItemInfo(ItemName, ItemAuthor, RotOffset, (XOffset, YOffset, ZOffset), SmallYOffset);
             else
             {
                 foreach (var child in Children)
@@ -78,6 +80,7 @@ namespace _1toOne_Converter.src.conversion
                         result.Offset.x += XOffset;
                         result.Offset.y += YOffset;
                         result.Offset.z += ZOffset;
+                        result.SmallYOffset += SmallYOffset;
                         break;
                     }
                 }
@@ -375,18 +378,20 @@ namespace _1toOne_Converter.src.conversion
         internal string ItemAuthor;
         internal byte RotOffset;
         internal (sbyte x, sbyte y, sbyte z) Offset;
+        internal float SmallYOffset;
         internal (byte x, byte z) BlockSize;
 
         internal List<Flag> Flags;
         internal List<Clip> Clips;
         internal List<Pylon> Pylons;
 
-        public ItemInfo(string itemName, string itemAuthor, byte rotOffset, (sbyte x, sbyte y, sbyte z) offset)
+        public ItemInfo(string itemName, string itemAuthor, byte rotOffset, (sbyte x, sbyte y, sbyte z) offset, float smallY)
         {
             ItemName = itemName;
             ItemAuthor = itemAuthor;
             RotOffset = rotOffset;
             Offset = offset;
+            SmallYOffset = smallY;
             BlockSize = (1, 1);
 
             Flags = new List<Flag>();
@@ -421,7 +426,7 @@ namespace _1toOne_Converter.src.conversion
 
         internal void PlaceAt(GBXFile file, (byte x, byte y, byte z) coords, byte rot, Challenge03043040 itemChunk, GBXLBS collection, string defaultAuthor)
         {
-            var itemCoords = file.ConvertCoords(coords);
+            var itemCoords = file.ConvertCoords(coords, SmallYOffset);
             var author = ItemAuthor ?? defaultAuthor;
 
             //Creating Item
