@@ -312,12 +312,19 @@ namespace _1toOne_Converter.src.gbx
             statistics.Add((statistic, value));
         }
 
-        internal void PrintStatistics()
+        internal String GetStatistics()
         {
+            var result = new StringBuilder();
+
             foreach((string statistic, double value) in statistics)
             {
-                Console.WriteLine(statistic + ": " + value);
+                result.Append(statistic);
+                result.Append(": ");
+                result.Append(value);
+                result.Append('\n');
             }
+
+            return result.ToString();
         }
         #endregion
     }

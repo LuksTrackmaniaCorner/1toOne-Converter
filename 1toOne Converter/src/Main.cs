@@ -16,14 +16,6 @@ namespace _1toOne_Converter.src
 {
     public class Converter : IDumpable
     {
-        private static readonly object ConsoleLock;
-
-        static Converter()
-        {
-            ConsoleLock = new object();
-        }
-
-
         private readonly GBXFile file;
         private Converter(string inputFileName)
         {
@@ -46,9 +38,9 @@ namespace _1toOne_Converter.src
             conversion.Convert(file);
         }
 
-        private void PrintStatistics()
+        private string GetStatistics()
         {
-            file.PrintStatistics();
+            return file.GetStatistics();
         }
 
         [STAThread] //Required for OpenFileDialog
@@ -128,15 +120,15 @@ namespace _1toOne_Converter.src
             //Loading the Settings
             Settings.GenerateSettings();
 
+            //Creating IOManager
+            using var ioManager = new IOManager(gbxFiles.Count);
+
             //Starting the converters on multiple Threads
             var tasks = new List<Task>();
 
-            int numberOfFiles = gbxFiles.Count;
-            int currentFileNumber = 0;
-
             foreach(var gbxFile in gbxFiles)
             {
-                tasks.Add(Task.Run(() => Convert(gbxFile, conversion, ref currentFileNumber, numberOfFiles, ref keepConsoleOpen)));
+                tasks.Add(Task.Run(() => Convert(gbxFile, conversion, ioManager)));
             }
 
             try
@@ -160,39 +152,20 @@ namespace _1toOne_Converter.src
 
             if (keepConsoleOpen)
                 Console.ReadKey();
-
-            var settings = Settings.GetSettings();
-            if(settings.OpenFolderAfterFinished)
-            {
-                if(settings.OutputFolder != Settings.RelativeDirectory)
-                    Process.Start(settings.OutputFolder);
-                else
-                    Process.Start(Path.GetDirectoryName(gbxFiles[0]));
-            }
         }
 
-        public static void Convert(string filePath, Conversion conversion, ref int currentFileNumber, int numberOfFiles, ref bool keepConsoleOpen)
+        public static void Convert(string mapFile, Conversion conversion, IOManager ioManager)
         {
             string errorMessage = null;
 
-            string fileName = Path.GetFileName(filePath).Replace(".Challenge.Gbx", ".Map.Gbx");
+            var fileName = Path.GetFileName(mapFile).Replace(".Challenge.Gbx", ".Map.Gbx");
+            var filePath = Path.GetDirectoryName(mapFile);
             try
             {
-                string outputPath;
-
-                if (Settings.GetSettings().OutputFolder == Settings.RelativeDirectory)
-                {
-                    outputPath = filePath.Replace(".Challenge.Gbx", ".Map.Gbx");
-                }
-                else
-                {
-                    outputPath = Settings.GetSettings().OutputFolder + fileName;
-                }
-
                 Converter converter;
                 try
                 {
-                    converter = new Converter(filePath);
+                    converter = new Converter(mapFile);
                 }
                 catch(IOException e)
                 {
@@ -200,7 +173,9 @@ namespace _1toOne_Converter.src
                         "Details: " + e.Message;
                     goto error;
                 }
-                
+
+                var outputPath = Settings.GetSettings().GetOutputPath(converter.file, filePath);
+                outputPath = Path.Combine(outputPath, fileName);
 
 #if DEBUG
                 //Optional Tasks
@@ -213,7 +188,7 @@ namespace _1toOne_Converter.src
                 var createFileMode = Settings.GetSettings().OverwriteExistingFiles ? FileMode.Create : FileMode.CreateNew;
                 try
                 {
-                    using var fs = new FileStream(outputPath, createFileMode);
+                    using var fs = new FileStream(outputPath, createFileMode, FileAccess.Write);
                     converter.WriteBack(fs);
                 }
                 catch(IOException e)
@@ -223,27 +198,7 @@ namespace _1toOne_Converter.src
                     goto error;
                 }
 
-                switch (Settings.GetSettings().DisplayMode)
-                {
-                    case DisplayMode.None:
-                        break;
-                    case DisplayMode.TracksOnly:
-                        lock (ConsoleLock)
-                        {
-                            currentFileNumber++;
-                            Console.WriteLine(currentFileNumber + " / " + numberOfFiles + " converted: " + fileName);
-                        }
-                        break;
-                    case DisplayMode.Full:
-                        lock (ConsoleLock)
-                        {
-                            currentFileNumber++;
-                            Console.WriteLine(currentFileNumber + " / " + numberOfFiles + " converted: " + fileName);
-                            converter.PrintStatistics();
-                            Console.WriteLine();
-                        }
-                        break;
-                }
+                ioManager.Success(fileName, filePath, converter.GetStatistics());
             }
             catch (UnsupportedMapBaseException)
             {
@@ -259,15 +214,7 @@ namespace _1toOne_Converter.src
          error:
             if(errorMessage != null)
             {
-                lock (ConsoleLock)
-                {
-                    currentFileNumber++;
-                    Console.WriteLine(currentFileNumber + " / " + numberOfFiles + " failed: " + fileName);
-                    Console.WriteLine(errorMessage);
-                    Console.WriteLine();
-                }
-
-                keepConsoleOpen = true;
+                ioManager.Error(fileName, errorMessage);
             }
         }
 

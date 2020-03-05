@@ -58,17 +58,26 @@ namespace _1toOne_Converter.src.conversion
 
             foreach (var block in blockChunk.Blocks)
             {
+                if (!_blockNameDict.ContainsKey(block.BlockName.Content))
+                    continue; //block cannot be converted;
+
+                var blockData = _blockNameDict[block.BlockName.Content];
+                var adjustedCoords = blockData.ApplyBlockOffset(block);
+
                 if (BlockIgnoreFlags != null)
                 {
                     foreach (var blockIgnoreFlag in BlockIgnoreFlags)
                     {
-                        if (file.TestFlag(blockIgnoreFlag.Name, block.Coords.X, block.Coords.Z))
+                        if (file.TestFlag(blockIgnoreFlag.Name, adjustedCoords.x, adjustedCoords.z))
                             goto nextBlock; // D: Goto?!? What a maniac.
                     }
                 }
 
-                //Block cannot not be ignored
-                var success = ConvertBlock(file, block, itemChunk);
+                var isSecondaryTerrain = SecondaryTerrainFlag == null ? false :
+                        file.TestFlag(SecondaryTerrainFlag.Name, adjustedCoords.x, adjustedCoords.z);
+
+                //Block should be converted
+                var success = ConvertBlock(file, block, isSecondaryTerrain, itemChunk);
                 if (success)
                     itemCount++;
 
@@ -81,18 +90,8 @@ namespace _1toOne_Converter.src.conversion
             }
         }
 
-        private bool ConvertBlock(GBXFile file, Block block, Challenge03043040 itemChunk)
+        private bool ConvertBlock(GBXFile file, Block block, bool isSecondaryTerrain, Challenge03043040 itemChunk)
         {
-            bool isSecondaryTerrain;
-            if (SecondaryTerrainFlag != null)
-            {
-                isSecondaryTerrain = file.TestFlag(SecondaryTerrainFlag.Name, block.Coords.X, block.Coords.Z);
-            }
-            else
-            {
-                isSecondaryTerrain = false;
-            }
-
             var blockName = block.BlockName.Content;
             if (_blockNameDict.ContainsKey(blockName))
             {
@@ -182,7 +181,7 @@ namespace _1toOne_Converter.src.conversion
             //Get Clips from the referenceblock
             foreach (var block in blockChunk.Blocks)
                 if (block.BlockName.Content == ReferenceBlockName)
-                    ConvertBlock(file, block, null);
+                    ConvertBlock(file, block, false, null);
 
             //Add clips to other blocks, avoid doubles.
             var clips = file.GetClips(referenceClip);
@@ -200,7 +199,7 @@ namespace _1toOne_Converter.src.conversion
 
                 if (blockDataLoc != null)
                 {
-                    //Add clipp to blockDataLoc.
+                    //Add clip to blockDataLoc.
                     (int x, int z) newClipAbsCoords = clip.Rot switch
                     {
                         0 => (clip.X, clip.Z + 1),

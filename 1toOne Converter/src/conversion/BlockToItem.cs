@@ -1,17 +1,12 @@
 ﻿using _1toOne_Converter.src.gbx;
 using _1toOne_Converter.src.gbx.chunks;
 using _1toOne_Converter.src.gbx.core;
-using _1toOne_Converter.src.gbx.core.chunks;
 using _1toOne_Converter.src.gbx.core.primitives;
 using _1toOne_Converter.src.gbx.primitives;
 using _1toOne_Converter.src.util;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace _1toOne_Converter.src.conversion
@@ -261,6 +256,40 @@ namespace _1toOne_Converter.src.conversion
             }
 
             Flatten();
+        }
+
+        public (byte x, byte y, byte z) ApplyBlockOffset(Block block)
+        {
+            return ApplyBlockOffset(block.Rot.Value, block.Coords.Value);
+        }
+
+        internal (byte x, byte y, byte z) ApplyBlockOffset(byte rot, (byte x, byte y, byte z) coords)
+        {
+            int xOffset;
+            int zOffset;
+
+            switch (rot)
+            {
+                case 0:
+                    xOffset = 0;
+                    zOffset = 0;
+                    break;
+                case 1:
+                    xOffset = BlockZSize - 1;
+                    zOffset = 0;
+                    break;
+                case 2:
+                    xOffset = BlockXSize - 1;
+                    zOffset = BlockZSize - 1;
+                    break;
+                case 3:
+                    xOffset = 0;
+                    zOffset = BlockZSize - 1;
+                    break;
+                default: throw new InternalException();
+            }
+
+            return ((byte)(coords.x + xOffset), (byte)(coords.y), (byte)(coords.z + zOffset));
         }
 
         public bool ShouldSerializeBlockXSize() => BlockXSize > 1;

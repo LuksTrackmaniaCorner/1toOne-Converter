@@ -19,10 +19,11 @@ namespace _1toOne_Converter.src.conversion
         public GBXLBS Collection;
         public GBXLBS DefaultAuthor;
 
+        //TODO merge these arrays an add attribute to clipblock
         [XmlElement(ElementName = "ClipBlock")]
-        public GBXLBS[] ClipBlocks;
+        public ClipBlock[] ClipBlocks;
         [XmlElement(IsNullable = false, ElementName = "SecondaryTerrainClipBlock")]
-        public GBXLBS[] SecondaryTerrainClipBlocks;
+        public ClipBlock[] SecondaryTerrainClipBlocks;
         [XmlElement(IsNullable = false)]
         public ItemData ClipFiller;
 
@@ -70,18 +71,39 @@ namespace _1toOne_Converter.src.conversion
             foreach (var block in blockChunk.Blocks)
             {
                 //Test if block is clip and collect the needed metadata
-                bool isSecondaryTerrain;
+                bool isSecondaryTerrain = false;
 
-                if (ClipBlocks.Any(x => x.Equals(block.BlockName)))
-                    isSecondaryTerrain = false;
-                else if (SecondaryTerrainClipBlocks != null && 
-                        SecondaryTerrainClipBlocks.Any(x => x.Equals(block.BlockName)))
-                    isSecondaryTerrain = true;
-                else
-                    continue; //Block is not a Clip, check next block.
+                //TODO replace with dict lookup
+                ClipBlock match = null;
+                foreach(var clipBlock in ClipBlocks)
+                {
+                    if(clipBlock.Content == block.BlockName.Content)
+                    {
+                        match = clipBlock;
+                        isSecondaryTerrain = false;
+                    }
+                }
+
+                if(SecondaryTerrainClipBlocks != null)
+                {
+                    foreach(var clipBlock in SecondaryTerrainClipBlocks)
+                    {
+                        if(clipBlock.Content == block.BlockName.Content)
+                        {
+                            match = clipBlock;
+                            isSecondaryTerrain = true;
+                        }
+                    }
+                }
+
+                if (match == null)
+                    continue; //Block is not clip, continue
 
                 uint groundFlag = block.Flags.Value & 0x1000;
                 bool isGround = groundFlag != 0;
+
+                match.ApplyMode(ref isGround);
+                
 
                 //Block is Clip
                 //Get all clips in this position
@@ -168,5 +190,26 @@ namespace _1toOne_Converter.src.conversion
     {
         [XmlAttribute]
         public string Clip;
+    }
+
+    public class ClipBlock
+    {
+        [XmlAttribute]
+        public string Content;
+
+        [XmlAttribute]
+        public ClipMode Mode;
+
+        public void ApplyMode(ref bool isGround)
+        {
+            if (Mode == ClipMode.ForceAir)
+                isGround = false;
+        }
+    }
+
+    public enum ClipMode
+    {
+        Default = 0,
+        ForceAir = 1
     }
 }
