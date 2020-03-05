@@ -121,7 +121,7 @@ namespace _1toOne_Converter.src.conversion
                     //Field belongs to the terrain.
                     //Console.WriteLine($"{height} at {row}, {column}");
                     //Set Secondary Terrain
-                    if (state.IsActive == true && secondaryTerrain)
+                    if (secondaryTerrain)
                         _file.SetFlag(new Flag(conversion.SecondaryTerrainFlag, row, column));
                     //Set Height
                     int thisHeight;
