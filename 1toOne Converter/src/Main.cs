@@ -67,11 +67,6 @@ namespace _1toOne_Converter.src
             string xmlFile = null;
             var gbxFiles = new List<string>();
 
-#if DEBUG
-            bool keepConsoleOpen = true;
-#else
-            bool keepConsoleOpen = false;
-#endif
             //Getting the files from the command line arguments
             foreach(var file in args)
             {
@@ -131,34 +126,18 @@ namespace _1toOne_Converter.src
                 tasks.Add(Task.Run(() => Convert(gbxFile, conversion, ioManager)));
             }
 
-            try
-            {
-                Task.WaitAll(tasks.ToArray());
-            }
-            catch(AggregateException e)
-            {
-                foreach(var innerException in e.InnerExceptions)
-                {
-                    Console.WriteLine(innerException);
-                }
-                keepConsoleOpen = true;
-            }
+            Task.WaitAll(tasks.ToArray());
 
-            if (Settings.GetSettings().DisplayMode == DisplayMode.Full)
-            {
-                Console.WriteLine("Remember to calculate shadows for the converted maps!");
-                keepConsoleOpen = true;
-            }
-
-            if (keepConsoleOpen)
-                Console.ReadKey();
+            ioManager.KeepConsoleOpen();
+            ioManager.OpenFolders();
         }
 
         public static void Convert(string mapFile, Conversion conversion, IOManager ioManager)
         {
             string errorMessage = null;
 
-            var fileName = Path.GetFileName(mapFile).Replace(".Challenge.Gbx", ".Map.Gbx");
+            var fileName = Path.GetFileName(mapFile);
+            var outputName = fileName.Replace(".Challenge.Gbx", ".Map.Gbx");
             var filePath = Path.GetDirectoryName(mapFile);
             try
             {
@@ -175,11 +154,11 @@ namespace _1toOne_Converter.src
                 }
 
                 var outputPath = Settings.GetSettings().GetOutputPath(converter.file, filePath);
-                outputPath = Path.Combine(outputPath, fileName);
+                var outputMapFile = Path.Combine(outputPath, outputName);
 
 #if DEBUG
                 //Optional Tasks
-                //CreateLog(converter.file, filePath);
+                //CreateLog(converter.file, mapFile);
                 //PropagateClips(converter.file);
 #endif
 
@@ -188,7 +167,7 @@ namespace _1toOne_Converter.src
                 var createFileMode = Settings.GetSettings().OverwriteExistingFiles ? FileMode.Create : FileMode.CreateNew;
                 try
                 {
-                    using var fs = new FileStream(outputPath, createFileMode, FileAccess.Write);
+                    using var fs = new FileStream(outputMapFile, createFileMode, FileAccess.Write);
                     converter.WriteBack(fs);
                 }
                 catch(IOException e)
@@ -198,7 +177,7 @@ namespace _1toOne_Converter.src
                     goto error;
                 }
 
-                ioManager.Success(fileName, filePath, converter.GetStatistics());
+                ioManager.Success(outputName, outputPath, converter.GetStatistics());
             }
             catch (UnsupportedMapBaseException)
             {
@@ -214,7 +193,7 @@ namespace _1toOne_Converter.src
          error:
             if(errorMessage != null)
             {
-                ioManager.Error(fileName, errorMessage);
+                ioManager.Error(outputName, errorMessage);
             }
         }
 
@@ -222,7 +201,7 @@ namespace _1toOne_Converter.src
         {
             string logFilePath = filePath.Replace(".Challenge.Gbx", ".txt").Replace(".Gbx", ".txt");
 
-            using var fs = new FileStream(logFilePath, FileMode.Create);
+            using var fs = new FileStream(logFilePath, FileMode.Create, FileAccess.Write, FileShare.Write);
             using var sw = new StreamWriter(fs);
             file.DumpToFile(sw);
         }

@@ -18,16 +18,20 @@ namespace _1toOne_Converter.src
         private readonly int _nrOfFiles;
         private int _currentFileNr;
         private bool _keepConsoleOpen;
-        private readonly HashSet<String> _openedFolders;
+        private readonly HashSet<String> _outputFolders;
 
         public IOManager(int nrOfFiles)
         {
             _nrOfFiles = nrOfFiles;
-            _openedFolders = new HashSet<string>();
+            _outputFolders = new HashSet<string>();
 
             var settings = Settings.GetSettings();
             if (settings.DisplayMode == DisplayMode.Full)
                 _keepConsoleOpen = true;
+
+#if DEBUG
+            _keepConsoleOpen = true;
+#endif
         }
 
         private void WriteToLog(string message)
@@ -75,7 +79,7 @@ namespace _1toOne_Converter.src
             }
         }
 
-        public void Success(string fileName, string filePath, string statistics)
+        public void Success(string fileName, string outputPath, string statistics)
         {
             var settings = Settings.GetSettings();
 
@@ -106,15 +110,11 @@ namespace _1toOne_Converter.src
                 }
             }
 
-            if (!settings.OpenFolderAfterFinished)
-                return;
-
             lock(_explorerLock)
             {
-                if(!_openedFolders.Contains(filePath))
+                if(!_outputFolders.Contains(outputPath))
                 {
-                    Process.Start(filePath);
-                    _openedFolders.Add(filePath);
+                    _outputFolders.Add(outputPath);
                 }
             }
         }
@@ -125,8 +125,25 @@ namespace _1toOne_Converter.src
             {
                 Console.WriteLine("Remember to calculate shadows for the converted maps!");
             }
+
             if (_keepConsoleOpen)
+            {
                 Console.ReadKey();
+            }
+        }
+
+        public void OpenFolders()
+        {
+            if (!Settings.GetSettings().OpenFolderAfterFinished)
+                return;
+
+            lock(_explorerLock)
+            {
+                foreach(var outputFolder in _outputFolders)
+                {
+                    Process.Start(outputFolder);
+                }
+            }
         }
 
         #region IDisposable Support
