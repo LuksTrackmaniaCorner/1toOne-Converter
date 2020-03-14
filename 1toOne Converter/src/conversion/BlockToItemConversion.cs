@@ -39,7 +39,7 @@ namespace _1toOne_Converter.src.conversion
                     _blockNameDict.Add(block.BlockName, block);
 
                 foreach (var altName in block.AltNames)
-                    _blockNameDict.Add(altName.Name, block);
+                    _blockNameDict.Add(altName.BlockName, block);
             }
         }
 

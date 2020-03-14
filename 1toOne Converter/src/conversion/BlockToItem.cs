@@ -4,6 +4,7 @@ using _1toOne_Converter.src.gbx.core;
 using _1toOne_Converter.src.gbx.core.primitives;
 using _1toOne_Converter.src.gbx.primitives;
 using _1toOne_Converter.src.util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -28,21 +29,25 @@ namespace _1toOne_Converter.src.conversion
         [XmlAttribute]
         public float SmallYOffset { get; set; }
 
+        private BlockToItem[] _children;
+
         //TODO do same thing with complexconversion
         [XmlElement(ElementName = "BlockData", Type = typeof(BlockData))]
         [XmlElement(ElementName = "BlockVariantData", Type = typeof(BlockVariantData))]
         [XmlElement(ElementName = "BlockTypeData", Type = typeof(BlockTypeData))]
         [XmlElement(ElementName = "BlockRandomData", Type = typeof(BlockRandomData))]
         [XmlElement(ElementName = "BlockSkinData", Type = typeof(BlockSkinData))]
-        public BlockToItem[] Children;
+        public BlockToItem[] Children
+        {
+            get => _children ??= Array.Empty<BlockToItem>();
+            set => _children = value;
+        }
         [XmlElement(ElementName = "Flag")]
         public Flag[] Flags { get; set; }
         [XmlElement(ElementName = "Clip")]
         public Clip[] Clips { get; set; }
         [XmlElement(ElementName = "Pylon")]
         public MultiPylon[] MultiPylons { get; set; }
-
-        //TODO remove childrenList once you serialized the newer version.
 
         /// <summary>
         /// Tests if this BlockToItem object fits could know which item the given block represents.
@@ -132,7 +137,7 @@ namespace _1toOne_Converter.src.conversion
         public byte BlockZSize { get; set; }
 
         [XmlElement(ElementName = "AltName")]
-        public BlockName[] AltNames;
+        public AlternativeName[] AltNames;
 
         internal void Initialize()
         {
@@ -140,6 +145,9 @@ namespace _1toOne_Converter.src.conversion
                 BlockXSize = 1;
             if (BlockZSize <= 0)
                 BlockZSize = 1;
+
+            if (AltNames == null)
+                AltNames = Array.Empty<AlternativeName>();
         }
 
         internal override bool TestBlock(Identifier identifier)
@@ -149,7 +157,7 @@ namespace _1toOne_Converter.src.conversion
 
             foreach(var altname in AltNames)
             {
-                if(identifier.blockName == altname.Name)
+                if(identifier.blockName == altname.BlockName)
                 {
                     if (altname.PriSecTerrain is bool terrain)
                         identifier.isSecondaryTerrain = terrain;
@@ -446,15 +454,19 @@ namespace _1toOne_Converter.src.conversion
         GroundSecondary
     }
 
-    public class BlockName
+    public class AlternativeName
     {
         [XmlAttribute]
-        public string Name;
+        public string BlockName;
 
         [XmlIgnore]
         public bool? PriSecTerrain;
 
         [XmlAttribute]
-        public bool SecondaryTerrain { set => PriSecTerrain = value; }
+        public bool SecondaryTerrain
+        {
+            set => PriSecTerrain = value;
+            get => (bool)PriSecTerrain;
+        }
     }
 }
