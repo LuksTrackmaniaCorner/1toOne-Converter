@@ -21,6 +21,8 @@ namespace _1toOne_Converter.src.util
         public short Z;
         [XmlAttribute]
         public byte Rot;
+        [XmlAttribute]
+        public bool Optional;
 
         internal byte NormalizedRot
         {
@@ -96,7 +98,7 @@ namespace _1toOne_Converter.src.util
             y += this.Y;
             rot = (byte)((Rot + rot) % 4);
 
-            return new Pylon() { Type = Type, Pos = Pos, X = x, Y = y, Z = z, Rot = rot };
+            return new Pylon() { Type = Type, Pos = Pos, X = x, Y = y, Z = z, Rot = rot, Optional = Optional };
         }
 
         public static IComparer<Pylon> GetComparer() => new PylonComparer();
@@ -107,11 +109,16 @@ namespace _1toOne_Converter.src.util
             {
                 //Primary criteria: Height, from top to bottom
                 int result = p2.Y.CompareTo(p1.Y);
+                if (result != 0)
+                    return result;
 
                 //Seondary criteria: Type None -> Prevent -> Top -> Bottom
-                if (result == 0)
-                    result = p1.Type.CompareTo(p2.Type);
+                result = p1.Type.CompareTo(p2.Type);
+                if (result != 0)
+                    return result;
 
+                //Tertiary criteria: Optional
+                result = p1.Optional.CompareTo(p2.Optional);
                 return result;
             }
         }
@@ -133,7 +140,8 @@ namespace _1toOne_Converter.src.util
                 X == other.X &&
                 Y == other.Y &&
                 Z == other.Z &&
-                Rot == other.Rot;
+                Rot == other.Rot &&
+                Optional == other.Optional;
         }
 
         public override int GetHashCode()
@@ -145,6 +153,7 @@ namespace _1toOne_Converter.src.util
             hashCode = hashCode * -1521134295 + Y.GetHashCode();
             hashCode = hashCode * -1521134295 + Z.GetHashCode();
             hashCode = hashCode * -1521134295 + Rot.GetHashCode();
+            hashCode = hashCode * -1521134295 + Optional.GetHashCode();
             return hashCode;
         }
 
@@ -180,6 +189,8 @@ namespace _1toOne_Converter.src.util
         [XmlAttribute]
         public short Z;
         [XmlAttribute]
+        public bool Optional;
+        [XmlAttribute]
         public MultiRot Rot;
 
         public MultiPylon()
@@ -190,13 +201,13 @@ namespace _1toOne_Converter.src.util
         public IEnumerator<Pylon> GetPylons()
         {
             if ((Rot & MultiRot.Zero) != 0)
-                yield return new Pylon { Pos = Pos, Type = Type, X = X, Y = Y, Z = Z, Rot = 0 };
+                yield return new Pylon { Pos = Pos, Type = Type, X = X, Y = Y, Z = Z, Rot = 0, Optional = Optional };
             if ((Rot & MultiRot.One) != 0)
-                yield return new Pylon { Pos = Pos, Type = Type, X = X, Y = Y, Z = Z, Rot = 1 };
+                yield return new Pylon { Pos = Pos, Type = Type, X = X, Y = Y, Z = Z, Rot = 1, Optional = Optional };
             if ((Rot & MultiRot.Two) != 0)
-                yield return new Pylon { Pos = Pos, Type = Type, X = X, Y = Y, Z = Z, Rot = 2 };
+                yield return new Pylon { Pos = Pos, Type = Type, X = X, Y = Y, Z = Z, Rot = 2, Optional = Optional };
             if ((Rot & MultiRot.Three) != 0)
-                yield return new Pylon { Pos = Pos, Type = Type, X = X, Y = Y, Z = Z, Rot = 3 };
+                yield return new Pylon { Pos = Pos, Type = Type, X = X, Y = Y, Z = Z, Rot = 3, Optional = Optional };
         }
 
         public static MultiRot GetRot(byte rot) => (MultiRot)(1 << rot);

@@ -67,6 +67,9 @@ namespace _1toOne_Converter.src.conversion
 
                 foreach(var pylonInfo in pylonField)
                 {
+                    if (pylonInfo.Optional)
+                        continue;
+
                     switch (pylonInfo.Type, pylonInfo.Pos)
                     {
                         case (PylonType.Prevent, PylonPosition.Both):
