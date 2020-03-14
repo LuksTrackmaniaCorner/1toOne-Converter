@@ -28,6 +28,7 @@ namespace _1toOne_Converter.src.conversion
         [XmlAttribute]
         public float SmallYOffset { get; set; }
 
+        //TODO do same thing with complexconversion
         [XmlElement(ElementName = "BlockData", Type = typeof(BlockData))]
         [XmlElement(ElementName = "BlockVariantData", Type = typeof(BlockVariantData))]
         [XmlElement(ElementName = "BlockTypeData", Type = typeof(BlockTypeData))]
@@ -124,16 +125,14 @@ namespace _1toOne_Converter.src.conversion
     {
         [XmlAttribute]
         public string BlockName { get; set; }
-        [XmlAttribute]
-        public string SecondaryTerrainName { get; set; }
 
         [XmlAttribute]
         public byte BlockXSize { get; set; }
         [XmlAttribute]
         public byte BlockZSize { get; set; }
 
-        [XmlElement]
-        public string[] AltName;
+        [XmlElement(ElementName = "AltName")]
+        public BlockName[] AltNames;
 
         internal void Initialize()
         {
@@ -145,21 +144,20 @@ namespace _1toOne_Converter.src.conversion
 
         internal override bool TestBlock(Identifier identifier)
         {
-            if (SecondaryTerrainName == null)
+            if (BlockName != null && identifier.blockName == BlockName)
+                return true;
+
+            foreach(var altname in AltNames)
             {
-                return identifier.blockName == BlockName;
+                if(identifier.blockName == altname.Name)
+                {
+                    if (altname.PriSecTerrain is bool terrain)
+                        identifier.isSecondaryTerrain = terrain;
+
+                    return true;
+                }
             }
 
-            if (identifier.blockName == BlockName)
-            {
-                identifier.isSecondaryTerrain = false;
-                return true;
-            }
-            if (identifier.blockName == SecondaryTerrainName)
-            {
-                identifier.isSecondaryTerrain = true;
-                return true;
-            }
             return false;
         }
 
