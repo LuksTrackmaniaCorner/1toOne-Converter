@@ -29,6 +29,8 @@ namespace _1toOne_Converter.src.conversion
         {
             int itemCount = 0;
 
+            bool placeOptional = Settings.GetSettings().PlaceExtraPylons;
+
             var itemChunk = (Challenge03043040)file.GetChunk(Chunk.challenge03043040Key);
 
             var pylonMap = new SortedSet<Pylon>[GBXFile.MaxMapXSize + 1, GBXFile.MaxMapZSize + 1, 4];
@@ -67,7 +69,7 @@ namespace _1toOne_Converter.src.conversion
 
                 foreach(var pylonInfo in pylonField)
                 {
-                    if (pylonInfo.Optional)
+                    if (!placeOptional && pylonInfo.Optional)
                         continue;
 
                     switch (pylonInfo.Type, pylonInfo.Pos)

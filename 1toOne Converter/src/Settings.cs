@@ -17,6 +17,13 @@ namespace _1toOne_Converter.src
 {
     public class Settings : IXmlSerializable
     {
+        public const bool DefaultOpenFolderAfterFinished = true;
+        public const bool DefaultOverwriteExistingFiles = false;
+        public const string RelativeDirectory = " ";
+        public const string DefaultLogFilePath = @".\log.txt";
+        public const bool DefaultAppendToLog = false;
+        public const bool DefaultPlaceExtraPylons = false;
+
         private static Settings settings;
 
         public static Settings GetSettings() => settings;
@@ -30,50 +37,43 @@ namespace _1toOne_Converter.src
         {
             string defaultPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @".\Settings.xml";
 
+            var xmls = new XmlSerializer(typeof(Settings));
             if (File.Exists(defaultPath))
             {
                 try {
-                    using var fs = new FileStream(defaultPath, FileMode.Open);
-                    var xmls = new XmlSerializer(typeof(Settings));
-                    settings = (Settings)xmls.Deserialize(fs);
+                    using (var fs = new FileStream(defaultPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        settings = (Settings)xmls.Deserialize(fs);
+                    }
+
+                    try
+                    {
+                        //Update settings if changes have been made
+                        using (var fs = new FileStream(defaultPath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                        {
+                            xmls.Serialize(fs, settings);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("You encountered an unexpected error, but not so unexpected that I didn't add a custom error message.\n");
+                    }
+                       
                     return;
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Settings could not be read. The settings will be restored to the original values.");
+                    Console.WriteLine("Settings could not be read. The settings will be restored to the original values.\n");
                 }
             }
             
+            //Create new Settings file
+            settings = new Settings();
+            using (var fs = new FileStream(defaultPath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
-                //Create new Settings file
-                settings = new Settings
-                {
-                    OutputFolder = RelativeDirectory,
-                    AlpineOutputFolder = RelativeDirectory,
-                    SpeedOutputFolder = RelativeDirectory,
-                    RallyOutputFolder = RelativeDirectory,
-                    BayOutputFolder = RelativeDirectory,
-                    CoastOutputFolder = RelativeDirectory,
-                    IslandOutputFolder = RelativeDirectory,
-                    OpenFolderAfterFinished = DefaultOpenFolderAfterFinished,
-                    OverwriteExistingFiles = DefaultOverwriteExistingFiles,
-                    DisplayMode = DisplayMode.Full,
-                    LogMode = DisplayMode.ErrorsOnly,
-                    LogFilePath = DefaultLogFilePath,
-                    AppendToLog = DefaultAppendToLog
-                };
-
-                using var fs = new FileStream(defaultPath, FileMode.Create);
-                var xmls = new XmlSerializer(typeof(Settings));
                 xmls.Serialize(fs, settings);
             }
         }
-
-        public const bool DefaultOpenFolderAfterFinished = true;
-        public const bool DefaultOverwriteExistingFiles = false;
-        public const string RelativeDirectory = " ";
-        public const string DefaultLogFilePath = @".\log.txt";
-        public const bool DefaultAppendToLog = false;
 
         public string OutputFolder { get; private set; }
         public string AlpineOutputFolder { get; private set; }
@@ -89,13 +89,29 @@ namespace _1toOne_Converter.src
 
         public DisplayMode DisplayMode { get; private set; }
 
+        public bool PlaceExtraPylons { get; private set; }
+
         public DisplayMode LogMode { get; private set; }
         public string LogFilePath { get; private set; }
         public bool AppendToLog { get; private set; }
 
-        private Settings() { }
-
-        public XmlSchema GetSchema() => null;
+        private Settings()
+        {
+            OutputFolder = RelativeDirectory;
+            AlpineOutputFolder = RelativeDirectory;
+            SpeedOutputFolder = RelativeDirectory;
+            RallyOutputFolder = RelativeDirectory;
+            BayOutputFolder = RelativeDirectory;
+            CoastOutputFolder = RelativeDirectory;
+            IslandOutputFolder = RelativeDirectory;
+            OpenFolderAfterFinished = DefaultOpenFolderAfterFinished;
+            OverwriteExistingFiles = DefaultOverwriteExistingFiles;
+            DisplayMode = DisplayMode.Full;
+            PlaceExtraPylons = DefaultPlaceExtraPylons;
+            LogMode = DisplayMode.ErrorsOnly;
+            LogFilePath = DefaultLogFilePath;
+            AppendToLog = DefaultAppendToLog;
+        }
 
         public string GetOutputPath(GBXFile file, string mapPath)
         {
@@ -129,6 +145,8 @@ namespace _1toOne_Converter.src
                 return mapPath;
         }
 
+        public XmlSchema GetSchema() => null;
+
         public void ReadXml(XmlReader reader)
         {
             var isEmpty = reader.IsEmptyElement;
@@ -143,6 +161,11 @@ namespace _1toOne_Converter.src
             BayOutputFolder = ReadXmlPath(reader, nameof(BayOutputFolder));
             CoastOutputFolder = ReadXmlPath(reader, nameof(CoastOutputFolder));
             IslandOutputFolder = ReadXmlPath(reader, nameof(IslandOutputFolder));
+
+            //Optional Element, to ensure backwards compatability
+            reader.MoveToContent();
+            if (reader.LocalName == nameof(PlaceExtraPylons))
+                PlaceExtraPylons = ReadXmlBool(reader, nameof(PlaceExtraPylons), DefaultPlaceExtraPylons);
 
             OpenFolderAfterFinished = ReadXmlBool(reader, nameof(OpenFolderAfterFinished), DefaultOpenFolderAfterFinished);
             OverwriteExistingFiles = ReadXmlBool(reader, nameof(OverwriteExistingFiles), DefaultOverwriteExistingFiles);
@@ -163,7 +186,7 @@ namespace _1toOne_Converter.src
             else if (!Directory.Exists(path))
             {
                 path = RelativeDirectory;
-                Console.WriteLine(elementName + "-Setting: Path does not exist. Resetting to relative Path.");
+                Console.WriteLine(elementName + "-Setting: Path does not exist. Resetting to relative Path.\n");
             }
             return path;
         }
@@ -176,7 +199,7 @@ namespace _1toOne_Converter.src
             else if (!Directory.Exists(Path.GetDirectoryName(file)))
             {
                 file = null;
-                Console.WriteLine(elementName + "-Setting: File does not exist. Resetting to Default.");
+                Console.WriteLine(elementName + "-Setting: File does not exist. Resetting to Default.\n");
             }
 
             return file;
@@ -187,8 +210,9 @@ namespace _1toOne_Converter.src
             var boolString = reader.ReadElementString(elementName);
             if (bool.TryParse(boolString, out var result))
                 return result;
-            else
-                return @default;
+
+            Console.WriteLine(elementName + "-Setting: Invalid input value.\n");
+            return @default;
         }
 
         private static T ReadXmlEnum<T>(XmlReader reader, string elementName, T @default = default) where T : struct, Enum
@@ -196,8 +220,9 @@ namespace _1toOne_Converter.src
             var enumString = reader.ReadElementString(elementName);
             if (Enum.TryParse<T>(enumString, out T result))
                 return result;
-            else
-                return @default;
+
+            Console.WriteLine(elementName + "-Setting: Invalid input value.\n");
+            return @default;
         }
 
         public void WriteXml(XmlWriter writer)
@@ -213,6 +238,11 @@ namespace _1toOne_Converter.src
             writer.WriteElementString(nameof(BayOutputFolder), BayOutputFolder);
             writer.WriteElementString(nameof(CoastOutputFolder), CoastOutputFolder);
             writer.WriteElementString(nameof(IslandOutputFolder), IslandOutputFolder);
+
+            writer.WriteComment("If False, the converter will place the pylons in the same way as TMO would.");
+            writer.WriteComment("If True, the converter will place pylons in more positions.");
+            writer.WriteComment("Allowed values are: True, False");
+            writer.WriteElementString(nameof(PlaceExtraPylons), PlaceExtraPylons.ToString());
 
             writer.WriteComment("Defines whether the converter should open the output directory after it has finished.");
             writer.WriteComment("Allowed values are: True, False");
