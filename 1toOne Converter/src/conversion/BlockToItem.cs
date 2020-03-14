@@ -28,14 +28,12 @@ namespace _1toOne_Converter.src.conversion
         [XmlAttribute]
         public float SmallYOffset { get; set; }
 
-        internal List<BlockToItem> childrenList;
-
         [XmlElement(ElementName = "BlockData", Type = typeof(BlockData))]
         [XmlElement(ElementName = "BlockVariantData", Type = typeof(BlockVariantData))]
         [XmlElement(ElementName = "BlockTypeData", Type = typeof(BlockTypeData))]
         [XmlElement(ElementName = "BlockRandomData", Type = typeof(BlockRandomData))]
         [XmlElement(ElementName = "BlockSkinData", Type = typeof(BlockSkinData))]
-        public BlockToItem[] Children { get => childrenList.ToArray(); set { if (value != null) childrenList = new List<BlockToItem>(value); } }
+        public BlockToItem[] Children;
         [XmlElement(ElementName = "Flag")]
         public Flag[] Flags { get; set; }
         [XmlElement(ElementName = "Clip")]
@@ -44,7 +42,6 @@ namespace _1toOne_Converter.src.conversion
         public MultiPylon[] MultiPylons { get; set; }
 
         //TODO remove childrenList once you serialized the newer version.
-        internal BlockToItem() => childrenList = new List<BlockToItem>();
 
         /// <summary>
         /// Tests if this BlockToItem object fits could know which item the given block represents.
@@ -61,7 +58,7 @@ namespace _1toOne_Converter.src.conversion
                 return null;
 
             ItemInfo result = null;
-            if (childrenList.Count == 0)
+            if (Children.Length == 0)
                 result = new ItemInfo(ItemName, ItemAuthor, RotOffset, (XOffset, YOffset, ZOffset), SmallYOffset);
             else
             {
@@ -99,40 +96,6 @@ namespace _1toOne_Converter.src.conversion
             return result;
         }
 
-        internal void Flatten()
-        {
-            foreach (var child in Children)
-            {
-                child.Flatten();
-            }
-
-            foreach (var child in Children)
-            {
-                if (child.CanFlatten() && child.childrenList.Count != 0)
-                {
-                    childrenList.Remove(child);
-                    //Flatten Non-Leaf Node
-                    foreach (var grandChild in child.Children)
-                    {
-                        grandChild.ItemAuthor ??= child.ItemAuthor;
-                        grandChild.YOffset += child.YOffset;
-                        grandChild.RotOffset += child.RotOffset;
-                        grandChild.XOffset += child.XOffset;
-                        grandChild.ZOffset += child.ZOffset;
-                        if (child.Flags != null)
-                            grandChild.Flags = grandChild.Flags == null ? child.Flags : grandChild.Flags.Union(child.Flags).ToArray();
-                        if (child.Clips != null)
-                            grandChild.Clips = grandChild.Clips == null ? child.Clips : grandChild.Clips.Union(child.Clips).ToArray();
-                        if (child.MultiPylons != null)
-                            grandChild.MultiPylons = grandChild.MultiPylons == null ? child.MultiPylons : grandChild.MultiPylons.Union(child.MultiPylons).ToArray();
-                        childrenList.Add(grandChild);
-                    }
-                }
-            }
-        }
-
-        internal virtual bool CanFlatten() => false;
-
         public bool ShouldSerializeYOffset() => YOffset != 0;
         public bool ShouldSerializeRotOffset() => RotOffset != 0;
         public bool ShouldSerializeXOffset() => XOffset != 0;
@@ -142,35 +105,12 @@ namespace _1toOne_Converter.src.conversion
         {
             //Returns all elements of the BlockToItem tree.
             yield return this;
-            foreach(var child in childrenList)
+            foreach (var child in Children)
             {
-                foreach(var childEnum in child)
+                foreach (var childEnum in child)
                 {
                     yield return childEnum;
                 }
-            }
-        }
-
-        internal IEnumerator<Stack<BlockToItem>> GetTreeEnumerator()
-        {
-            //TODO Replace stack with a immutable data structure.
-            var stack = new Stack<BlockToItem>();
-            stack.Push(this);
-            return GetTreeEnumerator(new Stack<BlockToItem>(stack));
-        }
-
-        private IEnumerator<Stack<BlockToItem>> GetTreeEnumerator(Stack<BlockToItem> stack)
-        {
-            yield return stack;
-
-            foreach(var child in stack.Peek().childrenList)
-            {
-                stack.Push(child);
-                foreach(var childEnum in child.GetTreeEnumerator(stack).AsEnumerable())
-                {
-                    yield return childEnum;
-                }
-                stack.Pop();
             }
         }
     }
@@ -191,6 +131,9 @@ namespace _1toOne_Converter.src.conversion
         public byte BlockXSize { get; set; }
         [XmlAttribute]
         public byte BlockZSize { get; set; }
+
+        [XmlElement]
+        public string[] AltName;
 
         internal void Initialize()
         {
@@ -225,37 +168,6 @@ namespace _1toOne_Converter.src.conversion
             var result = base.GetItemInfo(identifier);
             result?.SetBlockSize(BlockXSize, BlockZSize);
             return result;
-        }
-
-        internal void MergeVariants()
-        {
-            for (int i = 0; i < childrenList.Count; i++)
-            {
-                for (int j = i + 1; j < childrenList.Count; j++)
-                {
-                    if (childrenList[i] is BlockVariantData v1 && childrenList[j] is BlockVariantData v2 && v1._variant == v2._variant)
-                    {
-                        //Merge variants.
-                        foreach (var child2 in v2.Children)
-                        {
-                            child2.ItemAuthor ??= v2.ItemAuthor;
-                            child2.YOffset += v2.YOffset;
-                            child2.RotOffset += v2.RotOffset;
-                            child2.XOffset += v2.XOffset;
-                            child2.ZOffset += v2.ZOffset;
-                            if (v2.Flags != null)
-                                child2.Flags = child2.Flags == null ? v2.Flags : child2.Flags.Union(v2.Flags).ToArray();
-                            if (v2.Clips != null)
-                                child2.Clips = child2.Clips == null ? v2.Clips : child2.Clips.Union(v2.Clips).ToArray();
-                            v1.childrenList.Add(child2);
-                        }
-
-                        this.childrenList.Remove(v2);
-                    }
-                }
-            }
-
-            Flatten();
         }
 
         public (byte x, byte y, byte z) ApplyBlockOffset(Block block)
@@ -310,8 +222,6 @@ namespace _1toOne_Converter.src.conversion
             return (identifier.flags & 0x3F) == Variant;
         }
 
-        internal override bool CanFlatten() => _variant == null;
-
         public bool ShouldSerializeVariant() => _variant != null;
     }
 
@@ -339,8 +249,6 @@ namespace _1toOne_Converter.src.conversion
             };
         }
 
-        internal override bool CanFlatten() => _type == null;
-
         public bool ShouldSerializeTypeOfBlock() => _type != null;
     }
 
@@ -355,8 +263,6 @@ namespace _1toOne_Converter.src.conversion
         {
             return ((identifier.flags >> 6) & 0x3F) == Variant;
         }
-
-        internal override bool CanFlatten() => _variant == null;
     }
 
     public class BlockSkinData : BlockToItem
@@ -540,5 +446,17 @@ namespace _1toOne_Converter.src.conversion
         GroundPrimary,
         [XmlEnum(Name = "Sec")]
         GroundSecondary
+    }
+
+    public class BlockName
+    {
+        [XmlAttribute]
+        public string Name;
+
+        [XmlIgnore]
+        public bool? PriSecTerrain;
+
+        [XmlAttribute]
+        public bool SecondaryTerrain { set => PriSecTerrain = value; }
     }
 }
