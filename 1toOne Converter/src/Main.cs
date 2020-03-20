@@ -56,8 +56,6 @@ namespace _1toOne_Converter.src
                 Console.WriteLine(e);
                 Console.ReadKey();
             }
-
-            //AddPylonsToGround();
         }
 
         public static void ConvertMaps(string[] args)

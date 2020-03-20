@@ -45,7 +45,7 @@ namespace _1toOne_Converter.src.gbx.chunks
         public GBXVec3 UnknownVec { get => unknownVec; set { unknownVec = value; AddChildNew(value); } }
         public GBXFloat Scale { get => scale; set { scale = value; AddChildNew(value); } }
 
-        private AnchoredObject03101002() : base(null, null)
+        public AnchoredObject03101002() : base(null, null)
         {
 
         }

@@ -267,6 +267,8 @@ namespace _1toOne_Converter.src.conversion
 
         internal override bool TestBlock(Identifier identifier)
         {
+            if (_variant == null)
+                return true;
             return ((identifier.flags >> 6) & 0x3F) == Variant;
         }
     }

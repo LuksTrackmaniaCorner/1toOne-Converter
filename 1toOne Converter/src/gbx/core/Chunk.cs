@@ -234,7 +234,7 @@ namespace _1toOne_Converter.src.gbx.core
             {
                 try
                 {
-                    return isSkippable ?? IsChunkSkippable(ChunkID);
+                    return isSkippable ?? IsChunkSkippable(ChunkID) ?? true;
                 }
                 catch(KeyNotFoundException)
                 {
@@ -339,24 +339,24 @@ namespace _1toOne_Converter.src.gbx.core
 
             Chunk newChunk;
 
-            try
+            if(IsChunkSkippable(chunkID) is bool skippable)
             {
-                if(IsChunkSkippable(chunkID))
+                if(skippable)
                 {
-                    Trace.Assert(s.ReadUInt() == skip, "Error reading chunk. ChunkID:" + chunkID.ToString("X"));
+                    Trace.Assert(s.ReadUInt() == skip, "Error reading chunk. ChunkID: " + chunkID.ToString("X"));
 
                     long chunkEndPos = s.ReadUInt() + s.Position;
 
                     newChunk = ReadChunk(s, chunkID, new GBXLBSContext(), list, out key);
 
-                    Trace.Assert(s.Position == chunkEndPos, "Error reading chunk. ChunkID:" + chunkID.ToString("X"));
+                    Trace.Assert(s.Position == chunkEndPos, "Error reading chunk. ChunkID: " + chunkID.ToString("X"));
                 }
                 else
                 {
                     newChunk = ReadChunk(s, chunkID, context, list, out key);
                 }
             }
-            catch(KeyNotFoundException)
+            else
             {
                 //Chunk not in database, testing if it can be skipped
                 uint testSkip = BitConverter.ToUInt32(s.SimplePeek(4), 0);
@@ -375,7 +375,7 @@ namespace _1toOne_Converter.src.gbx.core
                 }
                 else
                 {
-                    //This exeption will cause the read to end.
+                    //This exeption will cause the reading of the file to end.
                     throw new UnknownChunkException("Chunk could not be read ChunkID: " + chunkID.ToString("X"));
                 }
                 
@@ -397,8 +397,11 @@ namespace _1toOne_Converter.src.gbx.core
             return newChunk;
         }
 
-        public static bool IsChunkSkippable(uint chunkID)
+        public static bool? IsChunkSkippable(uint chunkID)
         {
+            if (!chunkInfos.ContainsKey(chunkID))
+                return null;
+
             return chunkInfos[chunkID].skippable;
         }
     }

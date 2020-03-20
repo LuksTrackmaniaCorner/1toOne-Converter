@@ -1,6 +1,7 @@
 ﻿using _1toOne_Converter.src.gbx.core;
 using _1toOne_Converter.src.gbx.core.primitives;
 using _1toOne_Converter.src.gbx.primitives;
+using _1toOne_Converter.src.util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -93,6 +94,11 @@ namespace _1toOne_Converter.src.gbx.chunks
             size.Value = (uint) (sizeEndPos - sizeStartPos);
             Size.WriteBack(s); //Write size back after everything else
             s.Position = sizeEndPos;
+        }
+
+        public void AddItem(MinimalItem item)
+        {
+            AddItem(item.Meta, item.Rot, item.BlockCoords, item.ItemCoords);
         }
 
         public void AddItem(Meta meta, GBXVec3 rot, GBXByte3 blockCoords, GBXVec3 itemCoords)

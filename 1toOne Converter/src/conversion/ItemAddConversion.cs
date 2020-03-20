@@ -10,6 +10,7 @@ using _1toOne_Converter.src.gbx.core.chunks;
 
 namespace _1toOne_Converter.src.conversion
 {
+    [Obsolete("Should make use of MinimalItem", false)]
     public class ItemAddConversion : Conversion
     {
         public List<Node> ExtraItems;

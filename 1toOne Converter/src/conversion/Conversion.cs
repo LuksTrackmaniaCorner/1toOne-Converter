@@ -18,7 +18,6 @@ namespace _1toOne_Converter.src.conversion
     [XmlInclude(typeof(EnviConversion))]
     [XmlInclude(typeof(GridDefineConversion))]
     [XmlInclude(typeof(GroundItemAddConversion))]
-    [XmlInclude(typeof(ItemAddConversion))]
     [XmlInclude(typeof(ItemClipAddConversion))]
     [XmlInclude(typeof(MultiBlockAddConversion))]
     [XmlInclude(typeof(PylonAddConversion))]
