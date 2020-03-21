@@ -98,7 +98,7 @@ namespace _1toOne_Converter.src.gbx.chunks
 
         public void AddItem(MinimalItem item)
         {
-            AddItem(item.Meta, item.Rot, item.BlockCoords, item.ItemCoords);
+            AddItem((Meta)item.Meta.DeepClone(), (GBXVec3)item.Rot.DeepClone(), (GBXByte3)item.BlockCoords.DeepClone(), (GBXVec3)item.ItemCoords.DeepClone());
         }
 
         public void AddItem(Meta meta, GBXVec3 rot, GBXByte3 blockCoords, GBXVec3 itemCoords)

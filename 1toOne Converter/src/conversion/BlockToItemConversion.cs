@@ -58,6 +58,15 @@ namespace _1toOne_Converter.src.conversion
 
             foreach (var block in blockChunk.Blocks)
             {
+                /*
+                if(block.BlockName.Content == "BayBuilding2Pillar" && ((block.Flags.Value & 0x1000) != 0 ))
+                {
+                    uint a = block.Flags.Value & 0x3F;
+                    uint b = (block.Flags.Value >> 6) & 0x3F;
+                    Console.WriteLine($"Variante: {a} Random: {b}");
+                }
+                */
+
                 if (!_blockNameDict.ContainsKey(block.BlockName.Content))
                     continue; //block cannot be converted;
 
@@ -93,20 +102,15 @@ namespace _1toOne_Converter.src.conversion
         private bool ConvertBlock(GBXFile file, Block block, bool isSecondaryTerrain, Challenge03043040 itemChunk)
         {
             var blockName = block.BlockName.Content;
-            if (_blockNameDict.ContainsKey(blockName))
-            {
-                var blockData = _blockNameDict[blockName];
-                var itemInfo = blockData.GetItemInfo(new Identifier(block, isSecondaryTerrain));
+            var blockData = _blockNameDict[blockName];
+            var itemInfo = blockData.GetItemInfo(new Identifier(block, isSecondaryTerrain));
 
-                if (itemInfo != null)
-                {
-                    //Getting item data
-                    itemInfo.PlaceRelToBlock(file, block, itemChunk, Collection, DefaultAuthor.Content);
-                    return true;
-                }
-            }
+            if (itemInfo == null)
+                return false;
 
-            return false;
+            //Placing Item
+            itemInfo.PlaceRelToBlock(file, block, itemChunk, Collection, DefaultAuthor.Content);
+            return true;
         }
 
         private class BlockDataLoc
