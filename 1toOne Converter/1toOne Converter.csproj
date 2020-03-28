@@ -177,6 +177,7 @@
     <Compile Include="src\util\Marker.cs" />
     <Compile Include="src\lzo\MiniLZO.cs" />
     <Compile Include="src\util\EnumeratorExtensions.cs" />
+    <Compile Include="src\util\Memoize.cs" />
     <Compile Include="src\util\MinimalItem.cs" />
     <Compile Include="src\util\Pylon.cs" />
     <Compile Include="src\util\RandomExtensions.cs" />

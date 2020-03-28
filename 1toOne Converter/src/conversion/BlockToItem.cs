@@ -291,7 +291,7 @@ namespace _1toOne_Converter.src.conversion
         }
     }
 
-    internal class Identifier
+    internal class Identifier : IEquatable<Identifier>
     {
         internal string blockName;
         internal uint flags;
@@ -312,6 +312,30 @@ namespace _1toOne_Converter.src.conversion
             flags = block.Flags.Value;
             this.isSecondaryTerrain = isSecondaryTerrain;
             skinLocator = ((BlockSkin03059002)block.Skin?.node.Get(Chunk.blockSkin03059002Key))?.packDesc.filePath.Value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Identifier);
+        }
+
+        public bool Equals(Identifier other)
+        {
+            return other != null &&
+                   blockName == other.blockName &&
+                   flags == other.flags &&
+                   isSecondaryTerrain == other.isSecondaryTerrain &&
+                   skinLocator == other.skinLocator;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 344487553;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(blockName);
+            hashCode = hashCode * -1521134295 + flags.GetHashCode();
+            hashCode = hashCode * -1521134295 + isSecondaryTerrain.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(skinLocator);
+            return hashCode;
         }
     }
 

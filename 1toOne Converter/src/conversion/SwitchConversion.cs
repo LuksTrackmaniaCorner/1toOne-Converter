@@ -23,6 +23,11 @@ namespace _1toOne_Converter.src.conversion
             _conversions = new Dictionary<string, Conversion>();
         }
 
+        internal override void Initialize()
+        {
+            //TODO preload conversions
+        }
+
         public override void Convert(GBXFile file)
         {
             var commonChunk = (ChallengeCommon)file.GetChunk(Chunk.challengeCommonKey);
