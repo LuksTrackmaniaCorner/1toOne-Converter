@@ -48,6 +48,7 @@ namespace _1toOne_Converter.src
         {
             try
             {
+                SetInvariantCulture();
                 ConvertMaps(args);
             }
             catch(Exception e)
@@ -56,6 +57,15 @@ namespace _1toOne_Converter.src
                 Console.WriteLine(e);
                 Console.ReadKey();
             }
+        }
+
+        public static void SetInvariantCulture()
+        {
+            var culture = System.Globalization.CultureInfo.InvariantCulture;
+            System.Globalization.CultureInfo.CurrentCulture = culture;
+            System.Globalization.CultureInfo.CurrentUICulture = culture;
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
         }
 
         public static void ConvertMaps(string[] args)
