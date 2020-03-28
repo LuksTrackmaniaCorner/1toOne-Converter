@@ -20,13 +20,18 @@ namespace _1toOne_Converter.src.conversion
         public FlagName[] BlockIgnoreFlags;
 
         public List<BlockData> Blocks;
+        // Two optimizations are going on
+        // 1. BlockDatas are not searched manually, but stored in a dict.
+        // 2. Inputs are memoized and only manually looked up once.
         private readonly Dictionary<string, BlockData> _blockNameDict;
+        private readonly Func<Identifier, ItemInfo> _getItemInfoMemoized;
 
         public FlagName ItemCountStatistic;
 
-        public BlockToItemConversion()
+        private BlockToItemConversion()
         {
             _blockNameDict = new Dictionary<string, BlockData>();
+            _getItemInfoMemoized = Memoize.MakeMemoized<Identifier, ItemInfo>(GetItemInfo);
         }
 
         internal override void Initialize()
@@ -58,15 +63,6 @@ namespace _1toOne_Converter.src.conversion
 
             foreach (var block in blockChunk.Blocks)
             {
-                /*
-                if(block.BlockName.Content == "BayBuilding2Pillar" && ((block.Flags.Value & 0x1000) != 0 ))
-                {
-                    uint a = block.Flags.Value & 0x3F;
-                    uint b = (block.Flags.Value >> 6) & 0x3F;
-                    Console.WriteLine($"Variante: {a} Random: {b}");
-                }
-                */
-
                 if (!_blockNameDict.ContainsKey(block.BlockName.Content))
                     continue; //block cannot be converted;
 
@@ -101,9 +97,8 @@ namespace _1toOne_Converter.src.conversion
 
         private bool ConvertBlock(GBXFile file, Block block, bool isSecondaryTerrain, Challenge03043040 itemChunk)
         {
-            var blockName = block.BlockName.Content;
-            var blockData = _blockNameDict[blockName];
-            var itemInfo = blockData.GetItemInfo(new Identifier(block, isSecondaryTerrain));
+            //var itemInfo = _getItemInfoMemoized(new Identifier(block, isSecondaryTerrain));
+            var itemInfo = GetItemInfo(new Identifier(block, isSecondaryTerrain));
 
             if (itemInfo == null)
                 return false;
@@ -111,6 +106,12 @@ namespace _1toOne_Converter.src.conversion
             //Placing Item
             itemInfo.PlaceRelToBlock(file, block, itemChunk, Collection, DefaultAuthor.Content);
             return true;
+        }
+
+        private ItemInfo GetItemInfo(Identifier identifier)
+        {
+            var blockData = _blockNameDict[identifier.blockName];
+            return blockData.GetItemInfo(identifier);
         }
 
         private class BlockDataLoc
