@@ -1,0 +1,132 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Converter_UI"
+        x:Name="TrackMania_One_Converter"
+        x:Class="Converter_UI.MainWindow"
+        mc:Ignorable="d"
+        Title="TrackMania One Converter" Height="483.031" Width="607.238" Icon="image/1One_Logo.png" Foreground="{x:Null}" ResizeMode="NoResize">
+    <Grid HorizontalAlignment="Left" Height="445.091" VerticalAlignment="Top" Width="583.238" Margin="2.001,0,0,-1.06">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="84*"/>
+            <RowDefinition Height="361*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="115*"/>
+            <ColumnDefinition Width="468*"/>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.ColumnSpan="3" Content="TMUF to TMOne Converter" HorizontalAlignment="Left" Margin="56.598,6.482,0,0" VerticalAlignment="Top" FontSize="16" Height="35.316" Width="204.715"/>
+        <Image Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="43.098" Margin="10,10,0,0" VerticalAlignment="Top" Width="43.098" Source="image/1One_Logo.png"/>
+        <Label Grid.ColumnSpan="3" Content="Version 1.8.6" HorizontalAlignment="Left" Margin="58.098,28.164,0,0" VerticalAlignment="Top" FontSize="14" Height="35.316" Width="204.715" Opacity="0.5"/>
+        <Label Content="Supported environments" HorizontalAlignment="Left" Margin="299.842,6.057,-2.366,0" VerticalAlignment="Top" FontSize="14" Height="35.316" Width="170.715" Opacity="0.5" Grid.Column="2" Grid.ColumnSpan="3"/>
+        <Image HorizontalAlignment="Left" Height="20.599" Margin="347.379,32.499,0,0" VerticalAlignment="Top" Width="20.599" Source="image/Bay.png" AutomationProperties.HelpText="Bay" Grid.Column="2"/>
+        <Button Content="Convert" HorizontalAlignment="Left" Margin="332.447,308.216,0,0" VerticalAlignment="Top" Width="130.791" Height="39.541" FontSize="14" Grid.Column="2" Grid.Row="1"/>
+        <Button Content="Settings" HorizontalAlignment="Left" Margin="69.066,308.216,0,0" VerticalAlignment="Top" Width="92.791" Height="39.542" Background="#FFDDDDDD" FontSize="14" Grid.Column="2" Grid.Row="1"/>
+        <Separator Grid.ColumnSpan="3" Height="4.051" Margin="10,59.429,4.801,0" VerticalAlignment="Top"/>
+        <Separator Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="4.865" Margin="11.072,297.351,0,0" VerticalAlignment="Top" Width="566.547" Grid.Row="1"/>
+        <Label Grid.ColumnSpan="2" Content="Maps to convert" HorizontalAlignment="Left" Margin="4.664,59.765,0,0" VerticalAlignment="Top" Height="31.345" Width="110.383" FontSize="14" Grid.RowSpan="2"/>
+        <Button Grid.ColumnSpan="2" Content="Load Tracks" HorizontalAlignment="Left" Margin="10,308.216,0,0" VerticalAlignment="Top" Width="95.047" Height="39.542" Background="#FFDDDDDD" FontSize="14" Grid.Row="1"/>
+        <Label Content="Map information" HorizontalAlignment="Left" Margin="303.78,59.765,0,0" VerticalAlignment="Top" Height="31.345" Width="159.61" RenderTransformOrigin="0.5,0.5" FontSize="14" Grid.Column="2" Grid.RowSpan="2"/>
+        <Image HorizontalAlignment="Left" Height="156.462" Margin="306.928,6.777,0,0" VerticalAlignment="Top" Width="156.462" Source="image/Extremist«.Challenge.bmp" Grid.Column="2" Grid.Row="1"/>
+        <Label Content="Extremist«" HorizontalAlignment="Left" Margin="323.725,165.802,0,0" VerticalAlignment="Top" Background="{x:Null}" Height="31.177" Width="80.483" FontSize="14" Grid.Column="2" Grid.Row="1"/>
+        <Image HorizontalAlignment="Left" Height="22.418" Margin="302.849,169.738,0,0" VerticalAlignment="Top" Width="22.418" Source="image/Bay.png" Grid.Column="2" Grid.Row="1"/>
+        <Label Content="Author: jenox" HorizontalAlignment="Left" Margin="301.176,196.789,0,0" VerticalAlignment="Top" Width="156.462" Height="31.177" FontSize="13" Grid.Column="2" Grid.Row="1"/>
+        <Label Content="Time: 0:29.330" HorizontalAlignment="Left" Margin="301.176,216.605,0,0" VerticalAlignment="Top" Width="156.462" Height="31.176" FontSize="13" Grid.Column="2" Grid.Row="1"/>
+        <Label Content="Mood:" HorizontalAlignment="Left" Margin="301.176,240.372,0,0" VerticalAlignment="Top" Width="52.38" Height="31.176" FontSize="13" Grid.Column="2" Grid.Row="1"/>
+        <ComboBox HorizontalAlignment="Left" Height="25.104" Margin="358.556,242.442,0,0" VerticalAlignment="Top" Width="104.016" FontSize="13" Grid.Column="2" SelectedIndex="1" Grid.Row="1">
+            <ComboBoxItem Content="Sunrise" FontSize="12"/>
+            <ComboBoxItem Content="Day" FontSize="12" FontWeight="Bold"/>
+            <ComboBoxItem Content="Sunset" FontSize="12"/>
+            <ComboBoxItem Content="Night" FontSize="12"/>
+        </ComboBox>
+        <ListBox Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="285.574" Margin="10,6.777,0,0" VerticalAlignment="Top" Width="401.223" Grid.Row="1">
+            <Grid x:Name="Entry1" Height="41.01" Width="367.437">
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="367.437" Fill="{DynamicResource SelectedBackgroundBrush}" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="40.011" Margin="8.75,0.502,0,0" VerticalAlignment="Top" Width="136.499" Source="image/banner/BayBanner.png" Opacity="0.235"/>
+                <Label Content="Extremist«" HorizontalAlignment="Left" Margin="18.33,-0.165,0,0" VerticalAlignment="Top" Width="156.462" Height="31.177" FontSize="13" FontWeight="Bold"/>
+                <Label Content="by jenox" HorizontalAlignment="Left" Margin="18.33,15.175,0,-2.836" VerticalAlignment="Top" Width="143.129" Height="28.671" FontSize="13"/>
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="8.771" Fill="#FF00BAFF" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="17.18" Margin="339.771,12.168,0,0" VerticalAlignment="Top" Width="16.333" Source="image/Checkmark.png" Opacity="0.25"/>
+            </Grid>
+            <Grid x:Name="Entry1_Copy" Height="41.01" Width="367.437">
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="367.437" Fill="{DynamicResource SelectedBackgroundBrush}" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="40.011" Margin="8.75,0.502,0,0" VerticalAlignment="Top" Width="136.499" Source="image/banner/BayBanner.png" Opacity="0.235"/>
+                <Label Content="Testmap" HorizontalAlignment="Left" Margin="18.33,-0.165,0,0" VerticalAlignment="Top" Width="156.462" Height="31.177" FontSize="13" FontWeight="Bold"/>
+                <Label Content="by florenzius" HorizontalAlignment="Left" Margin="18.33,15.175,0,-2.836" VerticalAlignment="Top" Width="143.129" Height="28.671" FontSize="13"/>
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="8.771" Fill="#FFFF0202" Height="40.011" VerticalAlignment="Top"/>
+                <Label Content="Base not compatible" HorizontalAlignment="Left" Margin="239.34,7.999,0,0" VerticalAlignment="Top" Opacity="0.5"/>
+            </Grid>
+            <Grid x:Name="Entry1_Copy1" Height="41.01" Width="367.437">
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="367.437" Fill="{DynamicResource SelectedBackgroundBrush}" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="40.011" Margin="8.75,0.502,0,0" VerticalAlignment="Top" Width="136.499" Source="bay-banner.png" Opacity="0.235"/>
+                <Label Content="Testmap2" HorizontalAlignment="Left" Margin="18.33,-0.165,0,0" VerticalAlignment="Top" Width="156.462" Height="31.177" FontSize="13" FontWeight="Bold"/>
+                <Label Content="by florenzius" HorizontalAlignment="Left" Margin="18.33,15.175,0,-2.836" VerticalAlignment="Top" Width="143.129" Height="28.671" FontSize="13"/>
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="8.771" Fill="#FFFF0202" Height="40.011" VerticalAlignment="Top"/>
+                <Label Content="Map file not valid" HorizontalAlignment="Left" Margin="253.992,7.999,0,0" VerticalAlignment="Top" Opacity="0.5"/>
+            </Grid>
+            <Grid x:Name="Entry1_Copy2" Height="41.01" Width="367.437">
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="367.437" Fill="{DynamicResource SelectedBackgroundBrush}" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="40.011" Margin="8.75,0.502,0,0" VerticalAlignment="Top" Width="136.499" Source="bay-banner.png" Opacity="0.235"/>
+                <Label Content="TMS A01" HorizontalAlignment="Left" Margin="18.33,-0.165,0,0" VerticalAlignment="Top" Width="156.462" Height="31.177" FontSize="13" FontWeight="Bold"/>
+                <Label Content="by Nadeo" HorizontalAlignment="Left" Margin="18.33,15.175,0,-2.836" VerticalAlignment="Top" Width="143.129" Height="28.671" FontSize="13"/>
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="8.771" Fill="#FF00BAFF" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="17.18" Margin="339.771,12.168,0,0" VerticalAlignment="Top" Width="16.333" Source="checkmark-24-512.png" Opacity="0.25"/>
+            </Grid>
+            <Grid x:Name="Entry1_Copy3" Height="41.01" Width="367.437">
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="367.437" Fill="{DynamicResource SelectedBackgroundBrush}" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="40.011" Margin="8.75,0.502,0,0" VerticalAlignment="Top" Width="136.499" Source="bay-banner.png" Opacity="0.235"/>
+                <Label Content="TMS A02" HorizontalAlignment="Left" Margin="18.33,-0.165,0,0" VerticalAlignment="Top" Width="156.462" Height="31.177" FontSize="13" FontWeight="Bold"/>
+                <Label Content="by Nadeo" HorizontalAlignment="Left" Margin="18.33,15.175,0,-2.836" VerticalAlignment="Top" Width="143.129" Height="28.671" FontSize="13"/>
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="8.771" Fill="#FF00BAFF" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="17.18" Margin="339.771,12.168,0,0" VerticalAlignment="Top" Width="16.333" Source="checkmark-24-512.png" Opacity="0.25"/>
+            </Grid>
+            <Grid x:Name="Entry1_Copy4" Height="41.01" Width="367.437">
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="367.437" Fill="{DynamicResource SelectedBackgroundBrush}" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="40.011" Margin="8.75,0.502,0,0" VerticalAlignment="Top" Width="136.499" Source="bay-banner.png" Opacity="0.235"/>
+                <Label Content="TMS A03" HorizontalAlignment="Left" Margin="18.33,-0.165,0,0" VerticalAlignment="Top" Width="156.462" Height="31.177" FontSize="13" FontWeight="Bold"/>
+                <Label Content="by Nadeo" HorizontalAlignment="Left" Margin="18.33,15.175,0,-2.836" VerticalAlignment="Top" Width="143.129" Height="28.671" FontSize="13"/>
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="8.771" Fill="#FF00BAFF" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="17.18" Margin="339.771,12.168,0,0" VerticalAlignment="Top" Width="16.333" Source="checkmark-24-512.png" Opacity="0.25"/>
+            </Grid>
+            <Grid x:Name="Entry1_Copy5" Height="41.01" Width="367.437">
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="367.437" Fill="{DynamicResource SelectedBackgroundBrush}" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="40.011" Margin="8.75,0.502,0,0" VerticalAlignment="Top" Width="136.499" Source="image/banners/BayBanner.png" Opacity="0.235"/>
+                <Label Content="TMS A03" HorizontalAlignment="Left" Margin="18.33,-0.165,0,0" VerticalAlignment="Top" Width="156.462" Height="31.177" FontSize="13" FontWeight="Bold"/>
+                <Label Content="by Nadeo" HorizontalAlignment="Left" Margin="18.33,15.175,0,-2.836" VerticalAlignment="Top" Width="143.129" Height="28.671" FontSize="13"/>
+                <Rectangle HorizontalAlignment="Left" Margin="0,0.502,0,0" Width="8.771" Fill="#FF00BAFF" Height="40.011" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Height="17.18" Margin="339.771,12.168,0,0" VerticalAlignment="Top" Width="16.333" Source="image/Checkmark.png" Opacity="0.25"/>
+            </Grid>
+        </ListBox>
+        <Button Content="Clear" HorizontalAlignment="Left" Margin="110.047,308.216,0,0" VerticalAlignment="Top" Width="69.066" Height="39.542" Background="#FFDDDDDD" FontSize="14" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1"/>
+        <Image HorizontalAlignment="Left" Height="20.599" Margin="303.78,32.499,0,0" VerticalAlignment="Top" Width="20.599" Source="image/Alpine.png" AutomationProperties.HelpText="Bay" Grid.Column="2"/>
+        <Image HorizontalAlignment="Left" Height="20.599" Margin="324.379,32.499,0,0" VerticalAlignment="Top" Width="20.599" Source="image/Speed.png" AutomationProperties.HelpText="Bay" Grid.Column="2"/>
+        <Image HorizontalAlignment="Left" Height="20.599" Margin="372.978,32.499,0,0" VerticalAlignment="Top" Width="20.599" Source="image/Rally.png" AutomationProperties.HelpText="Bay" Grid.Column="2" Opacity="0.315">
+            <Image.Effect>
+                <BlurEffect Radius="3"/>
+            </Image.Effect>
+        </Image>
+        <Image HorizontalAlignment="Left" Height="20.599" Margin="397.577,32.499,0,0" VerticalAlignment="Top" Width="20.599" Source="image/Coast.png" AutomationProperties.HelpText="Bay" Grid.Column="2" Opacity="0.315">
+            <Image.Effect>
+                <BlurEffect Radius="3"/>
+            </Image.Effect>
+        </Image>
+        <Image HorizontalAlignment="Left" Height="20.599" Margin="421.077,32.499,0,0" VerticalAlignment="Top" Width="20.599" Source="image/Island.png" AutomationProperties.HelpText="Bay" Grid.Column="2" Opacity="0.315">
+            <Image.Effect>
+                <BlurEffect Radius="3"/>
+            </Image.Effect>
+        </Image>
+        <Separator HorizontalAlignment="Left" Height="6.199" Margin="306.928,196.019,0,0" VerticalAlignment="Top" Width="155.644" Grid.Row="1" Grid.Column="2"/>
+        <Label Content="(17)" HorizontalAlignment="Left" Margin="108.716,60.098,0,0" VerticalAlignment="Top" Height="31.345" Width="46.383" FontSize="14" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Opacity="0.5"/>
+        <Label Content="Car:" HorizontalAlignment="Left" Margin="301.176,267.708,0,0" VerticalAlignment="Top" Width="52.38" Height="31.176" FontSize="13" Grid.Column="2" Grid.Row="1"/>
+        <ComboBox HorizontalAlignment="Left" Height="25.104" Margin="358.556,269.778,0,0" VerticalAlignment="Top" Width="104.016" FontSize="13" Grid.Column="2" SelectedIndex="1" Grid.Row="1">
+            <ComboBoxItem Content="SnowCar" FontSize="12"/>
+            <ComboBoxItem Content="BayCar" FontSize="12" FontWeight="Bold"/>
+            <ComboBoxItem Content="DesertCar" FontSize="12"/>
+        </ComboBox>
+    </Grid>
+</Window>

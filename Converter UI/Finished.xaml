@@ -1,0 +1,17 @@
+﻿<Window x:Class="Converter_UI.Finished"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Converter_UI"
+        mc:Ignorable="d"
+        Title="Conversion finished" Height="175.562" Width="259.193" ResizeMode="NoResize" Icon="image/1One_Logo.png">
+    <Grid>
+        <Label Content="Conversion finished." HorizontalAlignment="Left" Margin="56.596,6.482,-16.19,0" VerticalAlignment="Top" FontSize="16" Height="35.316" Width="204.715"/>
+        <Image HorizontalAlignment="Left" Height="43.098" Margin="9.998,10,0,0" VerticalAlignment="Top" Width="43.098" Source="image/1One_Logo.png"/>
+        <Label Content="Converted 15 maps" HorizontalAlignment="Left" Margin="58.096,28.164,0,0" VerticalAlignment="Top" FontSize="14" Height="35.316" Width="204.715" Opacity="0.5"/>
+        <Label Content="Failed to convert 2 maps: See logs." HorizontalAlignment="Left" Margin="6.971,54.87,0,0" VerticalAlignment="Top" FontSize="14" Height="35.316" Width="227.098" Opacity="0.5"/>
+        <Button Content="Close Window" HorizontalAlignment="Left" Margin="10,88.949,0,0" VerticalAlignment="Top" Width="224.069" Height="39.541" FontSize="14"/>
+
+    </Grid>
+</Window>
