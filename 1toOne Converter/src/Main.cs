@@ -77,20 +77,12 @@ namespace _1toOne_Converter.src
         {
             string DefaultXmlFilePath = @"Default.xml";
 
-            string xmlFile = null;
             var gbxFiles = new List<string>();
 
             //Getting the files from the command line arguments
             foreach(var file in args)
             {
-                if(file.EndsWith(".xml", true, null))
-                {
-                    if (xmlFile != null)
-                        throw new Exception("Invalid command line arguments. You can only specify one xml file");
-
-                    xmlFile = file;
-                }
-                else if(file.EndsWith(".Challenge.Gbx"))
+                if(file.EndsWith(".Challenge.Gbx", true, null))
                 {
                     gbxFiles.Add(file);
                 }
@@ -100,12 +92,8 @@ namespace _1toOne_Converter.src
                 }
             }
 
-            //Setting to default conversion if nothing has been specified.
-            if(xmlFile == null)
-            {
-                Directory.SetCurrentDirectory(FileHelper.ProgramPath);
-                xmlFile = DefaultXmlFilePath;
-            }
+            Directory.SetCurrentDirectory(FileHelper.ProgramPath);
+            var xmlFile = DefaultXmlFilePath;
 
             //Getting the files manually, if no command line arguments have been found.
             if (gbxFiles.Count == 0)
