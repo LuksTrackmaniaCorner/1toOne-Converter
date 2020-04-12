@@ -46,6 +46,10 @@ namespace _1toOne_Converter.src
         [STAThread] //Required for OpenFileDialog
         public static void Main(string[] args)
         {
+#if DEBUG
+            SetInvariantCulture();
+            ConvertMaps(args);
+#else
             try
             {
                 SetInvariantCulture();
@@ -57,6 +61,7 @@ namespace _1toOne_Converter.src
                 Console.WriteLine(e);
                 Console.ReadKey();
             }
+#endif
         }
 
         public static void SetInvariantCulture()

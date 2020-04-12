@@ -139,7 +139,7 @@ namespace _1toOne_Converter.src.gbx.core.chunks
             if (UnknownUInt128 == null)
                 UnknownUInt128 = new Unread(16);
             if (MapType == null)
-                MapType = new GBXString("Trackmania/Race");
+                MapType = new GBXString("Race");
             if (MapStyle == null)
                 MapStyle = new GBXString("");
             unknownBool = null;
