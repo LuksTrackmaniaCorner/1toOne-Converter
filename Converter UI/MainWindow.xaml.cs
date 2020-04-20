@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Converter;
+using Converter.util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,29 @@ namespace Converter_UI
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void _loadButton_Click(object sender, RoutedEventArgs e)
+        {
+            var files = FileHelper.GetFilePaths(".gbx");
+
+            if (files == null)
+                return;
+
+            foreach (var file in files)
+            {
+                _converterList.Items.Add(new Converter(file));
+            }
+        }
+
+        private void _clearButton_Click(object sender, RoutedEventArgs e)
+        {
+            _converterList.Items.Clear();
+        }
+
+        private void _settingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            new Settings().Show();
         }
     }
 }

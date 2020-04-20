@@ -8,51 +8,55 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="image\1One_Logo.png" />
-    <None Remove="image\Alpine.png" />
-    <None Remove="image\banner\BayBanner.png" />
-    <None Remove="image\Bay.png" />
-    <None Remove="image\Checkmark.png" />
-    <None Remove="image\Coast.png" />
-    <None Remove="image\Cross.png" />
-    <None Remove="image\Extremist«.Challenge.bmp" />
-    <None Remove="image\Island.png" />
-    <None Remove="image\Rally.png" />
-    <None Remove="image\Speed.png" />
+    <None Remove="Image\1One_Logo.png" />
+    <None Remove="Image\Alpine.png" />
+    <None Remove="Image\banner\BayBanner.png" />
+    <None Remove="Image\Bay.png" />
+    <None Remove="Image\Checkmark.png" />
+    <None Remove="Image\Coast.png" />
+    <None Remove="Image\Cross.png" />
+    <None Remove="Image\Extremist«.Challenge.bmp" />
+    <None Remove="Image\Island.png" />
+    <None Remove="Image\Rally.png" />
+    <None Remove="Image\Speed.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="image\1One_Logo.png">
+    <ProjectReference Include="..\Converter\Converter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Image\1One_Logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="image\Alpine.png">
+    <Resource Include="Image\Alpine.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="image\banner\BayBanner.png">
+    <Resource Include="Image\banner\BayBanner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="image\Bay.png">
+    <Resource Include="Image\Bay.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="image\Checkmark.png">
+    <Resource Include="Image\Checkmark.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="image\Coast.png">
+    <Resource Include="Image\Coast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="image\Cross.png">
+    <Resource Include="Image\Cross.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="image\Extremist«.Challenge.bmp">
+    <Resource Include="Image\Extremist«.Challenge.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="image\Island.png">
+    <Resource Include="Image\Island.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="image\Rally.png">
+    <Resource Include="Image\Rally.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="image\Speed.png">
+    <Resource Include="Image\Speed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
