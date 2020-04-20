@@ -1,7 +1,0 @@
-﻿[*.cs]
-
-# IDE0017: Simplify object initialization
-dotnet_style_object_initializer = true:none
-
-# IDE0002: Simplify Member Access
-dotnet_diagnostic.IDE0002.severity = none
