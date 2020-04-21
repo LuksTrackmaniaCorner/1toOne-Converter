@@ -95,8 +95,8 @@
                     <DataTemplate>
                         <Canvas Height="40" MinWidth="370" Background="#FFDDDDDD" HorizontalAlignment="Stretch">
                             <Image Canvas.Left="8" HorizontalAlignment="Left" Height="40" Width="140" Source="image/banner/BayBanner.png" Opacity="0.25"/>
-                            <Label Canvas.Left="18" Canvas.Top="-2" Content=" {Binding MapName}" Width="300" FontSize="13" FontWeight="Bold"/>
-                            <Label Canvas.Left="18" Canvas.Top="14" Content=" {Binding Author}" Width="300" FontSize="13"/>
+                            <Label Canvas.Left="18" Canvas.Top="-2" Content="{Binding MapName}" Width="300" FontSize="13" FontWeight="Bold"/>
+                            <Label Canvas.Left="18" Canvas.Top="14" Content="{Binding Author}" Width="300" FontSize="13"/>
                             <Rectangle HorizontalAlignment="Left" Width="8" Fill="#FF00BAFF" Height="40" VerticalAlignment="Top"/>
                             <!-- Fill Failure "#FFFF0202" -->
                             <Image Canvas.Right="20" Canvas.Top="11" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="16" Source="image/Checkmark.png" Opacity="0.25"/>

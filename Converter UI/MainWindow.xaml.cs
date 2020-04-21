@@ -36,7 +36,7 @@ namespace Converter_UI
 
             foreach (var file in files)
             {
-                _converterList.Items.Add(new Converter(file));
+                _converterList.Items.Add(new Converter.Converter(file));
             }
         }
 
