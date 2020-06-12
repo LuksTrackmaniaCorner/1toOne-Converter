@@ -10,7 +10,13 @@
   <ItemGroup>
     <None Remove="Image\1One_Logo.png" />
     <None Remove="Image\Alpine.png" />
-    <None Remove="Image\banner\BayBanner.png" />
+    <None Remove="Image\Banner\BannerAlpine.png" />
+    <None Remove="Image\Banner\BannerBay.png" />
+    <None Remove="Image\Banner\BannerCoast.png" />
+    <None Remove="Image\Banner\BannerIsland.png" />
+    <None Remove="Image\Banner\BannerRally.png" />
+    <None Remove="Image\Banner\BannerSpeed.png" />
+    <None Remove="Image\Banner\BayBanner.png" />
     <None Remove="Image\Bay.png" />
     <None Remove="Image\Checkmark.png" />
     <None Remove="Image\Coast.png" />
@@ -32,7 +38,22 @@
     <Resource Include="Image\Alpine.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\banner\BayBanner.png">
+    <Resource Include="Image\Banner\BannerAlpine.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Image\Banner\BannerBay.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Image\Banner\BannerCoast.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Image\Banner\BannerIsland.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Image\Banner\BannerRally.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Image\Banner\BannerSpeed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Image\Bay.png">

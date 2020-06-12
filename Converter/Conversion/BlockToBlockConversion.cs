@@ -16,7 +16,7 @@ namespace Converter.Converion
         [XmlElement(ElementName = "BlockToBlock")]
         public BlockToBlock[] BlockToBlocks;
 
-        private Dictionary<string, BlockToBlock> _blockDict;
+        private readonly Dictionary<string, BlockToBlock> _blockDict;
 
         public BlockToBlockConversion()
         {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Converter.Gbx.core.chunks
 {
-    class ChallengeCommon : Chunk
+    public class ChallengeCommon : Chunk
     {
         public static readonly string versionKey = "Version";
         public static readonly string trackMetaKey = "Meta";

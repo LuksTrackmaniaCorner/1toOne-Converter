@@ -1,6 +1,7 @@
 ﻿using Converter.Gbx;
 using Converter.Gbx.chunks;
 using Converter.Gbx.core;
+using Converter.Gbx.core.primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,53 +17,30 @@ namespace Converter.Converion
     public class MultiBlockAddConversion : Conversion
     {
         public Block NewBlock;
-        public Range XRange;
-        public Range YRange;
-        public Range ZRange;
+        public GBXByte XStep;
+        public GBXByte YValue;
+        public GBXByte ZStep;
 
         public override void Convert(GBXFile file)
         {
             var blockChunk = (Challenge0304301F)file.GetChunk(Chunk.challenge0304301FKey);
+            var chunk0304301F = (Challenge0304301F)file.GetChunk(Chunk.challenge0304301FKey);
+            var mapSize = chunk0304301F.MapSize;
 
             blockChunk.Version.Value = 6; //Adding Support for Custom Blocks
 
             var block = (Block)NewBlock.DeepClone();
 
-            foreach(var x in XRange.GetValues())
+            for(byte x = 1; x <= mapSize.X; x += XStep.Value)
             {
-                foreach(var y in YRange.GetValues())
+                for(byte z = 1; z <= mapSize.Z; z += ZStep.Value)
                 {
-                    foreach(var z in ZRange.GetValues())
-                    {
-                        block.Coords.X = x;
-                        block.Coords.Y = y;
-                        block.Coords.Z = z;
-                        blockChunk.Blocks.Add((Block)block.DeepClone());
-                    }
+                    block.Coords.X = x;
+                    block.Coords.Y = YValue.Value;
+                    block.Coords.Z = z;
+                    blockChunk.Blocks.Add((Block)block.DeepClone());
                 }
             }
-        }
-    }
-
-    public class Range
-    {
-        [XmlAttribute]
-        public byte start;
-        [XmlAttribute]
-        public byte end;
-        [XmlAttribute]
-        public byte step = 1;
-
-        public IEnumerable<byte> GetValues()
-        {
-            byte current = start;
-
-            do
-            {
-                yield return current;
-                current += step;
-            }
-            while (current <= end);
         }
     }
 }

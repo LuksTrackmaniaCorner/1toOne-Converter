@@ -46,9 +46,12 @@ namespace Converter.Converion
             if(!_oldDecoDict.ContainsKey(mapDeco))
                 throw new UnsupportedMapBaseException();
 
+#pragma warning disable IDE0042 // Deconstruct variable declaration
             var deco = _oldDecoDict[mapDeco];
+#pragma warning restore IDE0042 // Deconstruct variable declaration
             var newDeco = deco.newDecoration;
             var gridOffset = deco.oldDecoration.GridOffset;
+            var mapSize = deco.newDecoration.MapSize ?? this.MapSize;
 
             //Change data in common chunk
             commonChunk.TrackMeta.Collection = (GBXLBS) newDeco.Deco.Collection.DeepClone();
@@ -65,7 +68,7 @@ namespace Converter.Converion
             }
 
             //Adjust map size
-            chunk0304301F.MapSize = (GBXNat3) MapSize.DeepClone();
+            chunk0304301F.MapSize = (GBXNat3) mapSize.DeepClone();
 
             //Place Warp items
             var warpItems = newDeco.WarpItems;
@@ -105,6 +108,9 @@ namespace Converter.Converion
 
         [XmlElement(IsNullable = false, ElementName ="WarpItem")]
         public MinimalItem[] WarpItems;
+
+        [XmlElement]
+        public GBXNat3 MapSize;
     }
 
     public class Vector

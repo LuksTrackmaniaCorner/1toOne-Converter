@@ -2,6 +2,7 @@
 using Converter.util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,8 @@ namespace Converter_UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ObservableCollection<UIConverter> Converters { get; } = new ObservableCollection<UIConverter>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,13 +39,13 @@ namespace Converter_UI
 
             foreach (var file in files)
             {
-                _converterList.Items.Add(new Converter.Converter(file));
+                Converters.Add(new UIConverter(file));
             }
         }
 
         private void _clearButton_Click(object sender, RoutedEventArgs e)
         {
-            _converterList.Items.Clear();
+            Converters.Clear();
         }
 
         private void _settingsButton_Click(object sender, RoutedEventArgs e)

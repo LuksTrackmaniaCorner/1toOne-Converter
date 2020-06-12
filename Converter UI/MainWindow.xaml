@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Converter_UI"
-        x:Name="TrackMania_One_Converter"
+        x:Name="Window"
         x:Class="Converter_UI.MainWindow"
         mc:Ignorable="d"
         Title="TrackMania One Converter" Height="500" MinHeight="500" Width="600" MinWidth="600" Icon="image/1One_Logo.png" ResizeMode="CanResize">
@@ -66,14 +66,14 @@
         <Separator DockPanel.Dock="Bottom" Margin="10,2,10,2" />
         <Grid DockPanel.Dock="Bottom" Margin="10,0,10,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="29" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="150" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="5" />
-                <RowDefinition Height="25" />
-                <RowDefinition Height="25" />
-                <RowDefinition Height="29" />
-                <RowDefinition Height="29" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -82,10 +82,15 @@
                 <ColumnDefinition Width="25" />
                 <ColumnDefinition Width="105" />
             </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="ClipToBounds" Value="False"/>
+                </Style>
+            </Grid.Resources>
             <Label Content="Maps to convert" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center" FontSize="14" />
             <Label Content="(17)" HorizontalAlignment="Left" Margin="110,0,0,0" VerticalAlignment="Center" FontSize="14" Opacity="0.5" />
             <Label Grid.Column="1" Grid.ColumnSpan="3" Content="Map information" HorizontalAlignment="Left" Margin="2,0,0,0" FontSize="14" />
-            <ListView Name="_converterList" Grid.Row="1" Grid.RowSpan="9" Margin="0,0,5,10" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView x:Name="ConverterList" ItemsSource="{Binding Converters, ElementName=Window}" Grid.Row="1" Grid.RowSpan="9" Margin="0,0,5,10" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal" />
@@ -94,36 +99,52 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Canvas Height="40" MinWidth="370" Background="#FFDDDDDD" HorizontalAlignment="Stretch">
-                            <Image Canvas.Left="8" HorizontalAlignment="Left" Height="40" Width="140" Source="image/banner/BayBanner.png" Opacity="0.25"/>
+                            <Rectangle HorizontalAlignment="Left" Width="8" Fill="{Binding Color}" Height="40" VerticalAlignment="Top"/>
+                            <Image Canvas.Left="8" HorizontalAlignment="Left" Height="40" Width="140" Source="{Binding BannerPath}" Opacity="0.25"/>
                             <Label Canvas.Left="18" Canvas.Top="-2" Content="{Binding MapName}" Width="300" FontSize="13" FontWeight="Bold"/>
                             <Label Canvas.Left="18" Canvas.Top="14" Content="{Binding Author}" Width="300" FontSize="13"/>
-                            <Rectangle HorizontalAlignment="Left" Width="8" Fill="#FF00BAFF" Height="40" VerticalAlignment="Top"/>
-                            <!-- Fill Failure "#FFFF0202" -->
                             <Image Canvas.Right="20" Canvas.Top="11" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="16" Source="image/Checkmark.png" Opacity="0.25"/>
                         </Canvas>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Image Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Height="150" Width="150" Margin="5,0,0,0" VerticalAlignment="Center" Source="image/Extremist«.Challenge.bmp" />
-            <Image Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Height="25" VerticalAlignment="Center" Width="25" Source="image/Bay.png" />
-            <Label Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Content="Extremist«" VerticalAlignment="Center"  FontSize="14" Height="25" />
+            <Image Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Height="150" Width="150" Margin="5,0,0,0" VerticalAlignment="Center" Source="{Binding SelectedItem.Thumbnail, ElementName=ConverterList}" RenderTransformOrigin="0.5,0.5" >
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="-1"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+            <Image Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Source="{Binding SelectedItem.IconPath, ElementName=ConverterList}" Height="25" VerticalAlignment="Center" Width="25" />
+            <Label Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Content="{Binding SelectedItem.MapName, ElementName=ConverterList}" VerticalAlignment="Center"  FontSize="14" />
             <Separator Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="5,2,0,2"/>
-            <Label Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Content="Author: jenox" VerticalAlignment="Center" FontSize="13" Height="25" />
-            <Label Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Content="Time: 0:29.330" VerticalAlignment="Center" FontSize="13" Height="25" />
-            <Label Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Content="Mood:" VerticalAlignment="Top" FontSize="13" Height="25" />
+            <Label Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Content="Author:" VerticalAlignment="Center" FontSize="13" />
+            <Label Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Content="{Binding SelectedItem.Author, ElementName=ConverterList}" VerticalAlignment="Center" FontSize="13" />
+            <Label Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Content="Time:" VerticalAlignment="Center" FontSize="13" />
+            <Label Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" Content="{Binding SelectedItem.AuthorTime, ElementName=ConverterList}" ContentStringFormat="{}{0:hh\\:mm\\:ss\\.fff}" VerticalAlignment="Center" FontSize="13" />
+            <Label Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Content="Mood:" VerticalAlignment="Top" FontSize="13" />
+            <Label Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Content="{Binding SelectedItem.Mood, ElementName=ConverterList}" VerticalAlignment="Top" FontSize="13" />
+            <!-- Uncomment once mood changes are supported
             <ComboBox Grid.Row="6" Grid.Column="3" VerticalAlignment="Center" FontSize="13" SelectedIndex="1" Height="25">
                 <ComboBoxItem Content="Sunrise" FontSize="12"/>
                 <ComboBoxItem Content="Day" FontSize="12" FontWeight="Bold"/>
                 <ComboBoxItem Content="Sunset" FontSize="12"/>
                 <ComboBoxItem Content="Night" FontSize="12"/>
             </ComboBox>
-            <Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Content="Car:" VerticalAlignment="Top" Height="25" FontSize="13"/>
+            -->
+            <Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Content="Car:" VerticalAlignment="Top" FontSize="13"/>
+            <Label Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="2" Content="{Binding SelectedItem.CarEnvi, ElementName=ConverterList}" VerticalAlignment="Top" FontSize="13" />
+            <!-- Uncomment once car changes are supported
             <ComboBox Grid.Row="7" Grid.Column="3" VerticalAlignment="Center" FontSize="13" SelectedIndex="1" Height="25">
                 <ComboBoxItem Content="SnowCar" FontSize="12"/>
                 <ComboBoxItem Content="BayCar" FontSize="12" FontWeight="Bold"/>
                 <ComboBoxItem Content="DesertCar" FontSize="12"/>
             </ComboBox>
+            -->
         </Grid>
     </DockPanel>
 </Window>
