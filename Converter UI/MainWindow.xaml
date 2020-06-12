@@ -7,7 +7,7 @@
         x:Name="Window"
         x:Class="Converter_UI.MainWindow"
         mc:Ignorable="d"
-        Title="TrackMania One Converter" Height="500" MinHeight="500" Width="600" MinWidth="600" Icon="image/1One_Logo.png" ResizeMode="CanResize">
+        Title="TrackMania One Converter" Height="500" MinHeight="500" Width="550" MinWidth="550" Icon="image/1One_Logo.png" ResizeMode="CanResize">
     <DockPanel>
         <Canvas Height="60" DockPanel.Dock="Top">
             <Image Canvas.Top="10" Canvas.Left="10" Height="45" Width="45" Source="image/1One_Logo.png"/>
@@ -98,9 +98,9 @@
                 </ListView.ItemsPanel>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Canvas Height="40" MinWidth="370" Background="#FFDDDDDD" HorizontalAlignment="Stretch">
+                        <Canvas Height="40" MinWidth="320" MaxWidth="640" Background="#FFDDDDDD" HorizontalAlignment="Stretch">
                             <Rectangle HorizontalAlignment="Left" Width="8" Fill="{Binding Color}" Height="40" VerticalAlignment="Top"/>
-                            <Image Canvas.Left="8" HorizontalAlignment="Left" Height="40" Width="140" Source="{Binding BannerPath}" Opacity="0.25"/>
+                            <Image Canvas.Left="8" HorizontalAlignment="Left" Height="40" Width="160" Source="{Binding BannerPath}" Opacity="0.4"/>
                             <Label Canvas.Left="18" Canvas.Top="-2" Content="{Binding MapName}" Width="300" FontSize="13" FontWeight="Bold"/>
                             <Label Canvas.Left="18" Canvas.Top="14" Content="{Binding Author}" Width="300" FontSize="13"/>
                             <Image Canvas.Right="20" Canvas.Top="11" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="16" Source="image/Checkmark.png" Opacity="0.25"/>
@@ -108,7 +108,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
             <Image Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Height="150" Width="150" Margin="5,0,0,0" VerticalAlignment="Center" Source="{Binding SelectedItem.Thumbnail, ElementName=ConverterList}" RenderTransformOrigin="0.5,0.5" >
                 <Image.RenderTransform>
                     <TransformGroup>
@@ -125,7 +124,7 @@
             <Label Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Content="Author:" VerticalAlignment="Center" FontSize="13" />
             <Label Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Content="{Binding SelectedItem.Author, ElementName=ConverterList}" VerticalAlignment="Center" FontSize="13" />
             <Label Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Content="Time:" VerticalAlignment="Center" FontSize="13" />
-            <Label Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" Content="{Binding SelectedItem.AuthorTime, ElementName=ConverterList}" ContentStringFormat="{}{0:hh\\:mm\\:ss\\.fff}" VerticalAlignment="Center" FontSize="13" />
+            <Label Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" Content="{Binding SelectedItem.AuthorTime, ElementName=ConverterList}" ContentStringFormat="{}{0:hh\:mm\:ss\.fff}" VerticalAlignment="Center" FontSize="13" />
             <Label Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Content="Mood:" VerticalAlignment="Top" FontSize="13" />
             <Label Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Content="{Binding SelectedItem.Mood, ElementName=ConverterList}" VerticalAlignment="Top" FontSize="13" />
             <!-- Uncomment once mood changes are supported

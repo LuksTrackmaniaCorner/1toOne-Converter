@@ -31,13 +31,14 @@ namespace Converter_UI
             var commonChunk = (ChallengeCommon)_file.GetChunk(Chunk.challengeCommonKey);
             var thumbnailChunk = (ChallengeThumbnail)_file.GetChunk(Chunk.challengeThumbnailKey);
             var carChunk = (Challenge0304300D)_file.GetChunk(Chunk.challenge0304300DKey);
+            var chunk0304301F = (Challenge0304301F)_file.GetChunk(Chunk.challenge0304301FKey);
 
             Envi = Enum.Parse<MapEnvironment>(commonChunk.TrackMeta.Collection.Content);
             MapName = commonChunk.TrackName.Value.RemoveTrackmaniaFormat();
             Author = commonChunk.TrackMeta.Author.Content.RemoveTrackmaniaFormat();
             AuthorTime = TimeSpan.FromMilliseconds(descChunk.AuthorTime.Value);
-            //TODO
-            Mood = "TODO";
+            //TODO better stuff
+            Mood = chunk0304301F?.DecorationMeta.ID.Content;
             if (carChunk != null && carChunk.Meta.ID.Content is string content)
                 CarEnvi = Enum.Parse<EnvironmentCar>(content).GetEnvironment();
             else
