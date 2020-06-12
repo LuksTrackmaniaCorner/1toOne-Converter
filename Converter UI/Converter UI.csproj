@@ -21,7 +21,6 @@
     <None Remove="Image\Checkmark.png" />
     <None Remove="Image\Coast.png" />
     <None Remove="Image\Cross.png" />
-    <None Remove="Image\Extremist«.Challenge.bmp" />
     <None Remove="Image\Island.png" />
     <None Remove="Image\Rally.png" />
     <None Remove="Image\Speed.png" />
@@ -35,7 +34,7 @@
     <Resource Include="Image\1One_Logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\Alpine.png">
+    <Resource Include="Image\Icons\IconAlpine.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Image\Banner\BannerAlpine.png">
@@ -56,28 +55,25 @@
     <Resource Include="Image\Banner\BannerSpeed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\Bay.png">
+    <Resource Include="Image\Icons\IconBay.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\Checkmark.png">
+    <Resource Include="Image\Status\Checkmark.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\Coast.png">
+    <Resource Include="Image\Icons\IconCoast.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\Cross.png">
+    <Resource Include="Image\Status\Cross.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\Extremist«.Challenge.bmp">
+    <Resource Include="Image\Icons\IconIsland.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\Island.png">
+    <Resource Include="Image\Icons\IconRally.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Image\Rally.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Image\Speed.png">
+    <Resource Include="Image\Icons\IconSpeed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

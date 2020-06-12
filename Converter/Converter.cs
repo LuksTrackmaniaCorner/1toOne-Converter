@@ -14,7 +14,7 @@ namespace Converter
 {
     public class Converter : IDumpable
     {
-        protected readonly GBXFile _file;
+        protected GBXFile _file { get; }
 
         public Converter(string inputFilePath)
         {

@@ -61,7 +61,7 @@
                 <Button Name="_clearButton" Content="Clear" Width="70" Click="_clearButton_Click" />
                 <Button Name="_settingsButton" Content="Setting" Width="70" Click="_settingsButton_Click"/>
             </StackPanel>
-            <Button DockPanel.Dock="Right" Content="Convert" Margin="10,10" Width="130" HorizontalAlignment="Right"/>
+            <Button x:Name="_convertButton" DockPanel.Dock="Right" Content="Convert" Margin="10,10" Width="130" HorizontalAlignment="Right" Click="_convertButton_Click"/>
         </DockPanel>
         <Separator DockPanel.Dock="Bottom" Margin="10,2,10,2" />
         <Grid DockPanel.Dock="Bottom" Margin="10,0,10,0">
@@ -103,7 +103,7 @@
                             <Image Canvas.Left="8" HorizontalAlignment="Left" Height="40" Width="160" Source="{Binding BannerPath}" Opacity="0.4"/>
                             <Label Canvas.Left="18" Canvas.Top="-2" Content="{Binding MapName}" Width="300" FontSize="13" FontWeight="Bold"/>
                             <Label Canvas.Left="18" Canvas.Top="14" Content="{Binding Author}" Width="300" FontSize="13"/>
-                            <Image Canvas.Right="20" Canvas.Top="11" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="16" Source="image/Checkmark.png" Opacity="0.25"/>
+                            <Image Canvas.Right="20" Canvas.Top="11" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="16" Source="{Binding StatusImagePath}" />
                         </Canvas>
                     </DataTemplate>
                 </ListView.ItemTemplate>

@@ -48,7 +48,7 @@ namespace Converter
 
         public static void ConvertMaps(string[] args)
         {
-            string DefaultXmlFilePath = @"Default.xml";
+            const string DefaultXmlFilePath = @"Default.xml";
 
             var gbxFiles = new List<string>();
 
@@ -84,7 +84,7 @@ namespace Converter
             }
 
             //Generating the Conversion
-            var conversion = Conversion.LoadConversion<SwitchConversion>(xmlFile); //TODO change to switch  
+            var conversion = Conversion.LoadConversion<SwitchConversion>(xmlFile);
 
             //Loading the Settings
             Settings.GenerateSettings();

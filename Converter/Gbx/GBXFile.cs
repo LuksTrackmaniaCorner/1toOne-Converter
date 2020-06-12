@@ -312,7 +312,7 @@ namespace Converter.Gbx
             statistics.Add((statistic, value));
         }
 
-        internal String GetStatistics()
+        public String GetStatistics()
         {
             var result = new StringBuilder();
 

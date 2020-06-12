@@ -1,8 +1,10 @@
 ﻿using Converter;
+using Converter.Converion;
 using Converter.util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,10 +26,16 @@ namespace Converter_UI
     public partial class MainWindow : Window
     {
         public ObservableCollection<UIConverter> Converters { get; } = new ObservableCollection<UIConverter>();
+        private Conversion _conversion;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            const string DefaultXmlFilePath = @"Default.xml";
+            Directory.SetCurrentDirectory(FileHelper.ProgramPath);
+            var xmlFile = DefaultXmlFilePath;
+            _conversion = Conversion.LoadConversion<SwitchConversion>(xmlFile);
         }
 
         private void _loadButton_Click(object sender, RoutedEventArgs e)
@@ -51,6 +59,15 @@ namespace Converter_UI
         private void _settingsButton_Click(object sender, RoutedEventArgs e)
         {
             new Settings().Show();
+        }
+
+        private void _convertButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach(var converter in Converters)
+            {
+                converter.Convert(_conversion);
+                converter.WriteBack();
+            }
         }
     }
 }
