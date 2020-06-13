@@ -23,20 +23,20 @@
                         <Setter Property="VerticalAlignment" Value="Top" />
                     </Style>
                 </StackPanel.Resources>
-                <Image Source="image/Alpine.png" AutomationProperties.HelpText="Alpine" />
-                <Image Source="image/Speed.png" AutomationProperties.HelpText="Speed" />
-                <Image Source="image/Bay.png" AutomationProperties.HelpText="Bay" />
-                <Image Source="image/Rally.png" AutomationProperties.HelpText="Rally" Opacity="0.4">
+                <Image Source="Image/Icons/IconAlpine.png" AutomationProperties.HelpText="Alpine" />
+                <Image Source="Image/Icons/IconSpeed.png" AutomationProperties.HelpText="Speed" />
+                <Image Source="Image/Icons/IconBay.png" AutomationProperties.HelpText="Bay" />
+                <Image Source="Image/Icons/IconRally.png" AutomationProperties.HelpText="Rally" Opacity="0.4">
                     <Image.Effect>
                         <BlurEffect Radius="3"/>
                     </Image.Effect>
                 </Image>
-                <Image Source="image/Coast.png" AutomationProperties.HelpText="Coast" Opacity="0.4">
+                <Image Source="Image/Icons/IconCoast.png" AutomationProperties.HelpText="Coast" Opacity="0.4">
                     <Image.Effect>
                         <BlurEffect Radius="3"/>
                     </Image.Effect>
                 </Image>
-                <Image Source="image/Island.png" AutomationProperties.HelpText="Island" Opacity="0.4">
+                <Image Source="Image/Icons/IconIsland.png" AutomationProperties.HelpText="Island" Opacity="0.4">
                     <Image.Effect>
                         <BlurEffect Radius="3"/>
                     </Image.Effect>

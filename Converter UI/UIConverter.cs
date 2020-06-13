@@ -99,7 +99,7 @@ namespace Converter_UI
             {
                 // We have a valid Envi!
                 Envi = enviResult;
-                IconPath = $"./Image/Icon/Icon{enviResult}.png";
+                IconPath = $"./Image/Icons/Icon{enviResult}.png";
                 BannerPath = $"./Image/Banner/Banner{enviResult}.png";
                 Color = enviResult.GetColor();
             }
