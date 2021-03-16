@@ -16,9 +16,7 @@ namespace Converter.util
      */
 
     /* Based on minilzo.c -- mini subset of the LZO real-time data compression library
-
        This file is part of the LZO real-time data compression library.
-
        Copyright (C) 2005 Markus Franz Xaver Johannes Oberhumer
        Copyright (C) 2004 Markus Franz Xaver Johannes Oberhumer
        Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
@@ -30,21 +28,17 @@ namespace Converter.util
        Copyright (C) 1997 Markus Franz Xaver Johannes Oberhumer
        Copyright (C) 1996 Markus Franz Xaver Johannes Oberhumer
        All Rights Reserved.
-
        The LZO library is free software; you can redistribute it and/or
        modify it under the terms of the GNU General Public License,
        version 2, as published by the Free Software Foundation.
-
        The LZO library is distributed in the hope that it will be useful,
        but WITHOUT ANY WARRANTY; without even the implied warranty of
        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
        GNU General Public License for more details.
-
        You should have received a copy of the GNU General Public License
        along with the LZO library; see the file COPYING.
        If not, write to the Free Software Foundation, Inc.,
        51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
        Markus F.X.J. Oberhumer
        <markus@oberhumer.com>
        http://www.oberhumer.com/opensource/lzo/
@@ -73,8 +67,13 @@ namespace Converter.util
 
         public unsafe static void Compress(byte[] src, out byte[] dst)
         {
+            if (src == null)
+            {
+                throw new ArgumentNullException(nameof(src));
+            }
+
             uint tmp;
-            uint dstlen = (uint)(src.Length + src.Length / 16 + 64 + 3);
+            uint dstlen = (uint)(src.Length + (src.Length / 16) + 64 + 3);
             dst = new byte[dstlen];
             if (src.Length <= M2_MAX_LEN + 5)
             {
@@ -124,7 +123,7 @@ namespace Converter.util
 
                         if (!literal)
                         {
-                            if (*(ushort*)pos == *(ushort*)ip && pos[2] == ip[2])
+                            if (*((ushort*)pos) == *((ushort*)ip) && pos[2] == ip[2])
                                 match = true;
                         }
 
@@ -145,7 +144,7 @@ namespace Converter.util
                             if (t <= 3)
                             {
                                 Debug.Assert(op - 2 > output);
-                                op[-2] |= (byte)t;
+                                op[-2] |= (byte)(t);
                             }
                             else if (t <= 18)
                                 *op++ = (byte)(t - 3);
@@ -159,7 +158,7 @@ namespace Converter.util
                                     *op++ = 0;
                                 }
                                 Debug.Assert(tt > 0);
-                                *op++ = (byte)tt;
+                                *op++ = (byte)(tt);
                             }
                             do
                             {
@@ -178,13 +177,13 @@ namespace Converter.util
                             if (offset <= M2_MAX_OFFSET)
                             {
                                 --offset;
-                                *op++ = (byte)(length - 1 << 5 | (offset & 7) << 2);
+                                *op++ = (byte)(((length - 1) << 5) | ((offset & 7) << 2));
                                 *op++ = (byte)(offset >> 3);
                             }
                             else if (offset <= M3_MAX_OFFSET)
                             {
                                 --offset;
-                                *op++ = (byte)(M3_MARKER | length - 2);
+                                *op++ = (byte)(M3_MARKER | (length - 2));
                                 *op++ = (byte)((offset & 63) << 2);
                                 *op++ = (byte)(offset >> 6);
                             }
@@ -193,7 +192,7 @@ namespace Converter.util
                                 offset -= 0x4000;
                                 Debug.Assert(offset > 0);
                                 Debug.Assert(offset <= 0x7FFF);
-                                *op++ = (byte)(M4_MARKER | (offset & 0x4000) >> 11 | length - 2);
+                                *op++ = (byte)(M4_MARKER | ((offset & 0x4000) >> 11) | (length - 2));
                                 *op++ = (byte)((offset & 63) << 2);
                                 *op++ = (byte)(offset >> 6);
                             }
@@ -212,7 +211,7 @@ namespace Converter.util
                             {
                                 --offset;
                                 if (length <= 33)
-                                    *op++ = (byte)(M3_MARKER | length - 2);
+                                    *op++ = (byte)(M3_MARKER | (length - 2));
                                 else
                                 {
                                     length -= 33;
@@ -223,7 +222,7 @@ namespace Converter.util
                                         *op++ = 0;
                                     }
                                     Debug.Assert(length > 0);
-                                    *op++ = (byte)length;
+                                    *op++ = (byte)(length);
                                 }
                             }
                             else
@@ -232,18 +231,18 @@ namespace Converter.util
                                 Debug.Assert(offset > 0);
                                 Debug.Assert(offset <= 0x7FFF);
                                 if (length <= M4_MAX_LEN)
-                                    *op++ = (byte)(M4_MARKER | (offset & 0x4000) >> 11 | length - 2);
+                                    *op++ = (byte)(M4_MARKER | ((offset & 0x4000) >> 11) | (length - 2));
                                 else
                                 {
                                     length -= M4_MAX_LEN;
-                                    *op++ = (byte)(M4_MARKER | (offset & 0x4000) >> 11);
+                                    *op++ = (byte)(M4_MARKER | ((offset & 0x4000) >> 11));
                                     while (length > 255)
                                     {
                                         length -= 255;
                                         *op++ = 0;
                                     }
                                     Debug.Assert(length > 0);
-                                    *op++ = (byte)length;
+                                    *op++ = (byte)(length);
                                 }
                             }
                             *op++ = (byte)((offset & 63) << 2);
@@ -266,7 +265,7 @@ namespace Converter.util
                 }
                 else if (tmp <= 3)
                 {
-                    dst[dstlen - 2] |= (byte)tmp;
+                    dst[dstlen - 2] |= (byte)(tmp);
                 }
                 else if (tmp <= 18)
                 {
@@ -282,7 +281,7 @@ namespace Converter.util
                         dst[dstlen++] = 0;
                     }
                     Debug.Assert(tt > 0);
-                    dst[dstlen++] = (byte)tt;
+                    dst[dstlen++] = (byte)(tt);
                 }
                 do
                 {
@@ -302,6 +301,15 @@ namespace Converter.util
         }
         public unsafe static void Decompress(byte[] src, byte[] dst)
         {
+            if (src == null)
+            {
+                throw new ArgumentNullException(nameof(src));
+            }
+            if (dst == null)
+            {
+                throw new ArgumentNullException(nameof(dst));
+            }
+
             uint t = 0;
             fixed (byte* input = src, output = dst)
             {
@@ -325,9 +333,9 @@ namespace Converter.util
                     else
                     {
                         Debug.Assert(t > 0);
-                        if (op_end - op < t)
+                        if ((op_end - op) < t)
                             throw new OverflowException("Output Overrun");
-                        if (ip_end - ip < t + 1)
+                        if ((ip_end - ip) < t + 1)
                             throw new OverflowException("Input Overrun");
                         do
                         {
@@ -347,21 +355,21 @@ namespace Converter.util
                         {
                             if (t == 0)
                             {
-                                if (ip_end - ip < 1)
+                                if ((ip_end - ip) < 1)
                                     throw new OverflowException("Input Overrun");
                                 while (*ip == 0)
                                 {
                                     t += 255;
                                     ++ip;
-                                    if (ip_end - ip < 1)
+                                    if ((ip_end - ip) < 1)
                                         throw new OverflowException("Input Overrun");
                                 }
                                 t += (uint)(15 + *ip++);
                             }
                             Debug.Assert(t > 0);
-                            if (op_end - op < t + 3)
+                            if ((op_end - op) < t + 3)
                                 throw new OverflowException("Output Overrun");
-                            if (ip_end - ip < t + 4)
+                            if ((ip_end - ip) < t + 4)
                                 throw new OverflowException("Input Overrun");
                             for (int x = 0; x < 4; ++x, ++op, ++ip)
                                 *op = *ip;
@@ -407,7 +415,7 @@ namespace Converter.util
                             pos -= *ip++ << 2;
                             if (pos < output || pos >= op)
                                 throw new OverflowException("Lookbehind Overrun");
-                            if (op_end - op < 3)
+                            if ((op_end - op) < 3)
                                 throw new OverflowException("Output Overrun");
                             *op++ = *pos++;
                             *op++ = *pos++;
@@ -421,12 +429,12 @@ namespace Converter.util
                         if (t >= 64)
                         {
                             pos = op - 1;
-                            pos -= t >> 2 & 7;
+                            pos -= (t >> 2) & 7;
                             pos -= *ip++ << 3;
                             t = (t >> 5) - 1;
                             if (pos < output || pos >= op)
                                 throw new OverflowException("Lookbehind Overrun");
-                            if (op_end - op < t + 2)
+                            if ((op_end - op) < t + 2)
                                 throw new OverflowException("Output Overrun");
                             copy_match = true;
                         }
@@ -435,19 +443,19 @@ namespace Converter.util
                             t &= 31;
                             if (t == 0)
                             {
-                                if (ip_end - ip < 1)
+                                if ((ip_end - ip) < 1)
                                     throw new OverflowException("Input Overrun");
                                 while (*ip == 0)
                                 {
                                     t += 255;
                                     ++ip;
-                                    if (ip_end - ip < 1)
+                                    if ((ip_end - ip) < 1)
                                         throw new OverflowException("Input Overrun");
                                 }
                                 t += (uint)(31 + *ip++);
                             }
                             pos = op - 1;
-                            pos -= *(ushort*)ip >> 2;
+                            pos -= (*(ushort*)ip) >> 2;
                             ip += 2;
                         }
                         else if (t >= 16)
@@ -458,18 +466,18 @@ namespace Converter.util
                             t &= 7;
                             if (t == 0)
                             {
-                                if (ip_end - ip < 1)
+                                if ((ip_end - ip) < 1)
                                     throw new OverflowException("Input Overrun");
                                 while (*ip == 0)
                                 {
                                     t += 255;
                                     ++ip;
-                                    if (ip_end - ip < 1)
+                                    if ((ip_end - ip) < 1)
                                         throw new OverflowException("Input Overrun");
                                 }
                                 t += (uint)(7 + *ip++);
                             }
-                            pos -= *(ushort*)ip >> 2;
+                            pos -= (*(ushort*)ip) >> 2;
                             ip += 2;
                             if (pos == op)
                                 eof_found = true;
@@ -483,7 +491,7 @@ namespace Converter.util
                             pos -= *ip++ << 2;
                             if (pos < output || pos >= op)
                                 throw new OverflowException("Lookbehind Overrun");
-                            if (op_end - op < 2)
+                            if ((op_end - op) < 2)
                                 throw new OverflowException("Output Overrun");
                             *op++ = *pos++;
                             *op++ = *pos++;
@@ -494,10 +502,10 @@ namespace Converter.util
                             if (pos < output || pos >= op)
                                 throw new OverflowException("Lookbehind Overrun");
                             Debug.Assert(t > 0);
-                            if (op_end - op < t + 2)
+                            if ((op_end - op) < t + 2)
                                 throw new OverflowException("Output Overrun");
                         }
-                        if (!eof_found && t >= 2 * 4 - 2 && op - pos >= 4 && !match_done && !copy_match)
+                        if (!eof_found && t >= 2 * 4 - 2 && (op - pos) >= 4 && !match_done && !copy_match)
                         {
                             for (int x = 0; x < 4; ++x, ++op, ++pos)
                                 *op = *pos;
@@ -542,9 +550,9 @@ namespace Converter.util
                             match_next = false;
                             Debug.Assert(t > 0);
                             Debug.Assert(t < 4);
-                            if (op_end - op < t)
+                            if ((op_end - op) < t)
                                 throw new OverflowException("Output Overrun");
-                            if (ip_end - ip < t + 1)
+                            if ((ip_end - ip) < t + 1)
                                 throw new OverflowException("Input Overrun");
                             *op++ = *ip++;
                             if (t > 1)
@@ -576,11 +584,11 @@ namespace Converter.util
         }
         private static uint D_INDEX2(uint idx)
         {
-            return idx & D_MASK & 0x7FF ^ ((D_MASK >> 1) + 1 | 0x1F);
+            return (idx & (D_MASK & 0x7FF)) ^ (((D_MASK >> 1) + 1) | 0x1F);
         }
         private static uint D_MS(uint v, byte s)
         {
-            return (v & D_MASK >> s) << s;
+            return (v & (D_MASK >> s)) << s;
         }
         private static uint D_MUL(uint a, uint b)
         {
@@ -588,11 +596,11 @@ namespace Converter.util
         }
         private unsafe static uint D_X2(byte* input, byte s1, byte s2)
         {
-            return (uint)((input[2] << s2 ^ input[1]) << s1 ^ input[0]);
+            return (uint)((((input[2] << s2) ^ input[1]) << s1) ^ input[0]);
         }
         private unsafe static uint D_X3(byte* input, byte s1, byte s2, byte s3)
         {
-            return D_X2(input + 1, s2, s3) << s1 ^ input[0];
+            return (D_X2(input + 1, s2, s3) << s1) ^ input[0];
         }
     }
 }

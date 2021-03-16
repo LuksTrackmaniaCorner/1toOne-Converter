@@ -26,7 +26,7 @@ namespace Converter_UI
     public partial class MainWindow : Window
     {
         public ObservableCollection<UIConverter> Converters { get; } = new ObservableCollection<UIConverter>();
-        private Conversion _conversion;
+        private readonly Conversion _conversion;
 
         public MainWindow()
         {
@@ -63,11 +63,25 @@ namespace Converter_UI
 
         private void _convertButton_Click(object sender, RoutedEventArgs e)
         {
+            var successCount = 0u;
+            var errorCount = 0u;
+
             foreach(var converter in Converters)
             {
-                converter.Convert(_conversion);
-                converter.WriteBack();
+                if (converter.Status == ConverterStatus.MapSaved)
+                    continue;
+
+                if (converter.Convert(_conversion) && converter.WriteBack())
+                {
+                    successCount++;
+                }
+                else
+                {
+                    errorCount++;
+                }
             }
+
+            new Finished(successCount, errorCount).ShowDialog();
         }
     }
 }

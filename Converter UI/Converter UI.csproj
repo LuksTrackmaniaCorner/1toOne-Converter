@@ -8,24 +8,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Image\1One_Logo.png" />
-    <None Remove="Image\Alpine.png" />
-    <None Remove="Image\Banner\BannerAlpine.png" />
-    <None Remove="Image\Banner\BannerBay.png" />
-    <None Remove="Image\Banner\BannerCoast.png" />
-    <None Remove="Image\Banner\BannerIsland.png" />
-    <None Remove="Image\Banner\BannerRally.png" />
-    <None Remove="Image\Banner\BannerSpeed.png" />
-    <None Remove="Image\Banner\BayBanner.png" />
-    <None Remove="Image\Bay.png" />
-    <None Remove="Image\Checkmark.png" />
-    <None Remove="Image\Coast.png" />
-    <None Remove="Image\Cross.png" />
-    <None Remove="Image\Island.png" />
-    <None Remove="Image\Rally.png" />
-    <None Remove="Image\Speed.png" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Converter\Converter.csproj" />

@@ -17,9 +17,31 @@ namespace Converter_UI
 {
     public partial class Finished : Window
     {
-        public Finished()
+        public string SuccessMessage { get; }
+        public string ErrorMessage { get; }
+
+        public Finished(uint successCount, uint errorCount)
         {
+            SuccessMessage = "Converted " + FormatMapCount(successCount);
+            if (errorCount > 0)
+                ErrorMessage = "Failed to convert " + FormatMapCount(errorCount) + ": See logs";
+            else
+                ErrorMessage = "No Errors occured";
+
             InitializeComponent();
+        }
+
+        private static string FormatMapCount(uint count)
+        {
+            if (count == 1)
+                return $"{count} map";
+            else
+                return $"{count} maps";
+        }
+
+        private void _closeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Converter_UI"
         mc:Ignorable="d"
-        Title="Conversion finished" Height="160" Width="248" ResizeMode="NoResize" Icon="image/1One_Logo.png">
-    <Grid>
-        <Label Content="Conversion finished." HorizontalAlignment="Left" Margin="56.596,6.482,-16.19,0" VerticalAlignment="Top" FontSize="16" Height="35.316" Width="204.715"/>
-        <Image HorizontalAlignment="Left" Height="43.098" Margin="9.998,10,0,0" VerticalAlignment="Top" Width="43.098" Source="image/1One_Logo.png"/>
-        <Label Content="Converted 15 maps" HorizontalAlignment="Left" Margin="58.096,28.164,0,0" VerticalAlignment="Top" FontSize="14" Height="35.316" Width="204.715" Opacity="0.5"/>
-        <Label Content="Failed to convert 2 maps: See logs." HorizontalAlignment="Left" Margin="6.971,54.87,0,0" VerticalAlignment="Top" FontSize="14" Height="35.316" Width="227.098" Opacity="0.5"/>
-        <Button Content="Close Window" HorizontalAlignment="Left" Margin="10,88.949,0,0" VerticalAlignment="Top" Width="224.069" Height="39.541" FontSize="14"/>
-
-    </Grid>
+        x:Name="Window"
+        Title="Conversion finished" Height="176" Width="260" ResizeMode="NoResize" Icon="Image/1One_Logo.png">
+    <Canvas>
+        <Label Content="Conversion finished." Canvas.Left="57" Canvas.Top="6" FontSize="16" Height="36" Width="204"/>
+        <Image Height="43" Width="43" Canvas.Left="10" Canvas.Top="10" Source="image/1One_Logo.png"/>
+        <Label Content="{Binding SuccessMessage, ElementName=Window}" Canvas.Left="58" Canvas.Top="28" FontSize="14" Height="35" Width="175" Opacity="0.5"/>
+        <Label Content="{Binding ErrorMessage, ElementName=Window}" Canvas.Left="7" Canvas.Top="55" FontSize="14" Height="35" Width="227" Opacity="0.5" />
+        <Button Content="Close Window" Canvas.Left="10" Canvas.Top="89"  Width="224" Height="39" FontSize="14" Click="_closeButton_Click" />
+    </Canvas>
 </Window>

@@ -132,7 +132,7 @@ namespace Converter
 
 #if DEBUG
                 //Optional Tasks
-                //CreateLog(converter.file, mapFile);
+                //CreateLog(converter.File, mapFile);
                 //PropagateClips(converter.file);
 #endif
 

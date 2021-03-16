@@ -14,37 +14,37 @@ namespace Converter
 {
     public class Converter : IDumpable
     {
-        protected GBXFile _file { get; }
+        public GBXFile File { get; }
 
         public Converter(string inputFilePath)
         {
             using var fs = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            _file = new GBXFile(fs);
+            File = new GBXFile(fs);
         }
 
         public void WriteBack(Stream outputFile)
         {
-            _file.WriteBack(outputFile);
+            File.WriteBack(outputFile);
         }
 
         public LinkedList<string> Dump()
         {
-            return _file.Dump();
+            return File.Dump();
         }
 
         public void Convert(Conversion conversion)
         {
-            conversion.Convert(_file);
+            conversion.Convert(File);
         }
 
         public string GetStatistics()
         {
-            return _file.GetStatistics();
+            return File.GetStatistics();
         }
 
         public string GetOutputPath(string mapPath)
         {
-            return Settings.GetSettings().GetOutputPath(_file, mapPath);
+            return Settings.GetSettings().GetOutputPath(File, mapPath);
         }
     }
 }
