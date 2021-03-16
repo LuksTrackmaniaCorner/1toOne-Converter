@@ -14,6 +14,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Converter;
 
+#pragma warning disable IDE1006 // Naming Styles
 namespace Converter_UI
 {
     public class UIConverter : INotifyPropertyChanged

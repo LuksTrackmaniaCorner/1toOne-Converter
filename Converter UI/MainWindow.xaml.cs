@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+#pragma warning disable IDE1006 // Naming Styles
 namespace Converter_UI
 {
     /// <summary>
@@ -63,23 +65,24 @@ namespace Converter_UI
 
         private void _convertButton_Click(object sender, RoutedEventArgs e)
         {
-            var successCount = 0u;
-            var errorCount = 0u;
+            var successCount = 0;
+            var errorCount = 0;
 
-            foreach(var converter in Converters)
-            {
-                if (converter.Status == ConverterStatus.MapSaved)
-                    continue;
+            var conversionTasks = from converter in Converters
+                                  where converter.Status != ConverterStatus.MapSaved
+                                 select Task.Run(() =>
+                                 {
+                                     if (converter.Convert(_conversion) && converter.WriteBack())
+                                     {
+                                         Interlocked.Increment(ref successCount);
+                                     }
+                                     else
+                                     {
+                                         Interlocked.Increment(ref errorCount);
+                                     }
+                                 });
 
-                if (converter.Convert(_conversion) && converter.WriteBack())
-                {
-                    successCount++;
-                }
-                else
-                {
-                    errorCount++;
-                }
-            }
+            Task.WaitAll(conversionTasks.ToArray());
 
             new Finished(successCount, errorCount).ShowDialog();
         }

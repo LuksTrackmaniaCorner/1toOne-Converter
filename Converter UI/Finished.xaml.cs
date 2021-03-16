@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+#pragma warning disable IDE1006 // Naming Styles
 namespace Converter_UI
 {
     public partial class Finished : Window
@@ -20,7 +21,7 @@ namespace Converter_UI
         public string SuccessMessage { get; }
         public string ErrorMessage { get; }
 
-        public Finished(uint successCount, uint errorCount)
+        public Finished(int successCount, int errorCount)
         {
             SuccessMessage = "Converted " + FormatMapCount(successCount);
             if (errorCount > 0)
@@ -31,7 +32,7 @@ namespace Converter_UI
             InitializeComponent();
         }
 
-        private static string FormatMapCount(uint count)
+        private static string FormatMapCount(int count)
         {
             if (count == 1)
                 return $"{count} map";
@@ -40,6 +41,7 @@ namespace Converter_UI
         }
 
         private void _closeButton_Click(object sender, RoutedEventArgs e)
+
         {
             Close();
         }
