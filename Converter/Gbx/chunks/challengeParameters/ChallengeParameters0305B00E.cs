@@ -11,11 +11,10 @@ namespace Converter.Gbx.Chunks.ChallengeParameters
 {
     public class ChallengeParameters0305B00E : Chunk
     {
+        //TODO better names
         public readonly GBXString unknown1;
         public readonly GBXUInt unknown2;
         public readonly GBXUInt unknown3;
-
-        //TODO better names
 
         public ChallengeParameters0305B00E(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {

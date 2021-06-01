@@ -71,7 +71,6 @@ namespace Converter.Conversion
                 //Test if block is clip and collect the needed metadata
                 bool isSecondaryTerrain = false;
 
-                //TODO replace with dict lookup
                 ClipBlock match = null;
                 foreach(var clipBlock in ClipBlocks)
                 {

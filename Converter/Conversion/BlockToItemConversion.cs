@@ -64,19 +64,18 @@ namespace Converter.Conversion
                     continue; //block cannot be converted;
 
                 var blockData = _blockNameDict[block.BlockName.Content];
-                var adjustedCoords = blockData.ApplyBlockOffset(block);
+                var (x, y, z) = blockData.ApplyBlockOffset(block);
 
                 if (BlockIgnoreFlags != null)
                 {
                     foreach (var blockIgnoreFlag in BlockIgnoreFlags)
                     {
-                        if (file.TestFlag(blockIgnoreFlag.Name, adjustedCoords.x, adjustedCoords.z))
+                        if (file.TestFlag(blockIgnoreFlag.Name, x, z))
                             goto nextBlock; // D: Goto?!? What a maniac.
                     }
                 }
 
-                var isSecondaryTerrain = SecondaryTerrainFlag == null ? false :
-                        file.TestFlag(SecondaryTerrainFlag.Name, adjustedCoords.x, adjustedCoords.z);
+                var isSecondaryTerrain = SecondaryTerrainFlag != null && file.TestFlag(SecondaryTerrainFlag.Name, x, z);
 
                 //Block should be converted
                 var success = ConvertBlock(file, block, isSecondaryTerrain, itemChunk);

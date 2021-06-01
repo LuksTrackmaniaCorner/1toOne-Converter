@@ -81,8 +81,8 @@ namespace Converter.Conversion
                     if (!dict.ContainsKey(terrainblock))
                         continue; //Block not relevant for any mapping
 
-                    var temp = dict[terrainblock];
-                    _map[block.Coords.X, block.Coords.Z] = ((temp.terrain, block.Coords.Y), temp.type);
+                    var (terrain, type) = dict[terrainblock];
+                    _map[block.Coords.X, block.Coords.Z] = ((terrain, block.Coords.Y), type);
                 }
             }
 

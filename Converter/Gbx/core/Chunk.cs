@@ -274,9 +274,10 @@ namespace Converter.Gbx.Core
         {
             get
             {
-                if (!IsSkippable)
-                    return Parent.NodeRefList;
-                throw new ParsingException("Noderefs can't be in skippable chunks. Consider using nodes instead.");
+                if (IsSkippable)
+                    throw new ParsingException("Noderefs can't be in skippable chunks. Consider using nodes instead.");
+
+                return Parent.NodeRefList;
             }
         }
         protected Chunk(GBXLBSContext context, GBXNodeRefList list)

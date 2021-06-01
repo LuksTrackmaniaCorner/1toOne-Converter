@@ -31,7 +31,6 @@ namespace Converter.Conversion
 
         private BlockToItem[] _children;
 
-        //TODO do same thing with complexconversion
         [XmlElement(ElementName = "BlockData", Type = typeof(BlockData))]
         [XmlElement(ElementName = "BlockVariantData", Type = typeof(BlockVariantData))]
         [XmlElement(ElementName = "BlockTypeData", Type = typeof(BlockTypeData))]
