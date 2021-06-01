@@ -22,16 +22,13 @@ namespace Converter.Conversion
         public List<BlockData> Blocks;
         // Two optimizations are going on
         // 1. BlockDatas are not searched manually, but stored in a dict.
-        // 2. Inputs are memoized and only manually looked up once.
         private readonly Dictionary<string, BlockData> _blockNameDict;
-        private readonly Func<Identifier, ItemInfo> _getItemInfoMemoized;
 
         public FlagName ItemCountStatistic;
 
         private BlockToItemConversion()
         {
             _blockNameDict = new Dictionary<string, BlockData>();
-            _getItemInfoMemoized = Memoize.MakeMemoized<Identifier, ItemInfo>(GetItemInfo);
         }
 
         internal override void Initialize()
