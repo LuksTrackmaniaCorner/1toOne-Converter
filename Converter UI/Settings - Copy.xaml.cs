@@ -13,29 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-#pragma warning disable IDE1006 // Naming Styles
 namespace Converter_UI
 {
-    public partial class Settings : Window
+    public partial class SettingsCopy : Window
     {
-        public Settings()
+        public SettingsCopy()
         {
             InitializeComponent();
-        }
-
-        private void _websiteButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void _discordButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void _exitButton_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

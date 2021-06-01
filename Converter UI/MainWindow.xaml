@@ -52,7 +52,7 @@
                     <Setter Property="VerticalAlignment" Value="Top" />
                     <Setter Property="Background" Value="#FFDDDDDD" />
                     <Setter Property="FontSize" Value="14" />
-                    <Setter Property="BorderBrush" Value="#FF00BAFF" />
+                    <!--<Setter Property="BorderBrush" Value="#FF00BAFF" />-->
                     <Setter Property="BorderThickness" Value="1.5" />
                 </Style>
             </DockPanel.Resources>
