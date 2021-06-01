@@ -1,7 +1,4 @@
-﻿using Converter.Gbx.chunks;
-using Converter.Gbx.core.chunks;
-using Converter.Gbx.core.primitives;
-using _1toOne_Converter.Streams;
+﻿using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,8 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Converter.Gbx.Chunks.AnchoredObject;
+using Converter.Gbx.Chunks.Challenge;
+using Converter.Gbx.Chunks.BlockSkin;
+using Converter.Gbx.Chunks.CollectorList;
+using Converter.Gbx.Chunks.ChallengeParameters;
+using Converter.Gbx.Chunks.BlockParameters;
+using Converter.Gbx.Chunks;
+using Converter.Gbx.Primitives;
 
-namespace Converter.Gbx.core
+namespace Converter.Gbx.Core
 {
     public class Chunk : Structure
     {

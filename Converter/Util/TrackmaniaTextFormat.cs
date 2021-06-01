@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Converter.util
+namespace Converter.Util
 {
-    public static class TrackmaniaFormat
+    public static class TrackmaniaTextFormat
     {
         private readonly static ISet<char> _colourCharacters;
 
-        static TrackmaniaFormat()
+        static TrackmaniaTextFormat()
         {
             _colourCharacters = new HashSet<char>();
             for(char c = '0'; c <= '9'; c++)

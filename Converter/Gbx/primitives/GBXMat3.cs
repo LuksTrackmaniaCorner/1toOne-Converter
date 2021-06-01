@@ -1,5 +1,4 @@
-﻿using Converter.Gbx.core;
-using Converter.Gbx.core.primitives;
+﻿using Converter.Gbx.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.primitives
+namespace Converter.Gbx.Primitives
 {
     public class GBXMat3 : Structure
     {

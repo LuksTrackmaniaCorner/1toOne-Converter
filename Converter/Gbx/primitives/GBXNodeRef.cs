@@ -1,4 +1,5 @@
-﻿using _1toOne_Converter.Streams;
+﻿using Converter.Gbx.Core;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.primitives
+namespace Converter.Gbx.Primitives
 {
 
     public class GBXNodeRef : FileComponent
@@ -29,7 +30,7 @@ namespace Converter.Gbx.core.primitives
 
         public override LinkedList<string> Dump()
         {
-            if(node == null)
+            if (node == null)
             {
                 var result = new LinkedList<string>();
                 result.AddLast("Empty Node");
@@ -68,7 +69,7 @@ namespace Converter.Gbx.core.primitives
         {
             uint index = s.ReadUInt();
 
-            if(index == emptyNode) //Empty NodeRef
+            if (index == emptyNode) //Empty NodeRef
             {
                 return new GBXNodeRef(this, null);
             }
@@ -80,7 +81,7 @@ namespace Converter.Gbx.core.primitives
             {
                 node = _storedNodesRead[(int)index - 1];
             }
-            catch(ArgumentOutOfRangeException)
+            catch (ArgumentOutOfRangeException)
             {
                 node = new Node(s, context, this);
                 _storedNodesRead.Add(node);
@@ -96,12 +97,12 @@ namespace Converter.Gbx.core.primitives
 
         internal void WriteGBXNodeRef(Stream s, GBXNodeRef nodeRef)
         {
-            if(_storedNodesWrite == null)
+            if (_storedNodesWrite == null)
             {
                 _storedNodesWrite = new List<Node>();
             }
 
-            if(nodeRef.node == null)
+            if (nodeRef.node == null)
             {
                 s.WriteUInt(emptyNode);
                 return;
@@ -109,16 +110,16 @@ namespace Converter.Gbx.core.primitives
 
             var index = _storedNodesWrite.IndexOf(nodeRef.node);
 
-            if(index < 0) //not stored, node needs to be stored
+            if (index < 0) //not stored, node needs to be stored
             {
                 index = _storedNodesWrite.Count;
                 _storedNodesWrite.Add(nodeRef.node);
-                s.WriteUInt((uint) index + 1);
+                s.WriteUInt((uint)index + 1);
                 nodeRef.node.WriteBack(s);
             }
             else //node already stored
             {
-                s.WriteUInt((uint) index + 1);
+                s.WriteUInt((uint)index + 1);
             }
         }
     }

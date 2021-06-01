@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Converter.Gbx;
-using Converter.Gbx.chunks;
-using Converter.Gbx.core;
-using Converter.Gbx.core.chunks;
+using Converter.Gbx.Chunks.Challenge;
+using Converter.Gbx.Core;
 
-namespace Converter.Converion
+namespace Converter.Conversion
 {
     public class BlockAddConversion : Conversion
     {

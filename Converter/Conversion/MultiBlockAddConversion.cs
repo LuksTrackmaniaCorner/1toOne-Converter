@@ -1,7 +1,7 @@
 ﻿using Converter.Gbx;
-using Converter.Gbx.chunks;
-using Converter.Gbx.core;
-using Converter.Gbx.core.primitives;
+using Converter.Gbx.Chunks.Challenge;
+using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace Converter.Converion
+namespace Converter.Conversion
 {
     public class MultiBlockAddConversion : Conversion
     {

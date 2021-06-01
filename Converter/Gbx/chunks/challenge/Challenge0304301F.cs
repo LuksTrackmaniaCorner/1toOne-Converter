@@ -1,7 +1,6 @@
-﻿using Converter.Gbx.core;
-using Converter.Gbx.core.primitives;
-using Converter.Gbx.primitives;
-using _1toOne_Converter.Streams;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Converter.Gbx.chunks
+namespace Converter.Gbx.Chunks.Challenge
 {
     public class Challenge0304301F : Chunk
     {
@@ -44,7 +43,7 @@ namespace Converter.Gbx.chunks
 
         public Challenge0304301F(Stream s, GBXLBSContext context, GBXNodeRefList list, bool is013) : base(context, list)
         {
-            if(is013)
+            if (is013)
             {
                 ChunkID = 0x02400301F; //Update chunk from 0x013 to 0x01F
             }
@@ -82,7 +81,7 @@ namespace Converter.Gbx.chunks
             return result;
         }
     }
-    
+
     public class Block : Structure
     {
         public static readonly string blockNameKey = "Block Name";
@@ -123,7 +122,7 @@ namespace Converter.Gbx.chunks
 
             Rot = new GBXByte(s);
 
-            if(Rot.Value>= 4)
+            if (Rot.Value >= 4)
             {
                 throw new Exception("OOF");
             }
@@ -137,19 +136,19 @@ namespace Converter.Gbx.chunks
 
             Flags.SetBase(16);
 
-            if(Flags.Value== 0xFFFFFFFF)
+            if (Flags.Value == 0xFFFFFFFF)
             {
                 return;
             }
 
-            if((Flags.Value & 0x8000) != 0) //Skinnable block
+            if ((Flags.Value & 0x8000) != 0) //Skinnable block
             {
                 Author = context.ReadLookBackString(s);
 
                 Skin = list.ReadGBXNodeRef(s, context);
             }
 
-            if((Flags.Value & 0x100000) != 0) //CP or Finish (newer Versions only)
+            if ((Flags.Value & 0x100000) != 0) //CP or Finish (newer Versions only)
             {
                 BlockParameters = list.ReadGBXNodeRef(s, context);
             }

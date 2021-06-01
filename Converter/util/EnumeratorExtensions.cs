@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.util
+namespace Converter.Util
 {
     public static class EnumeratorExtensions
     {

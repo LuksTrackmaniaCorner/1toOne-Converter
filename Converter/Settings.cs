@@ -1,6 +1,6 @@
 ﻿using Converter.Gbx;
-using Converter.Gbx.core;
-using Converter.Gbx.core.chunks;
+using Converter.Gbx.Chunks.Challenge;
+using Converter.Gbx.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;

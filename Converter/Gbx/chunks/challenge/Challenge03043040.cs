@@ -1,7 +1,7 @@
-﻿using Converter.Gbx.core;
-using Converter.Gbx.core.primitives;
-using Converter.Gbx.primitives;
-using Converter.util;
+﻿using Converter.Gbx.Chunks.AnchoredObject;
+using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.chunks
+namespace Converter.Gbx.Chunks.Challenge
 {
     public class Challenge03043040 : Chunk
     {
@@ -39,7 +39,7 @@ namespace Converter.Gbx.chunks
 
         public Challenge03043040(bool dummy) : base(null, null)
         {
-            this.ChunkID = 0x03043040;
+            ChunkID = 0x03043040;
 
             dummy = !dummy;
             Version = new GBXUInt(4);
@@ -91,7 +91,7 @@ namespace Converter.Gbx.chunks
 
             var sizeEndPos = s.Position;
             s.Position = sizePos;
-            size.Value = (uint) (sizeEndPos - sizeStartPos);
+            size.Value = (uint)(sizeEndPos - sizeStartPos);
             Size.WriteBack(s); //Write size back after everything else
             s.Position = sizeEndPos;
         }
@@ -117,7 +117,7 @@ namespace Converter.Gbx.chunks
             );
 
             var itemNode = new Node(0x03101000);
-            itemNode.AddChunk(Chunk.anchoredObject03101002Key, anchoredObject);
+            itemNode.AddChunk(anchoredObject03101002Key, anchoredObject);
 
             Items.Add(itemNode);
         }

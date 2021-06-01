@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Converter.Gbx.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Converter.Gbx.core.primitives
+namespace Converter.Gbx.Primitives
 {
     public abstract class Primitive<T> : FileComponent
     {

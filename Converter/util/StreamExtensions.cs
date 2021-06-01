@@ -7,7 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace _1toOne_Converter.Streams
+namespace Converter.Util
 {
     //Low effort implementations of some simple and convenient stream operations
     public static class StreamExtensions

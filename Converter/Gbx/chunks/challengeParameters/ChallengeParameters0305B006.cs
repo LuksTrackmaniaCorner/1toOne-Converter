@@ -1,4 +1,5 @@
-﻿using Converter.Gbx.core.primitives;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.chunks
+namespace Converter.Gbx.Chunks.ChallengeParameters
 {
     public class ChallengeParameters0305B006 : Chunk
     {
@@ -18,7 +19,7 @@ namespace Converter.Gbx.core.chunks
         public ChallengeParameters0305B006(Stream s, GBXLBSContext context, GBXNodeRefList list) : base(context, list)
         {
             count = new GBXUInt(s);
-            Trace.Assert(count.Value== 0, "Unsupported count");
+            Trace.Assert(count.Value == 0, "Unsupported count");
             AddChildDeprecated(countKey, count);
         }
     }

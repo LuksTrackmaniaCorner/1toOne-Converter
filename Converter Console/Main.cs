@@ -1,8 +1,7 @@
-﻿using Converter.Converion;
+﻿using Converter.Conversion;
 using Converter.Gbx;
-using Converter.Gbx.core;
-using Converter.Gbx.core.chunks;
-using Converter.util;
+using Converter.Gbx.Core;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -84,7 +83,7 @@ namespace Converter
             }
 
             //Generating the Conversion
-            var conversion = Conversion.LoadConversion<SwitchConversion>(xmlFile);
+            var conversion = Conversion.Conversion.LoadConversion<SwitchConversion>(xmlFile);
 
             //Loading the Settings
             Settings.GenerateSettings();
@@ -106,7 +105,7 @@ namespace Converter
             ioManager.OpenFolders();
         }
 
-        public static void Convert(string mapFile, Conversion conversion, IOManager ioManager)
+        public static void Convert(string mapFile, Conversion.Conversion conversion, IOManager ioManager)
         {
             string errorMessage = null;
 

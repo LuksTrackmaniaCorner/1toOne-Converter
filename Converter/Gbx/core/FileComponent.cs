@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using Converter.Gbx.core.primitives;
 using System.Xml.Serialization;
-using Converter.Gbx.core.chunks;
-using Converter.Gbx.chunks;
+using Converter.Gbx.Chunks.AnchoredObject;
+using Converter.Gbx.Chunks;
+using Converter.Gbx.Primitives;
 
-namespace Converter.Gbx.core
+namespace Converter.Gbx.Core
 {
 
     [XmlInclude(typeof(AnchoredObject03101002))]

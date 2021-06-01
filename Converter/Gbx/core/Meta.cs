@@ -1,4 +1,4 @@
-﻿using Converter.Gbx.core.primitives;
+﻿using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core
+namespace Converter.Gbx.Core
 {
     public class Meta : Structure
     {

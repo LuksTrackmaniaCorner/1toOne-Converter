@@ -1,4 +1,5 @@
-﻿using _1toOne_Converter.Streams;
+﻿using Converter.Gbx.Core;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using static System.Text.Encoding;
 
-namespace Converter.Gbx.core.primitives
+namespace Converter.Gbx.Primitives
 {
-    public class GBXString : FileComponent , IEquatable<GBXString>
+    public class GBXString : FileComponent, IEquatable<GBXString>
     {
         public static readonly string lengthKey = "Length";
         public static readonly string stringKey = "String";
@@ -26,7 +27,7 @@ namespace Converter.Gbx.core.primitives
         public GBXString(Stream s)
         {
             uint length = s.ReadUInt();
-            byte[] srcdata = s.SimpleRead((int) length);
+            byte[] srcdata = s.SimpleRead((int)length);
             Value = UTF8.GetString(srcdata);
         }
 
@@ -41,13 +42,13 @@ namespace Converter.Gbx.core.primitives
 
         public override void WriteBack(Stream s)
         {
-            s.WriteUInt((uint) UTF8.GetByteCount(Value));
+            s.WriteUInt((uint)UTF8.GetByteCount(Value));
             s.SimpleWrite(UTF8.GetBytes(Value));
         }
 
         public bool Equals(GBXString other)
         {
-            return this.Value == other.Value;
+            return Value == other.Value;
         }
     }
 }

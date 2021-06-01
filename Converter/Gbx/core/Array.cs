@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections;
-using Converter.Gbx.core.primitives;
-using Converter.util;
+using Converter.Util;
+using Converter.Gbx.Primitives;
 
-namespace Converter.Gbx.core
+namespace Converter.Gbx.Core
 {
     public delegate T Producer<T>();
     public delegate bool ContinueCondition();

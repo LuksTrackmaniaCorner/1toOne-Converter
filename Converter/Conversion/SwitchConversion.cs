@@ -1,6 +1,6 @@
 ﻿using Converter.Gbx;
-using Converter.Gbx.core;
-using Converter.Gbx.core.chunks;
+using Converter.Gbx.Chunks.Challenge;
+using Converter.Gbx.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Converter.Converion
+namespace Converter.Conversion
 {
     [XmlRoot]
     public class SwitchConversion : Conversion

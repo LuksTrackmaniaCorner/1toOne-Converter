@@ -1,5 +1,5 @@
-﻿using Converter.Gbx.core;
-using _1toOne_Converter.Streams;
+﻿using Converter.Gbx.Core;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Converter.Gbx.primitives
+namespace Converter.Gbx.Primitives
 {
     public sealed class GBXXml<T> : FileComponent
     {
         public T Xml;
 
-        private XmlSerializer _serializer;
+        private readonly XmlSerializer _serializer;
 
         public GBXXml(Stream stream)
         {

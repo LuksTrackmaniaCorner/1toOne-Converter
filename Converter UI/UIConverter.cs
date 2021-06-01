@@ -1,18 +1,17 @@
-﻿using Converter.Gbx.core;
-using Converter.util;
-using Converter.Gbx.core.chunks;
+﻿using Converter.Gbx.Core;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System.Windows.Media;
-using Converter.Gbx.chunks;
-using Converter.Converion;
+using Converter.Conversion;
 using Converter.Gbx;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Converter;
+using Converter.Gbx.Chunks.Challenge;
 
 #pragma warning disable IDE1006 // Naming Styles
 namespace Converter_UI

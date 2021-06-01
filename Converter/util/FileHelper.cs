@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 
-namespace Converter.util
+namespace Converter.Util
 {
     public static class FileHelper
     {

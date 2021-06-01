@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Converter.Gbx;
 
-namespace Converter.Converion
+namespace Converter.Conversion
 {
     public class ComplexConversion : Conversion
     {

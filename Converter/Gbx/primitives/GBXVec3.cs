@@ -1,5 +1,5 @@
-﻿using Converter.Gbx.primitives;
-using _1toOne_Converter.Streams;
+﻿using Converter.Gbx.Core;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.primitives
+namespace Converter.Gbx.Primitives
 {
     public class GBXVec3 : PrimitiveVec3<float>
     {
         private GBXVec3()
         {
-            
+
         }
 
         public GBXVec3(Stream s)

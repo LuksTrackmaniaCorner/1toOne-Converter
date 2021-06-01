@@ -1,4 +1,5 @@
-﻿using _1toOne_Converter.Streams;
+﻿using Converter.Gbx.Core;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.primitives
+namespace Converter.Gbx.Primitives
 {
     public class GBXByte : Primitive<byte>
     {

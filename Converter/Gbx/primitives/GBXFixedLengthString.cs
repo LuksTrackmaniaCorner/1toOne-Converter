@@ -4,10 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using _1toOne_Converter.Streams;
+using Converter.Gbx.Core;
+using Converter.Util;
 using static System.Text.Encoding;
 
-namespace Converter.Gbx.core.primitives
+namespace Converter.Gbx.Primitives
 {
     public class GBXFixedLengthString : FileComponent
     {

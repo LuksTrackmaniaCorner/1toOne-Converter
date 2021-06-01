@@ -1,14 +1,13 @@
 ﻿using Converter.Gbx;
-using Converter.Gbx.chunks;
-using Converter.Gbx.core;
-using Converter.Gbx.core.chunks;
+using Converter.Gbx.Chunks.Challenge;
+using Converter.Gbx.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Converion
+namespace Converter.Conversion
 {
     public class BlockClearConversion : Conversion
     {

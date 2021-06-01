@@ -1,4 +1,4 @@
-﻿using _1toOne_Converter.Streams;
+﻿using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Converter.Gbx.core
+namespace Converter.Gbx.Core
 {
     public class Unread : FileComponent
     {

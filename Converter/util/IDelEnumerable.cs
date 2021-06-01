@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.util
+namespace Converter.Util
 {
     public interface IDelEnumerable<out T> : IEnumerable<T>
     {

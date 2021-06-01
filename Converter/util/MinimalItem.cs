@@ -1,13 +1,12 @@
-﻿using Converter.Gbx.core;
-using Converter.Gbx.core.primitives;
-using Converter.Gbx.primitives;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.util
+namespace Converter.Util
 {
     /// <summary>
     /// Shortest possible representation of an item.

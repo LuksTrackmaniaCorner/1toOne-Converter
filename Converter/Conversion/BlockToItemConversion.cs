@@ -1,14 +1,14 @@
 ﻿using Converter.Gbx;
-using Converter.Gbx.chunks;
-using Converter.Gbx.core;
-using Converter.Gbx.core.primitives;
-using Converter.util;
+using Converter.Gbx.Chunks.Challenge;
+using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace Converter.Converion
+namespace Converter.Conversion
 {
     public class BlockToItemConversion : Conversion
     {

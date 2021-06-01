@@ -1,5 +1,6 @@
-﻿using Converter.Gbx.core.primitives;
-using Converter.util;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.chunks
+namespace Converter.Gbx.Chunks.Challenge
 {
     public class ChallengeCommon : Chunk
     {
@@ -85,29 +86,29 @@ namespace Converter.Gbx.core.chunks
             //version >= 2
             DecorationMeta = new Meta(s, context);
 
-            if (Version.Value< 3)
+            if (Version.Value < 3)
                 return;
             //version >= 3
             MapOrigin = new GBXVec2(s);
 
-            if (Version.Value< 4)
+            if (Version.Value < 4)
                 return;
             //version >= 4
             MapTarget = new GBXVec2(s);
 
-            if (Version.Value< 5)
+            if (Version.Value < 5)
                 return;
             //version >= 5
             UnknownUInt128 = new Unread(s, 16);
 
-            if (Version.Value< 6)
+            if (Version.Value < 6)
                 return;
             //version >= 6
             MapType = new GBXString(s);
 
             MapStyle = new GBXString(s);
 
-            if(Version.Value== 7)
+            if (Version.Value == 7)
             {
                 //version == 7
                 UnknownBool = new GBXBool(s);
@@ -117,12 +118,12 @@ namespace Converter.Gbx.core.chunks
             //version >= 8
             LightmapCacheUID = new GBXULong(s);
 
-            if (Version.Value< 9)
+            if (Version.Value < 9)
                 return;
             //version >= 9
             LightmapVersion = new GBXByte(s);
 
-            if (Version.Value< 11)
+            if (Version.Value < 11)
                 return;
             //version >= 11
             TitleUID = context.ReadLookBackString(s);

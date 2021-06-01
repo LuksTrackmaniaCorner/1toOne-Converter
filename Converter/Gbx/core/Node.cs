@@ -1,7 +1,5 @@
-﻿using Converter.Gbx.core.chunks;
-using Converter.Gbx.core.primitives;
-using Converter.util;
-using _1toOne_Converter.Streams;
+﻿using Converter.Gbx.Primitives;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Converter.Gbx.core
+namespace Converter.Gbx.Core
 {
     public class Node : Structure
     {

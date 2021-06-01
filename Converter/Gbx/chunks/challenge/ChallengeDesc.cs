@@ -1,4 +1,5 @@
-﻿using Converter.Gbx.core.primitives;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.chunks
+namespace Converter.Gbx.Chunks.Challenge
 {
     public class ChallengeDesc : Chunk
     {
@@ -44,7 +45,7 @@ namespace Converter.Gbx.core.chunks
         private GBXUInt _numCPs;
         private GBXUInt _numLaps;
 
-        
+
         public GBXByte Version { get => _version; private set { _version = value; AddChildNew(value); } }
         public GBXBool AlwaysFalse { get => _alwaysFalse; private set { _alwaysFalse = value; AddChildNew(value); } }
         public GBXUInt BronzeTime { get => _bronzeTime; private set { _bronzeTime = value; AddChildNew(value); } }
@@ -67,7 +68,8 @@ namespace Converter.Gbx.core.chunks
         {
             Version = new GBXByte(s);
 
-            if (Version.Value < 3) {
+            if (Version.Value < 3)
+            {
                 throw new Exception("File is too old. ChallengeTMDesc version is not supported.");
             }
 
@@ -77,7 +79,7 @@ namespace Converter.Gbx.core.chunks
             GoldTime = new GBXUInt(s);
             AuthorTime = new GBXUInt(s);
 
-            if(Version.Value < 4)
+            if (Version.Value < 4)
                 return;
             //version >= 4
             DisplayCost = new GBXUInt(s);
@@ -96,12 +98,12 @@ namespace Converter.Gbx.core.chunks
             //version >= 7
             TrackType = new GBXUInt(s);
 
-            if(Version.Value < 9)
+            if (Version.Value < 9)
                 return;
             //version >= 9
             AlwaysZero = new GBXUInt(s);
 
-            if(Version.Value < 10)
+            if (Version.Value < 10)
                 return;
             //version >= 10
             AuthorScore = new GBXUInt(s);
@@ -111,14 +113,14 @@ namespace Converter.Gbx.core.chunks
             //version >= 11
             EditMode = new GBXUInt(s);
 
-            if(Version.Value< 12)
+            if (Version.Value < 12)
             {
                 return;
             }
             //version >= 12
             AlwaysFalseToo = new GBXBool(s);
 
-            if(Version.Value< 13)
+            if (Version.Value < 13)
                 return;
             //version >= 13
             NumCPs = new GBXUInt(s);

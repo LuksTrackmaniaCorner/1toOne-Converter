@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Converter.Gbx.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.primitives
+namespace Converter.Gbx.Primitives
 {
     public class GBXFileRef : Structure
     {
@@ -23,7 +24,7 @@ namespace Converter.Gbx.core.primitives
         {
             version = new GBXByte(s);
 
-            if(version.Value>= 3)
+            if (version.Value >= 3)
             {
                 checksum = new Unread(s, 32);
             }
@@ -31,7 +32,7 @@ namespace Converter.Gbx.core.primitives
             filePath = new GBXString(s);
 
             //TODO Condition not 100% clear.
-            if(version.Value>= 1 && (filePath.Value.Length != 0 || version.Value>= 3))
+            if (version.Value >= 1 && (filePath.Value.Length != 0 || version.Value >= 3))
             {
                 locatorUrl = new GBXString(s);
             }

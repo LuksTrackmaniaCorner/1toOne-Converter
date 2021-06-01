@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Converter.Gbx;
-using Converter.Gbx.chunks;
-using Converter.Gbx.core;
-using Converter.Gbx.core.chunks;
-using Converter.Gbx.core.primitives;
-using Converter.Gbx.primitives;
-using Converter.util;
+using Converter.Gbx.Chunks.Challenge;
+using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
+using Converter.Util;
 
-namespace Converter.Converion
+namespace Converter.Conversion
 {
     public class PylonAddConversion : Conversion
     {

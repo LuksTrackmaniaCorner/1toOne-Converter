@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Converter.Gbx;
-using Converter.Gbx.chunks;
-using Converter.Gbx.core;
-using Converter.Gbx.core.chunks;
+using Converter.Gbx.Chunks.Challenge;
+using Converter.Gbx.Core;
 
-namespace Converter.Converion
+namespace Converter.Conversion
 {
     [Obsolete("Should make use of MinimalItem", false)]
     public class ItemAddConversion : Conversion

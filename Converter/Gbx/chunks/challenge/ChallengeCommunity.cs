@@ -1,5 +1,5 @@
-﻿using Converter.Gbx.core.primitives;
-using Converter.Gbx.primitives;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Converter.Gbx.core.chunks
+namespace Converter.Gbx.Chunks.Challenge
 {
     public class ChallengeCommunity : Chunk
     {
@@ -89,7 +89,7 @@ namespace Converter.Gbx.core.chunks
         //[Obsolete("Use the property Validated instead of ValidatedB.", false)] //The obsolete-attribute prevents the xml parser to parse
         public string ValidatedB { get; set; }
         [XmlIgnore()]
-        public bool Validated { get => this.ValidatedB == "1"; }
+        public bool Validated { get => ValidatedB == "1"; }
         [XmlAttribute(AttributeName = "nblaps")]
         public int LapCount { get; set; }
 
@@ -109,7 +109,7 @@ namespace Converter.Gbx.core.chunks
         //[Obsolete("Use the property HasGhostBlocks instead of HasGhostBlocksB.", false)] //The obsolete-attribute prevents the xml parser to parse
         public string HasGhostBlocksB { get; set; }
         [XmlIgnore()]
-        public bool HasGhostBlocks { get => this.HasGhostBlocksB == "1"; }
+        public bool HasGhostBlocks { get => HasGhostBlocksB == "1"; }
     }
 
     //Todo: Find out 
@@ -129,28 +129,28 @@ namespace Converter.Gbx.core.chunks
         public bool ShouldSerializeBronze() => Bronze != 0;
 
         [XmlIgnore()]
-        public TimeSpan BronzeTimeSpan { get => TimeSpan.FromMilliseconds(this.Bronze); }
+        public TimeSpan BronzeTimeSpan { get => TimeSpan.FromMilliseconds(Bronze); }
         [XmlAttribute(AttributeName = "silver")]
         public int Silver { get; set; }
 
         public bool ShouldSerializeSilver() => Bronze != 0;
 
         [XmlIgnore()]
-        public TimeSpan SilverTimeSpan { get => TimeSpan.FromMilliseconds(this.Silver); }
+        public TimeSpan SilverTimeSpan { get => TimeSpan.FromMilliseconds(Silver); }
         [XmlAttribute(AttributeName = "gold")]
         public int Gold { get; set; }
 
         public bool ShouldSerializeGold() => Bronze != 0;
 
         [XmlIgnore()]
-        public TimeSpan GoldTimeSpan { get => TimeSpan.FromMilliseconds(this.Gold); }
+        public TimeSpan GoldTimeSpan { get => TimeSpan.FromMilliseconds(Gold); }
         [XmlAttribute(AttributeName = "authortime")]
         public int AuthorTime { get; set; }
 
         public bool ShouldSerializeAuthorTime() => Bronze != 0;
 
         [XmlIgnore()]
-        public TimeSpan AuthorTimeSpan { get => TimeSpan.FromMilliseconds(this.AuthorTime); }
+        public TimeSpan AuthorTimeSpan { get => TimeSpan.FromMilliseconds(AuthorTime); }
         [XmlAttribute(AttributeName = "authorscore")]
         public int AuthorScore { get; set; }
 

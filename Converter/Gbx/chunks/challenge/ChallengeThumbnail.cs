@@ -1,4 +1,5 @@
-﻿using Converter.Gbx.core.primitives;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.chunks
+namespace Converter.Gbx.Chunks.Challenge
 {
     public class ChallengeThumbnail : Chunk
     {
@@ -33,7 +34,7 @@ namespace Converter.Gbx.core.chunks
             version = new GBXUInt(s);
             AddChildDeprecated(versionKey, version);
 
-            if(version.Value== 0)
+            if (version.Value == 0)
                 return;
             //version > 0
             thumbSize = new GBXUInt(s);

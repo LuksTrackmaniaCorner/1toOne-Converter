@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Converter.Gbx;
-using Converter.Gbx.core.primitives;
+using Converter.Gbx.Primitives;
 
-namespace Converter.Converion
+namespace Converter.Conversion
 {
     public class GridDefineConversion : Conversion
     {

@@ -1,4 +1,5 @@
-﻿using Converter.Gbx.core.primitives;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.chunks
+namespace Converter.Gbx.Chunks
 {
     public class SkippedChunk : Chunk
     {
@@ -28,7 +29,7 @@ namespace Converter.Gbx.core.chunks
 
         public SkippedChunk(uint chunkID, byte[] value) : base(null, null)
         {
-            this.ChunkID = chunkID;
+            ChunkID = chunkID;
             Bytes = new Unread(value);
         }
 

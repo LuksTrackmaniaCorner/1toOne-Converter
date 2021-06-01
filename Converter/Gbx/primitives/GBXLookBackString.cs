@@ -1,4 +1,5 @@
-﻿using _1toOne_Converter.Streams;
+﻿using Converter.Gbx.Core;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,16 +9,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Converter.Gbx.core.primitives
+namespace Converter.Gbx.Primitives
 {
-    public class GBXLBS : FileComponent , IEquatable<GBXLBS>
+    public class GBXLBS : FileComponent, IEquatable<GBXLBS>
     {
         public const uint unassigned = 0xFFFFFFFF;
 
         [XmlAttribute]
         public uint CollectionID;
         [XmlAttribute]
-        public string Content {
+        public string Content
+        {
             get => _content?.Value;
             set
             {
@@ -52,7 +54,7 @@ namespace Converter.Gbx.core.primitives
 
         public override LinkedList<string> Dump()
         {
-            if(_content == null)
+            if (_content == null)
             {
                 //TODO do display the name of the collection here instead.
                 var result = new LinkedList<string>();
@@ -76,8 +78,8 @@ namespace Converter.Gbx.core.primitives
         {
             return new GBXLBS
             {
-                CollectionID = this.CollectionID,
-                Content = this.Content
+                CollectionID = CollectionID,
+                Content = Content
             };
         }
 
@@ -90,11 +92,11 @@ namespace Converter.Gbx.core.primitives
 
         public bool Equals(GBXLBS other)
         {
-            if(this._content != null && other._content != null)
-                return this._content.Equals(other._content);
+            if (_content != null && other._content != null)
+                return _content.Equals(other._content);
 
-            if (this._content == null && other._content == null)
-                return this.CollectionID == other.CollectionID;
+            if (_content == null && other._content == null)
+                return CollectionID == other.CollectionID;
 
             return false;
         }
@@ -163,13 +165,13 @@ namespace Converter.Gbx.core.primitives
 
         internal void WriteLookBackString(Stream s, GBXLBS lookbackstring)
         {
-            if(_storedStringsWrite == null) //First Lookbackstring encountered, need to write version
+            if (_storedStringsWrite == null) //First Lookbackstring encountered, need to write version
             {
                 _storedStringsWrite = new List<GBXString>();
                 s.WriteUInt(LBSVersion);
             }
 
-            if(lookbackstring._content == null)
+            if (lookbackstring._content == null)
             {
                 s.WriteUInt(lookbackstring.CollectionID);
             }

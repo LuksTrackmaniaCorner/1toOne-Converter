@@ -1,6 +1,5 @@
-﻿using Converter.Gbx.core;
-using Converter.Gbx.core.primitives;
-using Converter.Gbx.primitives;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.chunks
+namespace Converter.Gbx.Chunks.AnchoredObject
 {
     public class AnchoredObject03101002 : Chunk
     {
@@ -77,7 +76,7 @@ namespace Converter.Gbx.chunks
             GBXVec3 unknownVec,
             GBXFloat scale) : base(null, null)
         {
-            this.ChunkID = 0x03101002;
+            ChunkID = 0x03101002;
 
             Always7 = always7;
             Meta = meta;

@@ -1,9 +1,8 @@
-﻿using Converter.Converion;
-using Converter.Gbx.chunks;
-using Converter.Gbx.core;
-using Converter.Gbx.core.chunks;
-using Converter.Gbx.core.primitives;
-using Converter.util;
+﻿using Converter.Conversion;
+using Converter.Gbx.Chunks.Challenge;
+using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

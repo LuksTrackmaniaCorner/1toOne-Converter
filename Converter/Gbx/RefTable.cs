@@ -1,5 +1,5 @@
-﻿using Converter.Gbx.core;
-using Converter.Gbx.core.primitives;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;

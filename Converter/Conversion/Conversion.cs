@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Converter.Converion
+namespace Converter.Conversion
 {
     [XmlRoot]
     [XmlInclude(typeof(BlockAddConversion))]

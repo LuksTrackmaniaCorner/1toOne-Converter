@@ -1,8 +1,7 @@
-﻿using Converter.Converion;
+﻿using Converter.Conversion;
 using Converter.Gbx;
-using Converter.Gbx.core;
-using Converter.Gbx.core.chunks;
-using Converter.util;
+using Converter.Gbx.Core;
+using Converter.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +31,7 @@ namespace Converter
             return File.Dump();
         }
 
-        public void Convert(Conversion conversion)
+        public void Convert(Conversion.Conversion conversion)
         {
             conversion.Convert(File);
         }

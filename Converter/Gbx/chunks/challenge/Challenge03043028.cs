@@ -1,5 +1,5 @@
-﻿using Converter.Gbx.core.primitives;
-using Converter.Gbx.primitives;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.chunks
+namespace Converter.Gbx.Chunks.Challenge
 {
     public class Challenge03043028 : Chunk
     {
@@ -37,7 +37,7 @@ namespace Converter.Gbx.core.chunks
         {
             ArchiveGmCamVal = new GBXBool(s);
 
-            if(ArchiveGmCamVal.Value == true)
+            if (ArchiveGmCamVal.Value == true)
             {
                 @byte = new GBXByte(s);
                 snapshotRotation = new GBXMat3(s);

@@ -1,4 +1,5 @@
-﻿using Converter.Gbx.core.primitives;
+﻿using Converter.Gbx.Core;
+using Converter.Gbx.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converter.Gbx.core.chunks
+namespace Converter.Gbx.Chunks.Challenge
 {
-    public class ChallengeVersion :Chunk
+    public class ChallengeVersion : Chunk
     {
         public static readonly string versionKey = "Version";
 
