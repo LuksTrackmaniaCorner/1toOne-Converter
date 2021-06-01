@@ -7,4 +7,3 @@
 //TODO Proper gui
 //     - Make it possible to more maps after the converter has finished
 //     - Settings menu
-//TODO Investigate into maps with muliple starts

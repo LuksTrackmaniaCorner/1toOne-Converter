@@ -41,18 +41,14 @@ namespace Converter
             if (File.Exists(defaultPath))
             {
                 try {
-                    using (var fs = new FileStream(defaultPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        settings = (Settings)xmls.Deserialize(fs);
-                    }
+                    using var readFs = new FileStream(defaultPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    settings = (Settings)xmls.Deserialize(readFs);
 
                     try
                     {
                         //Update settings if changes have been made
-                        using (var fs = new FileStream(defaultPath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                        {
-                            xmls.Serialize(fs, settings);
-                        }
+                        using var writeFs = new FileStream(defaultPath, FileMode.Create, FileAccess.Write, FileShare.Write);
+                        xmls.Serialize(writeFs, settings);
                     }
                     catch (Exception)
                     {
@@ -69,10 +65,8 @@ namespace Converter
             
             //Create new Settings file
             settings = new Settings();
-            using (var fs = new FileStream(defaultPath, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                xmls.Serialize(fs, settings);
-            }
+            using var fs = new FileStream(defaultPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            xmls.Serialize(fs, settings);
         }
 
         public string OutputFolder { get; private set; }
