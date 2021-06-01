@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace Converter.Util
+namespace Converter.Lzo
 {
     /**
      * ManagedLZO.MiniLZO
