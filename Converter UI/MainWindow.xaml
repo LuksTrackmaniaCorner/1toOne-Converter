@@ -16,7 +16,7 @@
             <Label Canvas.Top="7" Canvas.Right="10" Content="Supported environments" VerticalAlignment="Top" FontSize="14" Opacity="0.5" />
             <StackPanel Canvas.Top="33" Canvas.Right="20" Orientation="Horizontal">
                 <StackPanel.Resources>
-                    <Style TargetType="{x:Type Image}">
+                    <Style TargetType="Image">
                         <Setter Property="Margin" Value="2,0,2,0"/>
                         <Setter Property="Height" Value="21" />
                         <Setter Property="Width" Value="21" />
@@ -46,7 +46,7 @@
         <Separator DockPanel.Dock="Top" Margin="10,2,10,2" />
         <DockPanel DockPanel.Dock="Bottom" Height="60">
             <DockPanel.Resources>
-                <Style TargetType="{x:Type Button}">
+                <Style TargetType="Button">
                     <Setter Property="Margin" Value="2,10,2,10"/>
                     <Setter Property="Height" Value="40"/>
                     <Setter Property="VerticalAlignment" Value="Top" />
